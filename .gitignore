@@ -1,5 +1,4 @@
 $ cat .gitignore
 
-SPORTSPORTAL.iml
-/target
 /.idea
+/target

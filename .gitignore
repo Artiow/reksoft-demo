@@ -1,4 +1,13 @@
-$ cat .gitignore
+/target/
+!.mvn/wrapper/maven-wrapper.jar
 
-/.idea
-/target
+### IntelliJ IDEA ###
+/.idea/
+*.iws
+*.iml
+*.ipr
+
+### Maven ###
+/.mvn/
+mvnw.cmd
+mvnw

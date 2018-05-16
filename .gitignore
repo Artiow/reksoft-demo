@@ -1,5 +1,13 @@
-$ cat .gitignore
+/target/
+!.mvn/wrapper/maven-wrapper.jar
 
-SPORTSPORTAL.iml
-/target
-/.idea
+### IntelliJ IDEA ###
+/.idea/
+*.iws
+*.iml
+*.ipr
+
+### Maven ###
+/.mvn/
+mvnw.cmd
+mvnw

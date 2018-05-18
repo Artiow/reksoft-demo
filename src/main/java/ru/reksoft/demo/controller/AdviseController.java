@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+/**
+ * <h1>Главный  контроллер</h1>
+ */
 @Controller
 @ControllerAdvice
 public class AdviseController {

@@ -16,6 +16,8 @@ create sequence order_seq;
 
 create sequence order_status_seq;
 
+create sequence picture_id_seq;
+
 create table user_role
 (
   id          integer default nextval('user_role_seq' :: regclass) not null
@@ -78,6 +80,12 @@ create table picture
   uploaded timestamp   not null
 );
 
+create unique index picture_id_uindex
+  on picture (id);
+
+create unique index picture_url_uindex
+  on picture (url);
+
 create table "user"
 (
   id         integer default nextval('user_seq' :: regclass) not null
@@ -102,16 +110,17 @@ create unique index user_picture_id_uindex
 
 create table album
 (
-  id         integer default nextval('album_seq' :: regclass) not null
+  id          integer default nextval('album_seq' :: regclass) not null
     constraint album_pkey
     primary key,
-  label      varchar(45)                                      not null,
-  singer     varchar(45)                                      not null,
-  name       varchar(45)                                      not null,
-  picture_id integer
+  label       varchar(45)                                      not null,
+  singer      varchar(45)                                      not null,
+  name        varchar(45)                                      not null,
+  picture_id  integer
     constraint album_picture_id_fk
     references picture,
-  release    date                                             not null
+  release     date                                             not null,
+  description varchar(255)
 );
 
 create unique index album_picture_id_uindex
@@ -194,11 +203,5 @@ create table current_basket
   constraint current_basket_user_id_media_id_pk
   primary key (user_id, media_id)
 );
-
-create unique index picture_id_uindex
-  on picture (id);
-
-create unique index picture_url_uindex
-  on picture (url);
 
 

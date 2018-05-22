@@ -18,6 +18,10 @@ create sequence order_status_seq;
 
 create sequence picture_id_seq;
 
+create sequence label_id_seq;
+
+create sequence singer_id_seq;
+
 create table user_role
 (
   id          integer default nextval('user_role_seq' :: regclass) not null
@@ -88,33 +92,53 @@ create unique index picture_url_uindex
 
 create table "user"
 (
-  id         integer default nextval('user_seq' :: regclass) not null
+  id       integer default nextval('user_seq' :: regclass) not null
     constraint user_pkey
     primary key,
-  login      varchar(45)                                     not null,
-  password   varchar(90)                                     not null,
-  name       varchar(45)                                     not null,
-  surname    varchar(45)                                     not null,
-  picture_id integer
-    constraint user_picture_id_fk
-    references picture,
-  phone      varchar(16)                                     not null,
-  address    varchar(90)                                     not null,
-  role_id    integer                                         not null
+  login    varchar(45)                                     not null,
+  password varchar(90)                                     not null,
+  name     varchar(45)                                     not null,
+  surname  varchar(45)                                     not null,
+  phone    varchar(16)                                     not null,
+  address  varchar(90)                                     not null,
+  role_id  integer                                         not null
     constraint user_user_role_id_fk
     references user_role
 );
 
-create unique index user_picture_id_uindex
-  on "user" (picture_id);
+create table label
+(
+  id   serial      not null
+    constraint label_pkey
+    primary key,
+  name varchar(45) not null
+);
+
+create unique index label_id_uindex
+  on label (id);
+
+create unique index label_name_uindex
+  on label (name);
+
+create table singer
+(
+  id   serial      not null
+    constraint singer_pkey
+    primary key,
+  name varchar(45) not null
+);
 
 create table album
 (
   id          integer default nextval('album_seq' :: regclass) not null
     constraint album_pkey
     primary key,
-  label       varchar(45)                                      not null,
-  singer      varchar(45)                                      not null,
+  label_id    integer                                          not null
+    constraint album_label_id_fk
+    references label,
+  singer_id   integer                                          not null
+    constraint album_singer_id_fk
+    references singer,
   name        varchar(45)                                      not null,
   picture_id  integer
     constraint album_picture_id_fk
@@ -165,18 +189,6 @@ create table media
   price    integer                                          not null
 );
 
-create table media_picture
-(
-  media_id   integer not null
-    constraint media_picture_media_id_fk
-    references media,
-  picture_id integer not null
-    constraint media_picture_picture_id_fk
-    references picture,
-  constraint media_picture_media_id_picture_id_pk
-  primary key (media_id, picture_id)
-);
-
 create table media_order
 (
   media_id    integer           not null
@@ -203,5 +215,11 @@ create table current_basket
   constraint current_basket_user_id_media_id_pk
   primary key (user_id, media_id)
 );
+
+create unique index singer_id_uindex
+  on singer (id);
+
+create unique index singer_name_uindex
+  on singer (name);
 
 

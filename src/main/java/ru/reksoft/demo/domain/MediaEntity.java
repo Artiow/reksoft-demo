@@ -16,7 +16,6 @@ public class MediaEntity {
 
     private Collection<CurrentBasketEntity> baskets;
     private Collection<MediaOrderEntity> orders;
-    private Collection<PictureEntity> pictures;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -93,15 +92,5 @@ public class MediaEntity {
 
     public void setOrders(Collection<MediaOrderEntity> orders) {
         this.orders = orders;
-    }
-
-    @ManyToMany
-    @JoinTable(name = "media_picture", catalog = "reksoft", schema = "demo", joinColumns = @JoinColumn(name = "media_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "picture_id", referencedColumnName = "id", nullable = false))
-    public Collection<PictureEntity> getPictures() {
-        return pictures;
-    }
-
-    public void setPictures(Collection<PictureEntity> pictures) {
-        this.pictures = pictures;
     }
 }

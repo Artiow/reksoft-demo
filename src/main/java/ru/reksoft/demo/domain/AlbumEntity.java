@@ -11,10 +11,10 @@ public class AlbumEntity {
 
     private Integer id;
     private String name;
-    private String label;
-    private String singer;
     private Date release;
 
+    private LabelEntity label;
+    private SingerEntity singer;
     private PictureEntity picture;
 
     private Collection<MediaEntity> media;
@@ -41,26 +41,6 @@ public class AlbumEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Basic
-    @Column(name = "label", nullable = false)
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    @Basic
-    @Column(name = "singer", nullable = false)
-    public String getSinger() {
-        return singer;
-    }
-
-    public void setSinger(String singer) {
-        this.singer = singer;
     }
 
     @Basic
@@ -127,5 +107,26 @@ public class AlbumEntity {
 
     public void setCompositions(Collection<CompositionEntity> compositions) {
         this.compositions = compositions;
+    }
+
+
+    @ManyToOne
+    @JoinColumn(name = "label_id", referencedColumnName = "id", nullable = false)
+    public LabelEntity getLabel() {
+        return label;
+    }
+
+    public void setLabel(LabelEntity label) {
+        this.label = label;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "singer_id", referencedColumnName = "id", nullable = false)
+    public SingerEntity getSinger() {
+        return singer;
+    }
+
+    public void setSinger(SingerEntity singer) {
+        this.singer = singer;
     }
 }

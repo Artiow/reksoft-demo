@@ -17,7 +17,6 @@ public class UserEntity {
     private String address;
 
     private UserRoleEntity role;
-    private PictureEntity picture;
 
     private Collection<CurrentBasketEntity> baskets;
 
@@ -110,6 +109,16 @@ public class UserEntity {
     }
 
 
+    @OneToMany(mappedBy = "user")
+    public Collection<CurrentBasketEntity> getBaskets() {
+        return baskets;
+    }
+
+    public void setBaskets(Collection<CurrentBasketEntity> baskets) {
+        this.baskets = baskets;
+    }
+
+
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     public UserRoleEntity getRole() {
@@ -118,25 +127,5 @@ public class UserEntity {
 
     public void setRole(UserRoleEntity role) {
         this.role = role;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "picture_id", referencedColumnName = "id")
-    public PictureEntity getPicture() {
-        return picture;
-    }
-
-    public void setPicture(PictureEntity picture) {
-        this.picture = picture;
-    }
-
-
-    @OneToMany(mappedBy = "user")
-    public Collection<CurrentBasketEntity> getBaskets() {
-        return baskets;
-    }
-
-    public void setBaskets(Collection<CurrentBasketEntity> baskets) {
-        this.baskets = baskets;
     }
 }

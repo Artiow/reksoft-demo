@@ -21,12 +21,12 @@ public class MediaController {
     }
 
 
-    @RequestMapping("/list")
+    @RequestMapping(value = "/list")
     public List<MediaShortDTO> getMedia() {
         return mediaService.getMedia();
     }
 
-    @RequestMapping("/id{id}")
+    @RequestMapping(value = "/id{id}")
     public MediaShortDTO getMedia(@PathVariable int id) {
         return mediaService.getMedia(id);
     }

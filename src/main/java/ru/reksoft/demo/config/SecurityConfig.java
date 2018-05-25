@@ -9,11 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-/**
- * <h1>Конфигурация Spring Security</h1>
- */
 @Configuration
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UserDetailsService userDetailsService;
 
@@ -27,7 +24,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService).passwordEncoder(getPasswordEncoder());
     }
 
-
+    /**
+     * Configure differentiation of rights
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http

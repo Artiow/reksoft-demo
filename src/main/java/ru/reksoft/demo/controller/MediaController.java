@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.reksoft.demo.dto.MediaDTO;
 
 @RestController
-@RequestMapping("media")
+@RequestMapping("api/media")
 public class MediaController {
 
     @GetMapping("/{id}")

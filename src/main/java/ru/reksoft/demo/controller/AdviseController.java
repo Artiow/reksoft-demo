@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 @ControllerAdvice
 public class AdviseController implements ErrorController {
 
-    @GetMapping(value = {"/", "/index"})
+    @GetMapping("/")
     public String toIndexPage() {
         return "index";
     }

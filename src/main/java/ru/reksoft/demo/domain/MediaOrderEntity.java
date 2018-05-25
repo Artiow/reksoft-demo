@@ -5,19 +5,27 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "media_order", schema = "demo", catalog = "reksoft")
-@IdClass(MediaOrderEntityPK.class)
 public class MediaOrderEntity {
 
+    @EmbeddedId
     private MediaOrderEntityPK pk;
+
     private Integer count;
     private Integer totalPrice;
 
+    @ManyToOne
+    @MapsId("mediaId")
     private MediaEntity media;
+    @ManyToOne
+    @MapsId("orderId")
     private OrderEntity order;
 
 
-    @Id
-    @Column(nullable = false)
+    public MediaOrderEntity() {
+        pk = new MediaOrderEntityPK();
+    }
+
+
     public MediaOrderEntityPK getPk() {
         return pk;
     }
@@ -63,8 +71,6 @@ public class MediaOrderEntity {
     }
 
 
-    @ManyToOne
-    @JoinColumn(name = "media_id", referencedColumnName = "id", nullable = false)
     public MediaEntity getMedia() {
         return media;
     }
@@ -73,8 +79,6 @@ public class MediaOrderEntity {
         this.media = media;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
     public OrderEntity getOrder() {
         return order;
     }

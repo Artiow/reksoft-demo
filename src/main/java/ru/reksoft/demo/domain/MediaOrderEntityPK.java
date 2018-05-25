@@ -1,10 +1,7 @@
 package ru.reksoft.demo.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Id;
 import java.io.Serializable;
-import java.util.Objects;
 
 @Embeddable
 public class MediaOrderEntityPK implements Serializable {
@@ -13,8 +10,6 @@ public class MediaOrderEntityPK implements Serializable {
     private Integer orderId;
 
 
-    @Id
-    @Column(name = "media_id", nullable = false)
     public Integer getMediaId() {
         return mediaId;
     }
@@ -23,8 +18,6 @@ public class MediaOrderEntityPK implements Serializable {
         this.mediaId = mediaId;
     }
 
-    @Id
-    @Column(name = "order_id", nullable = false)
     public Integer getOrderId() {
         return orderId;
     }

@@ -5,17 +5,26 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "current_basket", schema = "demo", catalog = "reksoft")
-@IdClass(CurrentBasketEntityPK.class)
 public class CurrentBasketEntity {
 
+    @EmbeddedId
     private CurrentBasketEntityPK pk;
+
     private Integer count;
 
+    @ManyToOne
+    @MapsId("userId")
     private UserEntity user;
+    @ManyToOne
+    @MapsId("mediaId")
     private MediaEntity media;
 
-    @Id
-    @Column(nullable = false)
+
+    public CurrentBasketEntity() {
+        pk = new CurrentBasketEntityPK();
+    }
+
+
     public CurrentBasketEntityPK getPK() {
         return pk;
     }
@@ -51,8 +60,6 @@ public class CurrentBasketEntity {
     }
 
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     public UserEntity getUser() {
         return user;
     }
@@ -61,8 +68,6 @@ public class CurrentBasketEntity {
         this.user = user;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "media_id", referencedColumnName = "id", nullable = false)
     public MediaEntity getMedia() {
         return media;
     }

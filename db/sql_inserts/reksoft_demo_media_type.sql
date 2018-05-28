@@ -1,0 +1,1 @@
+INSERT INTO demo.media_type (id, name, code, description) VALUES (1, 'CD', 'cd', 'CD (Compact Disk)');

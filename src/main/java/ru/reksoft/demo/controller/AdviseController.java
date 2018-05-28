@@ -1,28 +1,34 @@
 package ru.reksoft.demo.controller;
 
+import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.NoHandlerFoundException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @ControllerAdvice
-public class AdviseController {
+public class AdviseController implements ErrorController {
 
-    @GetMapping(value = {"/", "/index"})
+    @GetMapping("/")
     public String toIndexPage() {
         return "index";
     }
 
-    @GetMapping(value = "/404")
-    public String to404() {
-        return "404";
+
+    @RequestMapping("/error")
+    public String toErrorPage() {
+        return "error-404";
     }
 
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public String handle404(NoHandlerFoundException ex) {
-        return "redirect:/404";
+    @Override
+    public String getErrorPath() {
+        return "/error";
     }
-
 }

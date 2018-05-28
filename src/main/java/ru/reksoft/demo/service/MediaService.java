@@ -1,6 +1,8 @@
 package ru.reksoft.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.domain.MediaEntity;
@@ -21,17 +23,24 @@ public class MediaService {
         this.mediaRepository = mediaRepository;
     }
 
+
+    /**
+     * Return list of media
+     *
+     * @return list of media
+     */
     @Transactional(readOnly = true)
-    public List<MediaShortDTO> getMediaList() {
-        List<MediaEntity> entities = mediaRepository.findAll();
-        List<MediaShortDTO> dtos = new ArrayList<>();
-        for (MediaEntity entity: entities) dtos.add(new MediaShortDTO(entity));
-        return dtos;
+    public Page<MediaShortDTO> getMediaList() {
+        return mediaRepository.findAll(Pageable.unpaged()).map(MediaShortDTO::new); //TODO: add pagination!
     }
 
+    /**
+     * Return media by id
+     *
+     * @return media
+     */
     @Transactional(readOnly = true)
     public MediaDTO getMedia(Integer id) {
-        MediaEntity entity = mediaRepository.getOne(id);
-        return new MediaDTO(entity);
+        return new MediaDTO(mediaRepository.getOne(id)); //TODO: add NullPointerException handling!
     }
 }

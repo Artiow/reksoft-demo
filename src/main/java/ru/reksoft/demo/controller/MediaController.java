@@ -1,9 +1,9 @@
 package ru.reksoft.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.MediaDTO;
 import ru.reksoft.demo.dto.MediaShortDTO;
 import ru.reksoft.demo.service.MediaService;
@@ -22,12 +22,22 @@ public class MediaController {
     }
 
 
-    @RequestMapping(value = "/list")
-    public List<MediaShortDTO> getMediaList() {
+    /**
+     * Return list of media with base information for current filter
+     *
+     * @return page with media
+     */
+    @GetMapping(value = "/list")
+    public Page<MediaShortDTO> getMediaList() {
         return mediaService.getMediaList();
     }
 
-    @RequestMapping(value = "/m{id}")
+    /**
+     * Return media by id with full information
+     *
+     * @return media
+     */
+    @GetMapping(value = "/{id}")
     public MediaDTO getMedia(@PathVariable int id) {
         return mediaService.getMedia(id);
     }

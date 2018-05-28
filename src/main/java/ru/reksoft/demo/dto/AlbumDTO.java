@@ -3,11 +3,8 @@ package ru.reksoft.demo.dto;
 import ru.reksoft.demo.domain.AlbumEntity;
 import ru.reksoft.demo.domain.CompositionEntity;
 import ru.reksoft.demo.domain.GenreEntity;
-import ru.reksoft.demo.domain.PictureEntity;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 
 public class AlbumDTO {
 
@@ -19,8 +16,8 @@ public class AlbumDTO {
     private SingerDTO singer;
     private PictureDTO picture;
 
-    private Collection<GenreDTO> genres;
-    private Collection<CompositionDTO> compositions;
+    private List<GenreDTO> genres;
+    private List<CompositionDTO> compositions;
 
 
     public AlbumDTO(AlbumEntity entity) {
@@ -31,17 +28,17 @@ public class AlbumDTO {
         label = new LabelDTO(entity.getLabel());
         singer = new SingerDTO(entity.getSinger());
 
-        PictureEntity pictureEntity = entity.getPicture();
-        if (pictureEntity != null) picture = new PictureDTO(pictureEntity);
+        try { picture = new PictureDTO(entity.getPicture()); } catch (NullPointerException e) { picture = null; }
 
         Collection<GenreEntity> genreEntities = entity.getGenres();
         genres = new ArrayList<>(genreEntities.size());
         for(GenreEntity e: genreEntities) genres.add(new GenreDTO(e));
+        Collections.sort(genres);
 
-//        TODO: sort by position
         Collection<CompositionEntity> compositionEntities = entity.getCompositions();
         compositions = new ArrayList<>(compositionEntities.size());
         for(CompositionEntity e: compositionEntities) compositions.add(new CompositionDTO(e));
+        Collections.sort(compositions);
     }
 
 

@@ -2,7 +2,6 @@ package ru.reksoft.demo.dto;
 
 import ru.reksoft.demo.domain.AlbumEntity;
 import ru.reksoft.demo.domain.MediaEntity;
-import ru.reksoft.demo.domain.PictureEntity;
 
 public class MediaShortDTO {
 
@@ -24,8 +23,7 @@ public class MediaShortDTO {
         singer = albumEntity.getSinger().getName();
         album = albumEntity.getName();
 
-        PictureEntity pictureEntity = albumEntity.getPicture();
-        if (pictureEntity != null) picture = new PictureDTO(pictureEntity);
+        try { picture = new PictureDTO(albumEntity.getPicture()); } catch (NullPointerException e) { picture = null; }
     }
 
 
@@ -52,5 +50,4 @@ public class MediaShortDTO {
     public PictureDTO getPicture() {
         return picture;
     }
-
 }

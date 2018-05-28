@@ -12,7 +12,6 @@ public class UserDTO {
     private String phone;
     private String address;
 
-    private UserRoleDTO role;
 
     public UserDTO() {
 
@@ -89,15 +88,6 @@ public class UserDTO {
 
     public UserDTO setAddress(String address) {
         this.address = address;
-        return this;
-    }
-
-    public UserRoleDTO getRole() {
-        return role;
-    }
-
-    public UserDTO setRole(UserRoleDTO role) {
-        this.role = role;
         return this;
     }
 

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.reksoft.demo.dto.MediaDTO;
 import ru.reksoft.demo.dto.MediaShortDTO;
 import ru.reksoft.demo.service.MediaService;
 
@@ -21,13 +22,13 @@ public class MediaController {
     }
 
 
-    @RequestMapping(value = "/list")
-    public List<MediaShortDTO> getMedia() {
-        return mediaService.getMedia();
+    @RequestMapping(value = "/medialist")
+    public List<MediaShortDTO> getMediaList() {
+        return mediaService.getMediaList();
     }
 
-    @RequestMapping(value = "/id{id}")
-    public MediaShortDTO getMedia(@PathVariable int id) {
+    @RequestMapping(value = "/media{id}")
+    public MediaDTO getMedia(@PathVariable int id) {
         return mediaService.getMedia(id);
     }
 

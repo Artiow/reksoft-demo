@@ -3,7 +3,6 @@ package ru.reksoft.demo.domain;
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Collection;
-import java.util.Objects;
 
 @Entity
 @Table(name = "album", schema = "demo", catalog = "reksoft")

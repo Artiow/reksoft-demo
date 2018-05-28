@@ -6,15 +6,17 @@ public class MediaDTO {
 
     private Integer id;
     private Integer price;
-//    TODO: add Album and MediaType!
+    private String type;
 
-    public MediaDTO() {
+    private AlbumDTO album;
 
-    }
 
     public MediaDTO(MediaEntity entity) {
         id = entity.getId();
         price = entity.getPrice();
+        type = entity.getType().getName();
+
+        album = new AlbumDTO(entity.getAlbum());
     }
 
 
@@ -22,17 +24,15 @@ public class MediaDTO {
         return id;
     }
 
-    public MediaDTO setId(Integer id) {
-        this.id = id;
-        return this;
-    }
-
     public Integer getPrice() {
         return price;
     }
 
-    public MediaDTO setPrice(Integer price) {
-        this.price = price;
-        return this;
+    public String getType() {
+        return type;
+    }
+
+    public AlbumDTO getAlbum() {
+        return album;
     }
 }

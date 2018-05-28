@@ -60,6 +60,8 @@ public class CurrentBasketEntity {
     }
 
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     public UserEntity getUser() {
         return user;
     }
@@ -68,6 +70,8 @@ public class CurrentBasketEntity {
         this.user = user;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "media_id", referencedColumnName = "id", nullable = false)
     public MediaEntity getMedia() {
         return media;
     }

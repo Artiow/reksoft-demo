@@ -71,6 +71,8 @@ public class MediaOrderEntity {
     }
 
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     public MediaEntity getMedia() {
         return media;
     }
@@ -79,6 +81,8 @@ public class MediaOrderEntity {
         this.media = media;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
     public OrderEntity getOrder() {
         return order;
     }

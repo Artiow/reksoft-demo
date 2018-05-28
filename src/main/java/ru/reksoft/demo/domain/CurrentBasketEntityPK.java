@@ -13,6 +13,8 @@ public class CurrentBasketEntityPK implements Serializable {
     private Integer mediaId;
 
 
+    @Id
+    @Column(name = "user_id", nullable = false)
     public Integer getUserId() {
         return userId;
     }
@@ -21,6 +23,8 @@ public class CurrentBasketEntityPK implements Serializable {
         this.userId = userId;
     }
 
+    @Id
+    @Column(name = "media_id", nullable = false)
     public Integer getMediaId() {
         return mediaId;
     }

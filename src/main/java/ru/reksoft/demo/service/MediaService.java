@@ -5,13 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.reksoft.demo.domain.MediaEntity;
 import ru.reksoft.demo.dto.MediaDTO;
 import ru.reksoft.demo.dto.MediaShortDTO;
 import ru.reksoft.demo.repository.MediaRepository;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class MediaService {

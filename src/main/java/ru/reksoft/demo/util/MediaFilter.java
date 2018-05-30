@@ -1,6 +1,7 @@
-package ru.reksoft.demo.service.util;
+package ru.reksoft.demo.util;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import ru.reksoft.demo.domain.MediaEntity;
 
@@ -11,19 +12,30 @@ import javax.persistence.criteria.Root;
 
 public class MediaFilter implements Specification<MediaEntity> {
 
+    private Boolean pagination;
     private Integer pageNum;
     private Integer pageSize;
 
 
     public MediaFilter() {
-
+        pagination = false;
     }
 
     public MediaFilter(Integer pageNum, Integer pageSize) {
+        pagination = true;
         this.pageNum = pageNum;
         this.pageSize = pageSize;
     }
 
+
+    public Boolean isPagination() {
+        return pagination;
+    }
+
+    public MediaFilter setPagination(Boolean pagination) {
+        this.pagination = pagination;
+        return this;
+    }
 
     public Integer getPageNum() {
         return pageNum;
@@ -43,10 +55,11 @@ public class MediaFilter implements Specification<MediaEntity> {
         return this;
     }
 
-
-    public PageRequest getPageRequest() {
-        return PageRequest.of(pageNum, pageSize);
+    public Pageable getPageRequest() {
+        if (!pagination) return Pageable.unpaged();
+        else return PageRequest.of(pageNum, pageSize);
     }
+
 
     @Override
     public Predicate toPredicate(Root<MediaEntity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {

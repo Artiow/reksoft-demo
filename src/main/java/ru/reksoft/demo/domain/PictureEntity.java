@@ -2,8 +2,6 @@ package ru.reksoft.demo.domain;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.Objects;
 
 @Entity
 @Table(name = "picture", schema = "demo", catalog = "reksoft")

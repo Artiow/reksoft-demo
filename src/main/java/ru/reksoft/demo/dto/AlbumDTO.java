@@ -5,13 +5,14 @@ import ru.reksoft.demo.domain.CompositionEntity;
 import ru.reksoft.demo.domain.GenreEntity;
 import ru.reksoft.demo.domain.PictureEntity;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class AlbumDTO {
 
     private Integer id;
     private String name;
-    private Date release;
+    private LocalDate release;
 
     private LabelDTO label;
     private SingerDTO singer;
@@ -24,7 +25,7 @@ public class AlbumDTO {
     public AlbumDTO(AlbumEntity entity) {
         id = entity.getId();
         name = entity.getName();
-        release = new Date(entity.getRelease().getTime());
+        release = entity.getRelease().toLocalDateTime().toLocalDate();
 
         label = new LabelDTO(entity.getLabel());
         singer = new SingerDTO(entity.getSinger());
@@ -52,7 +53,7 @@ public class AlbumDTO {
         return name;
     }
 
-    public Date getRelease() {
+    public LocalDate getRelease() {
         return release;
     }
 

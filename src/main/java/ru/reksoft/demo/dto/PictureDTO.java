@@ -2,7 +2,7 @@ package ru.reksoft.demo.dto;
 
 import ru.reksoft.demo.domain.PictureEntity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class PictureDTO {
 
@@ -10,7 +10,7 @@ public class PictureDTO {
     private String url;
     private String name;
     private Integer size;
-    private Date uploaded;
+    private LocalDateTime uploaded;
 
 
     public PictureDTO(PictureEntity entity) {
@@ -19,7 +19,7 @@ public class PictureDTO {
         name = entity.getName();
         size = entity.getSize();
 
-        uploaded = new Date(entity.getUploaded().getTime());
+        uploaded = entity.getUploaded().toLocalDateTime();
     }
 
 
@@ -39,7 +39,7 @@ public class PictureDTO {
         return size;
     }
 
-    public Date getUploaded() {
+    public LocalDateTime getUploaded() {
         return uploaded;
     }
 }

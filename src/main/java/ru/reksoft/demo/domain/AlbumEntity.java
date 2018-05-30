@@ -2,6 +2,7 @@ package ru.reksoft.demo.domain;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Collection;
 
 @Entity
@@ -10,7 +11,7 @@ public class AlbumEntity {
 
     private Integer id;
     private String name;
-    private Date release;
+    private Timestamp release;
 
     private LabelEntity label;
     private SingerEntity singer;
@@ -44,11 +45,11 @@ public class AlbumEntity {
 
     @Basic
     @Column(name = "release", nullable = false)
-    public Date getRelease() {
+    public Timestamp getRelease() {
         return release;
     }
 
-    public void setRelease(Date release) {
+    public void setRelease(Timestamp release) {
         this.release = release;
     }
 

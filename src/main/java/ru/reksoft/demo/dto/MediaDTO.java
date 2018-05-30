@@ -6,16 +6,16 @@ public class MediaDTO {
 
     private Integer id;
     private Integer price;
-    private String type;
 
+    private MediaTypeDTO type;
     private AlbumDTO album;
 
 
     public MediaDTO(MediaEntity entity) {
         id = entity.getId();
         price = entity.getPrice();
-        type = entity.getType().getName();
 
+        type = new MediaTypeDTO(entity.getType());
         album = new AlbumDTO(entity.getAlbum());
     }
 
@@ -28,7 +28,7 @@ public class MediaDTO {
         return price;
     }
 
-    public String getType() {
+    public MediaTypeDTO getType() {
         return type;
     }
 

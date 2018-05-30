@@ -2,12 +2,13 @@ package ru.reksoft.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.dto.MediaDTO;
 import ru.reksoft.demo.dto.MediaShortDTO;
 import ru.reksoft.demo.repository.MediaRepository;
+import ru.reksoft.demo.service.util.MediaFilter;
 
 @Service
 public class MediaService {
@@ -21,17 +22,18 @@ public class MediaService {
 
 
     /**
-     * Return list of media
+     * Returns page with filtered media
      *
-     * @return list of media
+     * @param filter - filter for media
+     * @return media page
      */
     @Transactional(readOnly = true)
-    public Page<MediaShortDTO> getMediaList() {
-        return mediaRepository.findAll(Pageable.unpaged()).map(MediaShortDTO::new); //TODO: add pagination!
+    public Page<MediaShortDTO> getMediaList(MediaFilter filter) {
+        return mediaRepository.findAll(filter, filter.getPageRequest()).map(MediaShortDTO::new);
     }
 
     /**
-     * Return media by id
+     * Returns media by id
      *
      * @return media
      */

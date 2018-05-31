@@ -1,11 +1,16 @@
 package ru.reksoft.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Collection;
 
 public class MediaFilterDTO {
 
     private Integer pageSize;
     private Integer pageNum;
+
+    private String searchType;
+    private String searchString;
 
     private Collection<String> typeCodes;
 
@@ -25,6 +30,24 @@ public class MediaFilterDTO {
 
     public MediaFilterDTO setPageNum(Integer pageNum) {
         this.pageNum = pageNum;
+        return this;
+    }
+
+    public String getSearchType() {
+        return searchType;
+    }
+
+    public MediaFilterDTO setSearchType(String searchType) {
+        this.searchType = searchType;
+        return this;
+    }
+
+    public String getSearchString() {
+        return searchString;
+    }
+
+    public MediaFilterDTO setSearchString(String searchString) {
+        this.searchString = searchString;
         return this;
     }
 

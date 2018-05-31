@@ -1,15 +1,15 @@
 package ru.reksoft.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.reksoft.demo.domain.MediaEntity;
 import ru.reksoft.demo.dto.MediaDTO;
+import ru.reksoft.demo.dto.MediaFilterDTO;
 import ru.reksoft.demo.dto.MediaShortDTO;
+import ru.reksoft.demo.dto.PageDTO;
 import ru.reksoft.demo.repository.MediaRepository;
-
-import java.util.ArrayList;
-import java.util.List;
+import ru.reksoft.demo.service.util.MediaFilter;
 
 @Service
 public class MediaService {
@@ -21,17 +21,31 @@ public class MediaService {
         this.mediaRepository = mediaRepository;
     }
 
+
+    /**
+     * Returns page with filtered media
+     *
+     * @param filterDTO - filter for media
+     * @return media page
+     */
     @Transactional(readOnly = true)
-    public List<MediaShortDTO> getMediaList() {
-        List<MediaEntity> entities = mediaRepository.findAll();
-        List<MediaShortDTO> dtos = new ArrayList<>();
-        for (MediaEntity entity: entities) dtos.add(new MediaShortDTO(entity));
-        return dtos;
+    public PageDTO<MediaShortDTO> getMediaList(MediaFilterDTO filterDTO) {
+        MediaFilter filter;
+        if (filterDTO != null)
+            filter = new MediaFilter(filterDTO);
+        else
+            filter = new MediaFilter();
+
+        return new PageDTO<>(mediaRepository.findAll(filter, filter.getPageRequest()).map(MediaShortDTO::new));
     }
 
+    /**
+     * Returns media by id
+     *
+     * @return media
+     */
     @Transactional(readOnly = true)
     public MediaDTO getMedia(Integer id) {
-        MediaEntity entity = mediaRepository.getOne(id);
-        return new MediaDTO(entity);
+        return new MediaDTO(mediaRepository.getOne(id));
     }
 }

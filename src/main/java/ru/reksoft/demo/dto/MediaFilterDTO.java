@@ -4,20 +4,11 @@ import java.util.Collection;
 
 public class MediaFilterDTO {
 
-    private Integer pageNum;
     private Integer pageSize;
+    private Integer pageNum;
 
     private Collection<String> typeCodes;
 
-
-    public Integer getPageNum() {
-        return pageNum;
-    }
-
-    public MediaFilterDTO setPageNum(Integer pageNum) {
-        this.pageNum = pageNum;
-        return this;
-    }
 
     public Integer getPageSize() {
         return pageSize;
@@ -25,6 +16,15 @@ public class MediaFilterDTO {
 
     public MediaFilterDTO setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+        return this;
+    }
+
+    public Integer getPageNum() {
+        return pageNum;
+    }
+
+    public MediaFilterDTO setPageNum(Integer pageNum) {
+        this.pageNum = pageNum;
         return this;
     }
 

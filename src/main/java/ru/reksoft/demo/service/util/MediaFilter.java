@@ -13,11 +13,12 @@ import ru.reksoft.demo.dto.MediaTypeDTO;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class MediaFilter implements Specification<MediaEntity> {
 
-    private Integer pageNum;
     private Integer pageSize;
+    private Integer pageNum;
 
     private Collection<String> typeCodes;
 
@@ -47,11 +48,11 @@ public class MediaFilter implements Specification<MediaEntity> {
 
     @Override
     public Predicate toPredicate(Root<MediaEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-        if (typeCodes != null) { //TODO: what if null?
-            Join<MediaEntity, MediaTypeEntity> join = root.join(MediaEntity_.type);
-            return join.get(MediaTypeEntity_.code).in(typeCodes);
-        }
+        Collection<Predicate> predicates = new ArrayList<>();
 
-        return null;
+        if (typeCodes != null)
+            predicates.add(cb.and(root.join(MediaEntity_.type).get(MediaTypeEntity_.code).in(typeCodes)));
+
+        return cb.and(predicates.toArray(new Predicate[0]));
     }
 }

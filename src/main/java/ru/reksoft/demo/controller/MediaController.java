@@ -21,7 +21,7 @@ public class MediaController {
 
 
     /**
-     * Return list of media with base information for current filter
+     * Return total list of media
      *
      * @return page with media
      */
@@ -30,9 +30,44 @@ public class MediaController {
         return mediaService.getMediaList(new MediaFilterDTO());
     }
 
+    /**
+     * Return list of media with base information for current filter
+     *
+     * @return page with media
+     */
     @PostMapping(value = "/list")
     public PageDTO<MediaShortDTO> getMediaList(@RequestBody MediaFilterDTO filter) {
         return mediaService.getMediaList(filter);
+    }
+
+    /**
+     * Return list of media by singer by id
+     *
+     * @return page with media
+     */
+    @GetMapping(value = "/album{singerId}")
+    public PageDTO<MediaShortDTO> getMediaListBySinger(@PathVariable int singerId) {
+        return mediaService.getMediaListByAlbum(singerId);
+    }
+
+    /**
+     * Return list of media by label by id
+     *
+     * @return page with media
+     */
+    @GetMapping(value = "/album{labelId}")
+    public PageDTO<MediaShortDTO> getMediaListByLabel(@PathVariable int labelId) {
+        return mediaService.getMediaListByAlbum(labelId);
+    }
+
+    /**
+     * Return list of media by album by id
+     *
+     * @return page with media
+     */
+    @GetMapping(value = "/album{albumId}")
+    public PageDTO<MediaShortDTO> getMediaListByAlbum(@PathVariable int albumId) {
+        return mediaService.getMediaListByAlbum(albumId);
     }
 
     /**
@@ -44,5 +79,4 @@ public class MediaController {
     public MediaDTO getMedia(@PathVariable int id) {
         return mediaService.getMedia(id);
     }
-
 }

@@ -2,6 +2,7 @@ package ru.reksoft.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.dto.MediaDTO;
@@ -37,6 +38,39 @@ public class MediaService {
             filter = new MediaFilter();
 
         return new PageDTO<>(mediaRepository.findAll(filter, filter.getPageRequest()).map(MediaShortDTO::new));
+    }
+
+    /**
+     * Returns page with media by singer by id
+     *
+     * @param singerId - singer id
+     * @return media page
+     */
+    @Transactional(readOnly = true)
+    public PageDTO<MediaShortDTO> getMediaListBySinger(Integer singerId) {
+        return null;
+    }
+
+    /**
+     * Returns page with media by label by id
+     *
+     * @param labelId - label id
+     * @return media page
+     */
+    @Transactional(readOnly = true)
+    public PageDTO<MediaShortDTO> getMediaListByLabel(Integer labelId) {
+        return null;
+    }
+
+    /**
+     * Returns page with media by album by id
+     *
+     * @param albumId - album id
+     * @return media page
+     */
+    @Transactional(readOnly = true)
+    public PageDTO<MediaShortDTO> getMediaListByAlbum(Integer albumId) {
+        return null;
     }
 
     /**

@@ -7,7 +7,7 @@ public class MediaFilterDTO {
     private Integer pageNum;
     private Integer pageSize;
 
-    private Collection<MediaTypeDTO> types;
+    private Collection<String> typeCodes;
 
 
     public Integer getPageNum() {
@@ -28,12 +28,12 @@ public class MediaFilterDTO {
         return this;
     }
 
-    public Collection<MediaTypeDTO> getTypes() {
-        return types;
+    public Collection<String> getTypeCodes() {
+        return typeCodes;
     }
 
-    public MediaFilterDTO setTypes(Collection<MediaTypeDTO> types) {
-        this.types = types;
+    public MediaFilterDTO setTypeCodes(Collection<String> typeCodes) {
+        this.typeCodes = typeCodes;
         return this;
     }
 }

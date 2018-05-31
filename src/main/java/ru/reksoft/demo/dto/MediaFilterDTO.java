@@ -1,7 +1,5 @@
 package ru.reksoft.demo.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Collection;
 
 public class MediaFilterDTO {
@@ -13,6 +11,7 @@ public class MediaFilterDTO {
     private String searchString;
 
     private Collection<String> typeCodes;
+    private Collection<String> genreCodes;
 
 
     public Integer getPageSize() {
@@ -57,6 +56,15 @@ public class MediaFilterDTO {
 
     public MediaFilterDTO setTypeCodes(Collection<String> typeCodes) {
         this.typeCodes = typeCodes;
+        return this;
+    }
+
+    public Collection<String> getGenreCodes() {
+        return genreCodes;
+    }
+
+    public MediaFilterDTO setGenreCodes(Collection<String> genreCodes) {
+        this.genreCodes = genreCodes;
         return this;
     }
 }

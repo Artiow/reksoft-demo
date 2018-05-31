@@ -1,0 +1,12 @@
+INSERT INTO demo.genre (id, name, code) VALUES (1, 'инди-рок', 'indie_rock');
+INSERT INTO demo.genre (id, name, code) VALUES (8, 'мидвест-эмо', 'midwest');
+INSERT INTO demo.genre (id, name, code) VALUES (4, 'поп-панк', 'pop_punk');
+INSERT INTO demo.genre (id, name, code) VALUES (2, 'инди-поп', 'indie_pop');
+INSERT INTO demo.genre (id, name, code) VALUES (3, 'дрим-поп', 'dream_pop');
+INSERT INTO demo.genre (id, name, code) VALUES (7, 'эмо', 'emo');
+INSERT INTO demo.genre (id, name, code) VALUES (5, 'пост-панк', 'post_punk');
+INSERT INTO demo.genre (id, name, code) VALUES (6, 'альтернативный рок', 'alternative');
+INSERT INTO demo.genre (id, name, code) VALUES (9, 'скримо', 'screamo');
+INSERT INTO demo.genre (id, name, code) VALUES (10, 'скрамз', 'skramz');
+INSERT INTO demo.genre (id, name, code) VALUES (11, 'художественная декламация', 'spoken_word');
+INSERT INTO demo.genre (id, name, code) VALUES (12, 'математический рок', 'math_rock');

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class MediaFilter implements Specification<MediaEntity> {
+
     private enum MediaSearchType {
         BY_SINGER("bySinger"),
         BY_LABEL("byLabel"),
@@ -40,6 +41,7 @@ public class MediaFilter implements Specification<MediaEntity> {
     private String searchString;
 
     private Collection<String> typeCodes;
+    private Collection<String> genreCodes;
 
 
     public MediaFilter() {
@@ -48,6 +50,7 @@ public class MediaFilter implements Specification<MediaEntity> {
 
     public MediaFilter(MediaFilterDTO dto) {
         configureSearchByString(dto);
+        configureSearchByGenres(dto);
         configureSearchByType(dto);
         configurePagination(dto);
     }
@@ -67,6 +70,11 @@ public class MediaFilter implements Specification<MediaEntity> {
             this.searchType = MediaSearchType.getEnum(searchType);
             this.searchString = searchString;
         }
+    }
+
+    private void configureSearchByGenres(MediaFilterDTO dto) {
+        Collection<String> genreCodes = dto.getGenreCodes();
+        if ((genreCodes != null) && (!genreCodes.isEmpty())) this.genreCodes = new ArrayList<>(genreCodes);
     }
 
     private void configureSearchByType(MediaFilterDTO dto) {
@@ -115,6 +123,9 @@ public class MediaFilter implements Specification<MediaEntity> {
                     break;
             }
         }
+
+        if (typeCodes != null)
+            predicates.add(cb.and(root.join(MediaEntity_.album).join(AlbumEntity_.genres).get(GenreEntity_.code).in(genreCodes)));
 
         if (typeCodes != null)
             predicates.add(cb.and(root.join(MediaEntity_.type).get(MediaTypeEntity_.code).in(typeCodes)));

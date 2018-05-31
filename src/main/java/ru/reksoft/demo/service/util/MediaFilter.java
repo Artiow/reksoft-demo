@@ -11,6 +11,7 @@ import ru.reksoft.demo.dto.MediaFilterDTO;
 import ru.reksoft.demo.dto.MediaTypeDTO;
 
 import javax.persistence.criteria.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,26 +24,33 @@ public class MediaFilter implements Specification<MediaEntity> {
     private Collection<String> typeCodes;
 
 
+    public MediaFilter() {
+
+    }
+
     public MediaFilter(MediaFilterDTO dto) {
         Integer pageNum = dto.getPageNum();
         Integer pageSize = dto.getPageSize();
 
-        if (pageSize == null)
-            throw new IllegalArgumentException("Page size must not be null!");
-        if ((pageSize > 0) && (pageNum == null))
-            throw new IllegalArgumentException("Page index must not be null!");
-        if ((pageSize > 0) && (pageNum < 0))
-            throw new IllegalArgumentException("Page index must not be less than zero!");
+        if (pageSize != null) {
+            if (pageSize < 1)
+                throw new IllegalArgumentException("Page index must not be less than one!");
+            if (pageNum == null)
+                throw new IllegalArgumentException("Page index must not be null!");
+            if (pageNum < 0)
+                throw new IllegalArgumentException("Page index must not be less than zero!");
 
-        this.pageSize = pageSize;
-        this.pageNum = pageNum;
+            this.pageSize = pageSize;
+            this.pageNum = pageNum;
+        }
 
         Collection<String> typeCodes = dto.getTypeCodes();
         if ((typeCodes != null) && (!typeCodes.isEmpty())) this.typeCodes = new ArrayList<>(typeCodes);
     }
 
+
     public Pageable getPageRequest() {
-        if (pageSize == 0) return Pageable.unpaged();
+        if (pageSize == null) return Pageable.unpaged();
         return PageRequest.of(pageNum, pageSize);
     }
 

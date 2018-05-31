@@ -30,7 +30,12 @@ public class MediaService {
      */
     @Transactional(readOnly = true)
     public PageDTO<MediaShortDTO> getMediaList(MediaFilterDTO filterDTO) {
-        MediaFilter filter = new MediaFilter(filterDTO);
+        MediaFilter filter;
+        if (filterDTO != null)
+            filter = new MediaFilter(filterDTO);
+        else
+            filter = new MediaFilter();
+
         return new PageDTO<>(mediaRepository.findAll(filter, filter.getPageRequest()).map(MediaShortDTO::new));
     }
 

@@ -1,11 +1,11 @@
 package ru.reksoft.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.MediaDTO;
 import ru.reksoft.demo.dto.MediaFilterDTO;
 import ru.reksoft.demo.dto.MediaShortDTO;
+import ru.reksoft.demo.dto.PageDTO;
 import ru.reksoft.demo.service.MediaService;
 
 @RestController
@@ -26,12 +26,12 @@ public class MediaController {
      * @return page with media
      */
     @GetMapping(value = "/list")
-    public Page<MediaShortDTO> getMediaList() {
+    public PageDTO<MediaShortDTO> getMediaList() {
         return mediaService.getMediaList(new MediaFilterDTO());
     }
 
     @PostMapping(value = "/list")
-    public Page<MediaShortDTO> getMediaList(@RequestBody MediaFilterDTO filter) {
+    public PageDTO<MediaShortDTO> getMediaList(@RequestBody MediaFilterDTO filter) {
         return mediaService.getMediaList(filter);
     }
 

@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.dto.MediaDTO;
 import ru.reksoft.demo.dto.MediaFilterDTO;
 import ru.reksoft.demo.dto.MediaShortDTO;
+import ru.reksoft.demo.dto.PageDTO;
 import ru.reksoft.demo.repository.MediaRepository;
 import ru.reksoft.demo.service.util.MediaFilter;
 
@@ -28,9 +29,9 @@ public class MediaService {
      * @return media page
      */
     @Transactional(readOnly = true)
-    public Page<MediaShortDTO> getMediaList(MediaFilterDTO filterDTO) {
+    public PageDTO<MediaShortDTO> getMediaList(MediaFilterDTO filterDTO) {
         MediaFilter filter = new MediaFilter(filterDTO);
-        return mediaRepository.findAll(filter, filter.getPageRequest()).map(MediaShortDTO::new);
+        return new PageDTO<>(mediaRepository.findAll(filter, filter.getPageRequest()).map(MediaShortDTO::new));
     }
 
     /**

@@ -3,9 +3,7 @@ package ru.reksoft.demo.service.util;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import ru.reksoft.demo.domain.MediaEntity;
-import ru.reksoft.demo.domain.MediaEntity_;
-import ru.reksoft.demo.domain.MediaTypeEntity_;
+import ru.reksoft.demo.domain.*;
 import ru.reksoft.demo.dto.MediaFilterDTO;
 
 import javax.persistence.criteria.*;
@@ -99,9 +97,24 @@ public class MediaFilter implements Specification<MediaEntity> {
         return PageRequest.of(pageNum, pageSize);
     }
 
+
     @Override
     public Predicate toPredicate(Root<MediaEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
         Collection<Predicate> predicates = new ArrayList<>();
+
+        if (searchType != null) {
+            switch (searchType) {
+                case BY_SINGER:
+                    predicates.add(cb.and(root.join(MediaEntity_.album).join(AlbumEntity_.singer).get(SingerEntity_.name).in(searchString)));
+                    break;
+                case BY_LABEL:
+                    predicates.add(cb.and(root.join(MediaEntity_.album).join(AlbumEntity_.label).get(LabelEntity_.name).in(searchString)));
+                    break;
+                case BY_ALBUM:
+                    predicates.add(cb.and(root.join(MediaEntity_.album).get(AlbumEntity_.name).in(searchString)));
+                    break;
+            }
+        }
 
         if (typeCodes != null)
             predicates.add(cb.and(root.join(MediaEntity_.type).get(MediaTypeEntity_.code).in(typeCodes)));

@@ -124,7 +124,7 @@ public class MediaFilter implements Specification<MediaEntity> {
             }
         }
 
-        if (typeCodes != null)
+        if (genreCodes != null)
             predicates.add(cb.and(root.join(MediaEntity_.album).join(AlbumEntity_.genres).get(GenreEntity_.code).in(genreCodes)));
 
         if (typeCodes != null)

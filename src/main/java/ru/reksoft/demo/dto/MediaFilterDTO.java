@@ -1,21 +1,23 @@
 package ru.reksoft.demo.dto;
 
+import ru.reksoft.demo.util.MediaSearchType;
+
 import java.util.Collection;
 
 public class MediaFilterDTO extends PageDividerDTO {
 
-    private String searchType;
+    private MediaSearchType searchType;
     private String searchString;
 
     private Collection<String> typeCodes;
     private Collection<String> genreCodes;
 
 
-    public String getSearchType() {
+    public MediaSearchType getSearchType() {
         return searchType;
     }
 
-    public MediaFilterDTO setSearchType(String searchType) {
+    public MediaFilterDTO setSearchType(MediaSearchType searchType) {
         this.searchType = searchType;
         return this;
     }

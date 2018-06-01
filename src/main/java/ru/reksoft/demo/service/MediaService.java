@@ -1,17 +1,24 @@
 package ru.reksoft.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.reksoft.demo.domain.*;
 import ru.reksoft.demo.dto.*;
 import ru.reksoft.demo.repository.MediaRepository;
-import ru.reksoft.demo.service.util.MediaFilter;
-import ru.reksoft.demo.service.util.PageDivider;
+import ru.reksoft.demo.util.MediaSearchType;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Service
-public class MediaService {
+public class MediaService extends AbstractService {
 
     private MediaRepository mediaRepository;
 
@@ -82,5 +89,88 @@ public class MediaService {
     @Transactional(readOnly = true)
     public MediaDTO getMedia(Integer id) {
         return new MediaDTO(mediaRepository.getOne(id));
+    }
+
+
+    public static class MediaFilter extends PageDivider implements Specification<MediaEntity> {
+
+        private MediaSearchType searchType;
+        private String searchString;
+
+        private Collection<String> typeCodes;
+        private Collection<String> genreCodes;
+
+
+        public MediaFilter() {
+            super();
+        }
+
+        public MediaFilter(MediaFilterDTO dto) {
+            super(dto);
+
+            configureSearchByString(dto);
+            configureSearchByGenres(dto);
+            configureSearchByType(dto);
+        }
+
+
+        private void configureSearchByString(MediaFilterDTO dto) {
+            if (searchType != null) {
+                String searchString = dto.getSearchString();
+                if (searchString == null) {
+                    throw new IllegalArgumentException("Search string must not be null!");
+                }
+                if (searchString.equals("")) {
+                    throw new IllegalArgumentException("Search string must not be empty!");
+                }
+
+                this.searchType = dto.getSearchType();
+                this.searchString = searchString;
+            }
+        }
+
+        private void configureSearchByGenres(MediaFilterDTO dto) {
+            Collection<String> genreCodes = dto.getGenreCodes();
+            if ((genreCodes != null) && (!genreCodes.isEmpty())) {
+                this.genreCodes = new ArrayList<>(genreCodes);
+            }
+        }
+
+        private void configureSearchByType(MediaFilterDTO dto) {
+            Collection<String> typeCodes = dto.getTypeCodes();
+            if ((typeCodes != null) && (!typeCodes.isEmpty())) {
+                this.typeCodes = new ArrayList<>(typeCodes);
+            }
+        }
+
+
+        @Override
+        public Predicate toPredicate(Root<MediaEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            Collection<Predicate> predicates = new ArrayList<>();
+
+            if (searchType != null) {
+                switch (searchType) {
+                    case BY_SINGER:
+                        predicates.add(cb.and(root.join(MediaEntity_.album).join(AlbumEntity_.singer).get(SingerEntity_.name).in(searchString)));
+                        break;
+                    case BY_LABEL:
+                        predicates.add(cb.and(root.join(MediaEntity_.album).join(AlbumEntity_.label).get(LabelEntity_.name).in(searchString)));
+                        break;
+                    case BY_ALBUM:
+                        predicates.add(cb.and(root.join(MediaEntity_.album).get(AlbumEntity_.name).in(searchString)));
+                        break;
+                }
+            }
+
+            if (genreCodes != null) {
+                predicates.add(cb.and(root.join(MediaEntity_.album).join(AlbumEntity_.genres).get(GenreEntity_.code).in(genreCodes)));
+            }
+
+            if (typeCodes != null) {
+                predicates.add(cb.and(root.join(MediaEntity_.type).get(MediaTypeEntity_.code).in(typeCodes)));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        }
     }
 }

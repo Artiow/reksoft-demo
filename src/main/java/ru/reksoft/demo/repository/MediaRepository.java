@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import ru.reksoft.demo.domain.MediaEntity;
 
 public interface MediaRepository extends JpaRepository<MediaEntity, Integer>, JpaSpecificationExecutor<MediaEntity> {
-    Page<MediaEntity> findByAlbum_Singer_Id(Integer id, Pageable pageable);
+    Page<MediaEntity> findByAlbumSingerId(Integer id, Pageable pageable);
 
-    Page<MediaEntity> findByAlbum_Label_Id(Integer id, Pageable pageable);
+    Page<MediaEntity> findByAlbumLabelId(Integer id, Pageable pageable);
 
-    Page<MediaEntity> findByAlbum_Id(Integer id, Pageable pageable);
+    Page<MediaEntity> findByAlbumId(Integer id, Pageable pageable);
 }

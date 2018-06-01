@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user", schema = "demo", catalog = "reksoft")
+@Table(name = "user")
 public class UserEntity {
 
     private Integer id;

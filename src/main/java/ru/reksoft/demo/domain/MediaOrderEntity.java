@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "media_order", schema = "demo", catalog = "reksoft")
+@Table(name = "media_order")
 public class MediaOrderEntity {
 
     @EmbeddedId
@@ -72,7 +72,7 @@ public class MediaOrderEntity {
 
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "media_id", referencedColumnName = "id", nullable = false)
     public MediaEntity getMedia() {
         return media;
     }

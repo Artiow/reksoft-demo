@@ -44,7 +44,7 @@ public class MediaService {
     @Transactional(readOnly = true)
     public PageDTO<MediaShortDTO> getMediaListBySinger(@NotNull Integer id, @NotNull PageDividerDTO pdDTO) {
         PageDivider pd = new PageDivider(pdDTO);
-        return new PageDTO<>(mediaRepository.findByAlbum_Singer_Id(id, pd.getPageRequest()).map(MediaShortDTO::new));
+        return new PageDTO<>(mediaRepository.findByAlbumSingerId(id, pd.getPageRequest()).map(MediaShortDTO::new));
     }
 
     /**
@@ -57,7 +57,7 @@ public class MediaService {
     @Transactional(readOnly = true)
     public PageDTO<MediaShortDTO> getMediaListByLabel(@NotNull Integer id, @NotNull PageDividerDTO pdDTO) {
         PageDivider pd = new PageDivider(pdDTO);
-        return new PageDTO<>(mediaRepository.findByAlbum_Label_Id(id, pd.getPageRequest()).map(MediaShortDTO::new));
+        return new PageDTO<>(mediaRepository.findByAlbumLabelId(id, pd.getPageRequest()).map(MediaShortDTO::new));
     }
 
     /**
@@ -70,7 +70,7 @@ public class MediaService {
     @Transactional(readOnly = true)
     public PageDTO<MediaShortDTO> getMediaListByAlbum(@NotNull Integer id, @NotNull PageDividerDTO pdDTO) {
         PageDivider pd = new PageDivider(pdDTO);
-        return new PageDTO<>(mediaRepository.findByAlbum_Id(id, pd.getPageRequest()).map(MediaShortDTO::new));
+        return new PageDTO<>(mediaRepository.findByAlbumId(id, pd.getPageRequest()).map(MediaShortDTO::new));
     }
 
 

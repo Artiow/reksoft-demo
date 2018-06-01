@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import java.util.Collection;
 
 @Entity
-@Table(name = "album", schema = "demo", catalog = "reksoft")
+@Table(name = "album")
 public class AlbumEntity {
 
     private Integer id;

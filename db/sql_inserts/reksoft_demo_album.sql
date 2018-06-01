@@ -1,4 +1,4 @@
-INSERT INTO demo.album (id, label_id, singer_id, name, picture_id, release, description) VALUES (1, 1, 1, 'Forgettable', null, '2015-01-01 00:00:00.000000', null);
-INSERT INTO demo.album (id, label_id, singer_id, name, picture_id, release, description) VALUES (2, 1, 2, 'Slow Burn', null, '2016-01-01 00:00:00.000000', null);
-INSERT INTO demo.album (id, label_id, singer_id, name, picture_id, release, description) VALUES (3, 2, 3, 'Swell', null, '2016-01-01 00:00:00.000000', null);
-INSERT INTO demo.album (id, label_id, singer_id, name, picture_id, release, description) VALUES (4, 3, 1, 'You''re Not As _____ As You Think', null, '2017-01-01 00:00:00.000000', null);
+INSERT INTO demo.album (label_id, singer_id, name, picture_id, release, description) VALUES (1, 1, 'Forgettable', null, '2015-01-01 00:00:00.000000', null);
+INSERT INTO demo.album (label_id, singer_id, name, picture_id, release, description) VALUES (1, 2, 'Slow Burn', null, '2016-01-01 00:00:00.000000', null);
+INSERT INTO demo.album (label_id, singer_id, name, picture_id, release, description) VALUES (2, 3, 'Swell', null, '2016-01-01 00:00:00.000000', null);
+INSERT INTO demo.album (label_id, singer_id, name, picture_id, release, description) VALUES (3, 1, 'You''re Not As _____ As You Think', null, '2017-01-01 00:00:00.000000', null);

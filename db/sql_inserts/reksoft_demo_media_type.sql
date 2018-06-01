@@ -1,3 +1,3 @@
-INSERT INTO demo.media_type (id, name, code, description) VALUES (1, 'CD', 'cd', 'compact disk');
-INSERT INTO demo.media_type (id, name, code, description) VALUES (2, 'Винил', 'vinyl', 'vinyl record / music plate');
-INSERT INTO demo.media_type (id, name, code, description) VALUES (3, 'Кассета', 'cassette', 'music cassette');
+INSERT INTO demo.media_type (name, code, description) VALUES ('CD', 'cd', 'compact disk');
+INSERT INTO demo.media_type (name, code, description) VALUES ('Винил', 'vinyl', 'vinyl record / music plate');
+INSERT INTO demo.media_type (name, code, description) VALUES ('Кассета', 'cassette', 'music cassette');

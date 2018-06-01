@@ -1,16 +1,14 @@
 package ru.reksoft.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.reksoft.demo.dto.MediaDTO;
-import ru.reksoft.demo.dto.MediaFilterDTO;
-import ru.reksoft.demo.dto.MediaShortDTO;
-import ru.reksoft.demo.dto.PageDTO;
+import ru.reksoft.demo.dto.*;
 import ru.reksoft.demo.repository.MediaRepository;
 import ru.reksoft.demo.service.util.MediaFilter;
+import ru.reksoft.demo.service.util.PageDivider;
+
+import javax.validation.constraints.NotNull;
 
 @Service
 public class MediaService {
@@ -30,48 +28,51 @@ public class MediaService {
      * @return media page
      */
     @Transactional(readOnly = true)
-    public PageDTO<MediaShortDTO> getMediaList(MediaFilterDTO filterDTO) {
-        MediaFilter filter;
-        if (filterDTO != null)
-            filter = new MediaFilter(filterDTO);
-        else
-            filter = new MediaFilter();
-
+    public PageDTO<MediaShortDTO> getMediaList(@NotNull MediaFilterDTO filterDTO) {
+        MediaFilter filter = new MediaFilter(filterDTO);
         return new PageDTO<>(mediaRepository.findAll(filter, filter.getPageRequest()).map(MediaShortDTO::new));
     }
 
+
     /**
-     * Returns page with media by singer by id
+     * Returns page with media by album by id
      *
-     * @param singerId - singer id
+     * @param id - album id
+     * @param pdDTO - page divider
      * @return media page
      */
     @Transactional(readOnly = true)
-    public PageDTO<MediaShortDTO> getMediaListBySinger(Integer singerId) {
-        return null;
+    public PageDTO<MediaShortDTO> getMediaListBySinger(@NotNull Integer id, @NotNull PageDividerDTO pdDTO) {
+        PageDivider pd = new PageDivider(pdDTO);
+        return new PageDTO<>(mediaRepository.findByAlbum_Singer_Id(id, pd.getPageRequest()).map(MediaShortDTO::new));
     }
 
     /**
      * Returns page with media by label by id
      *
-     * @param labelId - label id
+     * @param id - label id
+     * @param pdDTO - page divider
      * @return media page
      */
     @Transactional(readOnly = true)
-    public PageDTO<MediaShortDTO> getMediaListByLabel(Integer labelId) {
-        return null;
+    public PageDTO<MediaShortDTO> getMediaListByLabel(@NotNull Integer id, @NotNull PageDividerDTO pdDTO) {
+        PageDivider pd = new PageDivider(pdDTO);
+        return new PageDTO<>(mediaRepository.findByAlbum_Label_Id(id, pd.getPageRequest()).map(MediaShortDTO::new));
     }
 
     /**
      * Returns page with media by album by id
      *
-     * @param albumId - album id
+     * @param id - album id
+     * @param pdDTO - page divider
      * @return media page
      */
     @Transactional(readOnly = true)
-    public PageDTO<MediaShortDTO> getMediaListByAlbum(Integer albumId) {
-        return null;
+    public PageDTO<MediaShortDTO> getMediaListByAlbum(@NotNull Integer id, @NotNull PageDividerDTO pdDTO) {
+        PageDivider pd = new PageDivider(pdDTO);
+        return new PageDTO<>(mediaRepository.findByAlbum_Id(id, pd.getPageRequest()).map(MediaShortDTO::new));
     }
+
 
     /**
      * Returns media by id

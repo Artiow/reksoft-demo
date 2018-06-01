@@ -1,3 +1,7 @@
+
+
+-- create sequences
+
 create sequence demo.album_seq;
 
 create sequence demo.composition_seq;
@@ -21,6 +25,9 @@ create sequence demo.singer_id_seq;
 create sequence demo.user_seq;
 
 create sequence demo.user_role_seq;
+
+
+-- create tables
 
 create table demo.genre
 (
@@ -224,3 +231,5 @@ create table demo.current_basket
   constraint current_basket_user_id_media_id_pk
   primary key (user_id, media_id)
 );
+
+

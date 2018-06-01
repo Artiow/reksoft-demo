@@ -1,10 +1,13 @@
 package ru.reksoft.demo.util;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum MediaSearchType {
     BY_SINGER("bySinger"),
     BY_LABEL("byLabel"),
     BY_ALBUM("byAlbum");
 
+    @JsonValue
     private String code;
 
     MediaSearchType(String code) {
@@ -14,10 +17,5 @@ public enum MediaSearchType {
     @Override
     public String toString() {
         return code;
-    }
-
-    public static MediaSearchType getSearchType(String code) {
-        for(MediaSearchType v : values()) if(v.code.equalsIgnoreCase(code)) return v;
-        throw new IllegalArgumentException();
     }
 }

@@ -15,11 +15,11 @@ public class PageDTO<T> {
 
 
     public PageDTO(Page<T> page) {
-        content = new ArrayList<>(page.getContent());
-        pageNumber = page.getNumber();
-        numberOfElements = page.getNumberOfElements();
-        totalElements = (int) page.getTotalElements();
-        totalPages = page.getTotalPages();
+        this.content = new ArrayList<>(page.getContent());
+        this.pageNumber = page.getNumber();
+        this.numberOfElements = page.getNumberOfElements();
+        this.totalElements = (int) page.getTotalElements();
+        this.totalPages = page.getTotalPages();
     }
 
 

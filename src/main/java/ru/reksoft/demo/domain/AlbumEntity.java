@@ -1,7 +1,6 @@
 package ru.reksoft.demo.domain;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Collection;
 

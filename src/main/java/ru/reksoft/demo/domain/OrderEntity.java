@@ -3,7 +3,6 @@ package ru.reksoft.demo.domain;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.Objects;
 
 @Entity
 @Table(name = "order")

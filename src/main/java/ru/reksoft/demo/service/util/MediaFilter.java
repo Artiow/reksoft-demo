@@ -54,14 +54,17 @@ public class MediaFilter extends PageDivider implements Specification<MediaEntit
     private void configureSearchByString(MediaFilterDTO dto) {
         String searchType = dto.getSearchType();
         if (searchType != null) {
-            if(searchType.equals(""))
+            if(searchType.equals("")) {
                 throw new IllegalArgumentException("Search type must not be empty!");
+            }
 
             String searchString = dto.getSearchString();
-            if (searchString == null)
+            if (searchString == null) {
                 throw new IllegalArgumentException("Search string must not be null!");
-            if (searchString.equals(""))
+            }
+            if (searchString.equals("")) {
                 throw new IllegalArgumentException("Search string must not be empty!");
+            }
 
             this.searchType = MediaSearchType.getEnum(searchType);
             this.searchString = searchString;
@@ -70,12 +73,16 @@ public class MediaFilter extends PageDivider implements Specification<MediaEntit
 
     private void configureSearchByGenres(MediaFilterDTO dto) {
         Collection<String> genreCodes = dto.getGenreCodes();
-        if ((genreCodes != null) && (!genreCodes.isEmpty())) this.genreCodes = new ArrayList<>(genreCodes);
+        if ((genreCodes != null) && (!genreCodes.isEmpty())) {
+            this.genreCodes = new ArrayList<>(genreCodes);
+        }
     }
 
     private void configureSearchByType(MediaFilterDTO dto) {
         Collection<String> typeCodes = dto.getTypeCodes();
-        if ((typeCodes != null) && (!typeCodes.isEmpty())) this.typeCodes = new ArrayList<>(typeCodes);
+        if ((typeCodes != null) && (!typeCodes.isEmpty())) {
+            this.typeCodes = new ArrayList<>(typeCodes);
+        }
     }
 
 
@@ -97,11 +104,13 @@ public class MediaFilter extends PageDivider implements Specification<MediaEntit
             }
         }
 
-        if (genreCodes != null)
+        if (genreCodes != null) {
             predicates.add(cb.and(root.join(MediaEntity_.album).join(AlbumEntity_.genres).get(GenreEntity_.code).in(genreCodes)));
+        }
 
-        if (typeCodes != null)
+        if (typeCodes != null) {
             predicates.add(cb.and(root.join(MediaEntity_.type).get(MediaTypeEntity_.code).in(typeCodes)));
+        }
 
         return cb.and(predicates.toArray(new Predicate[0]));
     }

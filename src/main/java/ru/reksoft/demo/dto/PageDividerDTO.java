@@ -5,6 +5,7 @@ public class PageDividerDTO {
     private Integer pageSize;
     private Integer pageNum;
 
+
     public Integer getPageSize() {
         return pageSize;
     }

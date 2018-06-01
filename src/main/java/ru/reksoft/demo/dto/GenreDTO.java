@@ -12,9 +12,9 @@ public class GenreDTO implements Comparable<GenreDTO> {
 
 
     public GenreDTO(GenreEntity entity) {
-        id = entity.getId();
-        name = entity.getName();
-        code = entity.getCode();
+        this.id = entity.getId();
+        this.name = entity.getName();
+        this.code = entity.getCode();
     }
 
 

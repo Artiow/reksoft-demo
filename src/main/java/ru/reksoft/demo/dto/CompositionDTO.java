@@ -13,10 +13,10 @@ public class CompositionDTO implements Comparable<CompositionDTO> {
 
 
     public CompositionDTO(CompositionEntity entity) {
-        id = entity.getId();
-        name = entity.getName();
-        duration = entity.getDuration().toLocalTime();
-        position = entity.getPosition();
+        this.id = entity.getId();
+        this.name = entity.getName();
+        this.duration = entity.getDuration().toLocalTime();
+        this.position = entity.getPosition();
     }
 
 

@@ -9,8 +9,8 @@ public class MediaTypeDTO {
 
 
     public MediaTypeDTO(MediaTypeEntity entity) {
-        id = entity.getId();
-        name = entity.getName();
+        this.id = entity.getId();
+        this.name = entity.getName();
     }
 
 

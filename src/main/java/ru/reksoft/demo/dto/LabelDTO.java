@@ -9,8 +9,8 @@ public class LabelDTO {
 
 
     public LabelDTO(LabelEntity entity) {
-        id = entity.getId();
-        name = entity.getName();
+        this.id = entity.getId();
+        this.name = entity.getName();
     }
 
 

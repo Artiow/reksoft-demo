@@ -11,20 +11,24 @@ public class PageDivider {
 
 
     public PageDivider() {
-
+        this.pageSize = null;
+        this.pageNum = null;
     }
 
     public PageDivider(PageDividerDTO dto) {
         Integer pageSize = dto.getPageSize();
         if (pageSize != null) {
-            if (pageSize < 1)
+            if (pageSize < 1) {
                 throw new IllegalArgumentException("Page index must not be less than one!");
+            }
 
             Integer pageNum = dto.getPageNum();
-            if (pageNum == null)
+            if (pageNum == null) {
                 throw new IllegalArgumentException("Page index must not be null!");
-            if (pageNum < 0)
+            }
+            if (pageNum < 0) {
                 throw new IllegalArgumentException("Page index must not be less than zero!");
+            }
 
             this.pageSize = pageSize;
             this.pageNum = pageNum;
@@ -33,7 +37,10 @@ public class PageDivider {
 
 
     public Pageable getPageRequest() {
-        if (pageSize == null) return Pageable.unpaged();
+        if (pageSize == null) {
+            return Pageable.unpaged();
+        }
+
         return PageRequest.of(pageNum, pageSize);
     }
 }

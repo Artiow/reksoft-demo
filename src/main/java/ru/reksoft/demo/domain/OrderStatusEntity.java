@@ -2,7 +2,6 @@ package ru.reksoft.demo.domain;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.Objects;
 
 @Entity
 @Table(name = "order_status")

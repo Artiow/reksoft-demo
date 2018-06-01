@@ -16,16 +16,18 @@ public class MediaShortDTO {
 
 
     public MediaShortDTO(MediaEntity entity) {
-        id = entity.getId();
-        price = entity.getPrice();
-        type = entity.getType().getName();
+        this.id = entity.getId();
+        this.price = entity.getPrice();
+        this.type = entity.getType().getName();
 
         AlbumEntity albumEntity = entity.getAlbum();
-        singer = albumEntity.getSinger().getName();
-        album = albumEntity.getName();
+        this.singer = albumEntity.getSinger().getName();
+        this.album = albumEntity.getName();
 
         PictureEntity pictureEntity = albumEntity.getPicture();
-        if (pictureEntity != null) picture = new PictureDTO(pictureEntity);
+        if (pictureEntity != null) {
+            this.picture = new PictureDTO(pictureEntity);
+        }
     }
 
 

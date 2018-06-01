@@ -14,12 +14,12 @@ public class PictureDTO {
 
 
     public PictureDTO(PictureEntity entity) {
-        id = entity.getId();
-        url = entity.getUrl();
-        name = entity.getName();
-        size = entity.getSize();
+        this.id = entity.getId();
+        this.url = entity.getUrl();
+        this.name = entity.getName();
+        this.size = entity.getSize();
 
-        uploaded = entity.getUploaded().toLocalDateTime();
+        this.uploaded = entity.getUploaded().toLocalDateTime();
     }
 
 

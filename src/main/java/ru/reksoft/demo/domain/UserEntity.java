@@ -12,8 +12,9 @@ public class UserEntity {
     private String password;
     private String name;
     private String surname;
-    private String phone;
+    private String patronymic;
     private String address;
+    private String phone;
 
     private UserRoleEntity role;
 
@@ -72,13 +73,13 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "phone", nullable = false)
-    public String getPhone() {
-        return phone;
+    @Column(name = "patronymic", nullable = false)
+    public String getPatronymic() {
+        return patronymic;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPatronymic(String patronymic) {
+        this.patronymic = patronymic;
     }
 
     @Basic
@@ -89,6 +90,16 @@ public class UserEntity {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Basic
+    @Column(name = "phone", nullable = false)
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
 

@@ -12,7 +12,8 @@ public class AlbumDTO {
 
     private Integer id;
     private String name;
-    private LocalDate release;
+    private String description;
+    private LocalDate releaseYear;
 
     private LabelDTO label;
     private SingerDTO singer;
@@ -25,7 +26,8 @@ public class AlbumDTO {
     public AlbumDTO(AlbumEntity entity) {
         this.id = entity.getId();
         this.name = entity.getName();
-        this.release = entity.getRelease().toLocalDateTime().toLocalDate();
+        this.description = entity.getDescription();
+        this.releaseYear = entity.getReleaseYear().toLocalDateTime().toLocalDate();
 
         this.label = new LabelDTO(entity.getLabel());
         this.singer = new SingerDTO(entity.getSinger());
@@ -61,8 +63,12 @@ public class AlbumDTO {
         return name;
     }
 
-    public LocalDate getRelease() {
-        return release;
+    public String getDescription() {
+        return description;
+    }
+
+    public LocalDate getReleaseYear() {
+        return releaseYear;
     }
 
     public LabelDTO getLabel() {

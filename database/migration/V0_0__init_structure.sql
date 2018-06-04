@@ -8,8 +8,8 @@ create table demo.user_role
     constraint user_role_pk
     primary key,
 
-  name        varchar(45) not null,
   code        varchar(45) not null,
+  name        varchar(45) not null,
   description varchar(90)
 );
 
@@ -53,8 +53,8 @@ create table demo.order_status
     constraint order_status_pk
     primary key,
 
-  name        varchar(45) not null,
   code        varchar(45) not null,
+  name        varchar(45) not null,
   description varchar(90)
 );
 

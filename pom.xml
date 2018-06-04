@@ -130,11 +130,10 @@
                     <url>jdbc:postgresql://localhost:5432/reksoft</url>
                     <user>postgres</user>
                     <password>postgres</password>
+                    <locations>filesystem:database/migration</locations>
                     <schemas>
                         <schema>demo</schema>
                     </schemas>
-
-                    <locations>database/migration/</locations>
                 </configuration>
             </plugin>
         </plugins>

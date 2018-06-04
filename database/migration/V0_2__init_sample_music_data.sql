@@ -70,13 +70,13 @@ ALTER SEQUENCE demo.composition_id_seq RESTART WITH 10;
 -- media
 
 INSERT INTO demo.media (id, type_id, album_id, price) VALUES
-(1, 1, 1, 1500);
-(2, 1, 2, 1500);
-(3, 1, 3, 1250);
-(4, 1, 4, 600);
-(5, 2, 1, 2250);
-(6, 2, 2, 2300);
-(7, 2, 4, 1250);
+(1, 1, 1, 1500),
+(2, 1, 2, 1500),
+(3, 1, 3, 1250),
+(4, 1, 4, 600),
+(5, 2, 1, 2250),
+(6, 2, 2, 2300),
+(7, 2, 4, 1250),
 (8, 3, 4, 800);
 
 ALTER SEQUENCE demo.media_id_seq RESTART WITH 9;

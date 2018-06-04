@@ -9,8 +9,9 @@ public class UserDTO {
     private String password;
     private String name;
     private String surname;
-    private String phone;
+    private String patronymic;
     private String address;
+    private String phone;
 
 
     public UserDTO(UserEntity entity) {
@@ -19,8 +20,9 @@ public class UserDTO {
         this.password = entity.getPassword();
         this.name = entity.getName();
         this.surname = entity.getSurname();
-        this.phone = entity.getPhone();
+        this.patronymic = entity.getPatronymic();
         this.address = entity.getAddress();
+        this.phone = entity.getPhone();
     }
 
 
@@ -44,11 +46,15 @@ public class UserDTO {
         return surname;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getPatronymic() {
+        return patronymic;
     }
 
     public String getAddress() {
         return address;
+    }
+
+    public String getPhone() {
+        return phone;
     }
 }

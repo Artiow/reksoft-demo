@@ -10,7 +10,8 @@ public class AlbumEntity {
 
     private Integer id;
     private String name;
-    private Timestamp release;
+    private String description;
+    private Timestamp releaseYear;
 
     private LabelEntity label;
     private SingerEntity singer;
@@ -43,13 +44,23 @@ public class AlbumEntity {
     }
 
     @Basic
-    @Column(name = "release", nullable = false)
-    public Timestamp getRelease() {
-        return release;
+    @Column(name = "description")
+    public String getDescription() {
+        return description;
     }
 
-    public void setRelease(Timestamp release) {
-        this.release = release;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Basic
+    @Column(name = "release_year", nullable = false)
+    public Timestamp getReleaseYear() {
+        return releaseYear;
+    }
+
+    public void setReleaseYear(Timestamp releaseYear) {
+        this.releaseYear = releaseYear;
     }
 
 

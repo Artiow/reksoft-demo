@@ -9,7 +9,7 @@ public class CurrentBasketEntity {
     @EmbeddedId
     private CurrentBasketEntityPK pk;
 
-    private Integer count;
+    private Integer count = 1;
 
     @ManyToOne
     @MapsId("userId")

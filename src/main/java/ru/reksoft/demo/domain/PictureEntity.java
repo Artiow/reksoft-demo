@@ -10,7 +10,8 @@ public class PictureEntity {
     private Integer id;
     private String url;
     private String name;
-    private Integer size;
+    private Integer width;
+    private Integer height;
     private Timestamp uploaded;
 
     @Id
@@ -45,13 +46,23 @@ public class PictureEntity {
     }
 
     @Basic
-    @Column(name = "size", nullable = false)
-    public Integer getSize() {
-        return size;
+    @Column(name = "width", nullable = false)
+    public Integer getWidth() {
+        return width;
     }
 
-    public void setSize(Integer size) {
-        this.size = size;
+    public void setWidth(Integer width) {
+        this.width = width;
+    }
+
+    @Basic
+    @Column(name = "height", nullable = false)
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
     }
 
     @Basic

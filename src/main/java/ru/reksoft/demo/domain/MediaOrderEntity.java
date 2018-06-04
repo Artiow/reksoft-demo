@@ -9,7 +9,7 @@ public class MediaOrderEntity {
     @EmbeddedId
     private MediaOrderEntityPK pk;
 
-    private Integer count;
+    private Integer count = 1;
     private Integer totalPrice;
 
     @ManyToOne

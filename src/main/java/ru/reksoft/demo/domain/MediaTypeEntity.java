@@ -8,8 +8,8 @@ import java.util.Collection;
 public class MediaTypeEntity {
 
     private Integer id;
-    private String name;
     private String code;
+    private String name;
     private String description;
 
     private Collection<MediaEntity> media;
@@ -27,16 +27,6 @@ public class MediaTypeEntity {
     }
 
     @Basic
-    @Column(name = "name", nullable = false)
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Basic
     @Column(name = "code", nullable = false)
     public String getCode() {
         return code;
@@ -44,6 +34,16 @@ public class MediaTypeEntity {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    @Basic
+    @Column(name = "name", nullable = false)
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Basic

@@ -8,8 +8,8 @@ import java.util.Collection;
 public class GenreEntity {
 
     private Integer id;
-    private String name;
     private String code;
+    private String name;
 
     private Collection<AlbumEntity> albums;
 
@@ -25,16 +25,6 @@ public class GenreEntity {
     }
 
     @Basic
-    @Column(name = "name", nullable = false)
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Basic
     @Column(name = "code", nullable = false)
     public String getCode() {
         return code;
@@ -42,6 +32,16 @@ public class GenreEntity {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    @Basic
+    @Column(name = "name", nullable = false)
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 

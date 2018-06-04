@@ -15,7 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class ApplicationConfig implements WebMvcConfigurer {
 
     /**
-     * Configuration of Swagger
+     * Swagger config
      *
      * @return docket bean
      */
@@ -25,13 +25,13 @@ public class ApplicationConfig implements WebMvcConfigurer {
                 .useDefaultResponseMessages(false)
 
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("ru.reksoft.demo.controller")) //TODO: RequestHandlerSelectors.any()?
+                .apis(RequestHandlerSelectors.basePackage("ru.reksoft.demo.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
 
     /**
-     * Configure resource handlers
+     * Resource handlers config
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

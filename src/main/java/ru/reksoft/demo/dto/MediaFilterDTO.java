@@ -1,30 +1,33 @@
 package ru.reksoft.demo.dto;
 
+import ru.reksoft.demo.util.MediaSearchType;
+
 import java.util.Collection;
 
-public class MediaFilterDTO {
+public class MediaFilterDTO extends PageDividerDTO {
 
-    private Integer pageSize;
-    private Integer pageNum;
+    private MediaSearchType searchType;
+    private String searchString;
 
     private Collection<String> typeCodes;
+    private Collection<String> genreCodes;
 
 
-    public Integer getPageSize() {
-        return pageSize;
+    public MediaSearchType getSearchType() {
+        return searchType;
     }
 
-    public MediaFilterDTO setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
+    public MediaFilterDTO setSearchType(MediaSearchType searchType) {
+        this.searchType = searchType;
         return this;
     }
 
-    public Integer getPageNum() {
-        return pageNum;
+    public String getSearchString() {
+        return searchString;
     }
 
-    public MediaFilterDTO setPageNum(Integer pageNum) {
-        this.pageNum = pageNum;
+    public MediaFilterDTO setSearchString(String searchString) {
+        this.searchString = searchString;
         return this;
     }
 
@@ -34,6 +37,15 @@ public class MediaFilterDTO {
 
     public MediaFilterDTO setTypeCodes(Collection<String> typeCodes) {
         this.typeCodes = typeCodes;
+        return this;
+    }
+
+    public Collection<String> getGenreCodes() {
+        return genreCodes;
+    }
+
+    public MediaFilterDTO setGenreCodes(Collection<String> genreCodes) {
+        this.genreCodes = genreCodes;
         return this;
     }
 }

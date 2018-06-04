@@ -3,10 +3,9 @@ package ru.reksoft.demo.domain;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.Objects;
 
 @Entity
-@Table(name = "order", schema = "demo", catalog = "reksoft")
+@Table(name = "order")
 public class OrderEntity {
 
     private Integer id;

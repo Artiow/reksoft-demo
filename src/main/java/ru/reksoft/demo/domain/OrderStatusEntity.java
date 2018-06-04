@@ -2,15 +2,14 @@ package ru.reksoft.demo.domain;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.Objects;
 
 @Entity
-@Table(name = "order_status", schema = "demo", catalog = "reksoft")
+@Table(name = "order_status")
 public class OrderStatusEntity {
 
     private Integer id;
-    private String name;
     private String code;
+    private String name;
     private String description;
 
     private Collection<OrderEntity> orders;
@@ -27,16 +26,6 @@ public class OrderStatusEntity {
     }
 
     @Basic
-    @Column(name = "name", nullable = false)
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Basic
     @Column(name = "code", nullable = false)
     public String getCode() {
         return code;
@@ -44,6 +33,16 @@ public class OrderStatusEntity {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    @Basic
+    @Column(name = "name", nullable = false)
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Basic

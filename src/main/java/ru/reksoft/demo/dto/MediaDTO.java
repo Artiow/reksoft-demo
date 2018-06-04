@@ -12,11 +12,11 @@ public class MediaDTO {
 
 
     public MediaDTO(MediaEntity entity) {
-        id = entity.getId();
-        price = entity.getPrice();
+        this.id = entity.getId();
+        this.price = entity.getPrice();
 
-        type = new MediaTypeDTO(entity.getType());
-        album = new AlbumDTO(entity.getAlbum());
+        this.type = new MediaTypeDTO(entity.getType());
+        this.album = new AlbumDTO(entity.getAlbum());
     }
 
 

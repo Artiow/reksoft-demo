@@ -1,8 +1,0 @@
-spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults = false
-
-spring.datasource.url       = xxxx
-
-spring.datasource.username  = xxxx
-spring.datasource.password  = xxxx
-
-server.error.whitelabel.enabled = false

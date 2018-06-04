@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Id;
 import java.io.Serializable;
-import java.util.Objects;
 
 @Embeddable
 public class CurrentBasketEntityPK implements Serializable {

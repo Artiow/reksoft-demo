@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.sql.Time;
 
 @Entity
-@Table(name = "composition", schema = "demo", catalog = "reksoft")
+@Table(name = "composition")
 public class CompositionEntity {
 
     private Integer id;

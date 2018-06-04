@@ -1,16 +1,15 @@
 package ru.reksoft.demo.domain;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
-@Table(name = "current_basket", schema = "demo", catalog = "reksoft")
+@Table(name = "current_basket")
 public class CurrentBasketEntity {
 
     @EmbeddedId
     private CurrentBasketEntityPK pk;
 
-    private Integer count;
+    private Integer count = 1;
 
     @ManyToOne
     @MapsId("userId")

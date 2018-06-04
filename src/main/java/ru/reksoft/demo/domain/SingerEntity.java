@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-@Table(name = "singer", schema = "demo", catalog = "reksoft")
+@Table(name = "singer")
 public class SingerEntity {
 
     private Integer id;

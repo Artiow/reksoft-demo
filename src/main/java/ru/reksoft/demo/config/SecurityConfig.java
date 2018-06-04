@@ -25,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * Configure differentiation of rights
+     * Differentiation of rights configuration
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {

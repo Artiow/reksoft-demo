@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-@Table(name = "label", schema = "demo", catalog = "reksoft")
+@Table(name = "label")
 public class LabelEntity {
 
     private Integer id;

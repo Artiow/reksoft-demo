@@ -12,7 +12,8 @@ public class AlbumDTO {
 
     private Integer id;
     private String name;
-    private LocalDate release;
+    private String description;
+    private LocalDate releaseYear;
 
     private LabelDTO label;
     private SingerDTO singer;
@@ -23,25 +24,34 @@ public class AlbumDTO {
 
 
     public AlbumDTO(AlbumEntity entity) {
-        id = entity.getId();
-        name = entity.getName();
-        release = entity.getRelease().toLocalDateTime().toLocalDate();
+        this.id = entity.getId();
+        this.name = entity.getName();
+        this.description = entity.getDescription();
+        this.releaseYear = entity.getReleaseYear().toLocalDateTime().toLocalDate();
 
-        label = new LabelDTO(entity.getLabel());
-        singer = new SingerDTO(entity.getSinger());
+        this.label = new LabelDTO(entity.getLabel());
+        this.singer = new SingerDTO(entity.getSinger());
 
         PictureEntity pictureEntity = entity.getPicture();
-        if (pictureEntity != null) picture = new PictureDTO(pictureEntity);
+        if (pictureEntity != null) {
+            this.picture = new PictureDTO(pictureEntity);
+        }
 
         Collection<GenreEntity> genreEntities = entity.getGenres();
-        genres = new ArrayList<>(genreEntities.size());
-        for(GenreEntity e: genreEntities) genres.add(new GenreDTO(e));
-        Collections.sort(genres);
+        this.genres = new ArrayList<>(genreEntities.size());
+        for(GenreEntity e: genreEntities) {
+            this.genres.add(new GenreDTO(e));
+        }
+
+        Collections.sort(this.genres);
 
         Collection<CompositionEntity> compositionEntities = entity.getCompositions();
-        compositions = new ArrayList<>(compositionEntities.size());
-        for(CompositionEntity e: compositionEntities) compositions.add(new CompositionDTO(e));
-        Collections.sort(compositions);
+        this.compositions = new ArrayList<>(compositionEntities.size());
+        for(CompositionEntity e: compositionEntities) {
+            this.compositions.add(new CompositionDTO(e));
+        }
+
+        Collections.sort(this.compositions);
     }
 
 
@@ -53,8 +63,12 @@ public class AlbumDTO {
         return name;
     }
 
-    public LocalDate getRelease() {
-        return release;
+    public String getDescription() {
+        return description;
+    }
+
+    public LocalDate getReleaseYear() {
+        return releaseYear;
     }
 
     public LabelDTO getLabel() {

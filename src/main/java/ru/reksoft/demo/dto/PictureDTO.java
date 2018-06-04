@@ -9,17 +9,19 @@ public class PictureDTO {
     private Integer id;
     private String url;
     private String name;
-    private Integer size;
+    private Integer width;
+    private Integer height;
     private LocalDateTime uploaded;
 
 
     public PictureDTO(PictureEntity entity) {
-        id = entity.getId();
-        url = entity.getUrl();
-        name = entity.getName();
-        size = entity.getSize();
+        this.id = entity.getId();
+        this.url = entity.getUrl();
+        this.name = entity.getName();
+        this.width = entity.getWidth();
+        this.height = entity.getHeight();
 
-        uploaded = entity.getUploaded().toLocalDateTime();
+        this.uploaded = entity.getUploaded().toLocalDateTime();
     }
 
 
@@ -35,8 +37,12 @@ public class PictureDTO {
         return name;
     }
 
-    public Integer getSize() {
-        return size;
+    public Integer getWidth() {
+        return width;
+    }
+
+    public Integer getHeight() {
+        return height;
     }
 
     public LocalDateTime getUploaded() {

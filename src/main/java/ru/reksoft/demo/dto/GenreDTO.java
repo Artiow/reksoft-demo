@@ -7,14 +7,14 @@ import java.util.Comparator;
 public class GenreDTO implements Comparable<GenreDTO> {
 
     private Integer id;
-    private String name;
     private String code;
+    private String name;
 
 
     public GenreDTO(GenreEntity entity) {
-        id = entity.getId();
-        name = entity.getName();
-        code = entity.getCode();
+        this.id = entity.getId();
+        this.code = entity.getCode();
+        this.name = entity.getName();
     }
 
 
@@ -22,12 +22,12 @@ public class GenreDTO implements Comparable<GenreDTO> {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public String getCode() {
         return code;
+    }
+
+    public String getName() {
+        return name;
     }
 
 

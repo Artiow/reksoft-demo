@@ -30,7 +30,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <exclusions>
-                <!-- integral tomcat exclusion -->
+                <!-- INTEGRAL TOMCAT EXCLUSION -->
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-tomcat</artifactId>
@@ -38,7 +38,7 @@
             </exclusions>
         </dependency>
 
-        <!-- custom servlet -->
+        <!-- CUSTOM SERVLET API -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
@@ -88,7 +88,6 @@
             <scope>provided</scope>
         </dependency>
 
-
         <!-- SWAGGER -->
         <dependency>
             <groupId>io.springfox</groupId>
@@ -120,6 +119,22 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <!-- FLYWAY -->
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>5.1.1</version>
+                <configuration>
+                    <url>jdbc:postgresql://localhost:5432/reksoft</url>
+                    <user>postgres</user>
+                    <password>postgres</password>
+                    <locations>filesystem:database/migration</locations>
+                    <schemas>
+                        <schema>demo</schema>
+                    </schemas>
+                </configuration>
             </plugin>
         </plugins>
     </build>

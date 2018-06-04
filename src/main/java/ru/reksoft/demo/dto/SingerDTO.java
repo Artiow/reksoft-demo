@@ -9,8 +9,8 @@ public class SingerDTO {
 
 
     public SingerDTO(SingerEntity entity) {
-        id = entity.getId();
-        name = entity.getName();
+        this.id = entity.getId();
+        this.name = entity.getName();
     }
 
 

@@ -2,17 +2,16 @@ package ru.reksoft.demo.domain;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.Objects;
 
 @Entity
-@Table(name = "media", schema = "demo", catalog = "reksoft")
+@Table(name = "media")
 public class MediaEntity {
 
     private Integer id;
     private Integer price;
 
-    private AlbumEntity album;
     private MediaTypeEntity type;
+    private AlbumEntity album;
 
     private Collection<CurrentBasketEntity> baskets;
     private Collection<MediaOrderEntity> orders;
@@ -56,16 +55,6 @@ public class MediaEntity {
 
 
     @ManyToOne
-    @JoinColumn(name = "album_id", referencedColumnName = "id", nullable = false)
-    public AlbumEntity getAlbum() {
-        return album;
-    }
-
-    public void setAlbum(AlbumEntity album) {
-        this.album = album;
-    }
-
-    @ManyToOne
     @JoinColumn(name = "type_id", referencedColumnName = "id", nullable = false)
     public MediaTypeEntity getType() {
         return type;
@@ -73,6 +62,16 @@ public class MediaEntity {
 
     public void setType(MediaTypeEntity type) {
         this.type = type;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "album_id", referencedColumnName = "id", nullable = false)
+    public AlbumEntity getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(AlbumEntity album) {
+        this.album = album;
     }
 
 

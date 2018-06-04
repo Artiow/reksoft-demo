@@ -54,17 +54,20 @@ INSERT INTO demo.album_genres (album_id, genre_id) VALUES
 -- composition
 
 INSERT INTO demo.composition (id, album_id, album_pos, name, duration) VALUES
-(1, 1, 1, 'Rory Shield',      '00:03:13'),
-(2, 1, 2, 'Mediocre at Best', '00:02:13'),
-(3, 1, 3, 'Dirty Ickes',      '00:02:19'),
-(4, 2, 1, 'Pulpit',           '00:01:16'),
-(5, 2, 2, 'Communion',        '00:01:04'),
-(6, 2, 3, 'Blunt Trauma',     '00:00:52'),
-(7, 3, 1, 'Applause',         '00:03:07'),
-(8, 3, 2, 'Smooth It Out',    '00:03:24'),
-(9, 3, 3, 'Feel Alive',       '00:03:21');
+(1,  1, 1, 'Rory Shield',                '00:03:13'),
+(2,  1, 2, 'Mediocre at Best',           '00:02:13'),
+(3,  1, 3, 'Dirty Ickes',                '00:02:19'),
+(4,  2, 1, 'Pulpit',                     '00:01:16'),
+(5,  2, 2, 'Communion',                  '00:01:04'),
+(6,  2, 3, 'Blunt Trauma',               '00:00:52'),
+(7,  3, 1, 'Applause',                   '00:03:07'),
+(8,  3, 2, 'Smooth It Out',              '00:03:24'),
+(9,  3, 3, 'Feel Alive',                 '00:03:21'),
+(10, 4, 1, 'No Halo',                    '00:02:50'),
+(11, 4, 2, 'A Portrait Of',              '00:03:30'),
+(12, 4, 3, 'First Letter From St. Sean', '00:03:05');
 
-ALTER SEQUENCE demo.composition_id_seq RESTART WITH 10;
+ALTER SEQUENCE demo.composition_id_seq RESTART WITH 13;
 
 
 -- media

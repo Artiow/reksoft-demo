@@ -4,6 +4,7 @@ import ru.reksoft.demo.domain.AlbumEntity;
 import ru.reksoft.demo.domain.CompositionEntity;
 import ru.reksoft.demo.domain.GenreEntity;
 import ru.reksoft.demo.domain.PictureEntity;
+import ru.reksoft.demo.mapper.LabelMapper;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -29,7 +30,7 @@ public class AlbumDTO {
         this.description = entity.getDescription();
         this.releaseYear = entity.getReleaseYear().toLocalDateTime().toLocalDate();
 
-        this.label = new LabelDTO(entity.getLabel());
+        this.label = LabelMapper.INSTANCE.toDTO(entity.getLabel());
         this.singer = new SingerDTO(entity.getSinger());
 
         PictureEntity pictureEntity = entity.getPicture();

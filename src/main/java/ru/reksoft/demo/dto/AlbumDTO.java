@@ -3,8 +3,9 @@ package ru.reksoft.demo.dto;
 import ru.reksoft.demo.domain.AlbumEntity;
 import ru.reksoft.demo.domain.CompositionEntity;
 import ru.reksoft.demo.domain.GenreEntity;
-import ru.reksoft.demo.domain.PictureEntity;
 import ru.reksoft.demo.mapper.LabelMapper;
+import ru.reksoft.demo.mapper.PictureMapper;
+import ru.reksoft.demo.mapper.SingerMapper;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -31,12 +32,8 @@ public class AlbumDTO {
         this.releaseYear = entity.getReleaseYear().toLocalDateTime().toLocalDate();
 
         this.label = LabelMapper.INSTANCE.toDTO(entity.getLabel());
-        this.singer = new SingerDTO(entity.getSinger());
-
-        PictureEntity pictureEntity = entity.getPicture();
-        if (pictureEntity != null) {
-            this.picture = new PictureDTO(pictureEntity);
-        }
+        this.singer = SingerMapper.INSTANCE.toDTO(entity.getSinger());
+        this.picture = PictureMapper.INSTANCE.toDTO(entity.getPicture());
 
         Collection<GenreEntity> genreEntities = entity.getGenres();
         this.genres = new ArrayList<>(genreEntities.size());

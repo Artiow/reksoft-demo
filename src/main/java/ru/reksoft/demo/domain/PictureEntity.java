@@ -74,7 +74,4 @@ public class PictureEntity {
     public void setUploaded(Timestamp uploaded) {
         this.uploaded = uploaded;
     }
-
-
-
 }

@@ -6,10 +6,7 @@ import ru.reksoft.demo.domain.LabelEntity;
 import ru.reksoft.demo.dto.LabelDTO;
 
 @Mapper
-public interface LabelMapper {
+public interface LabelMapper extends AbstractEntityMapper<LabelEntity, LabelDTO> {
+
     LabelMapper INSTANCE = Mappers.getMapper(LabelMapper.class);
-
-    LabelDTO toDTO(LabelEntity entity);
-
-    LabelEntity toEntity(LabelDTO dto);
 }

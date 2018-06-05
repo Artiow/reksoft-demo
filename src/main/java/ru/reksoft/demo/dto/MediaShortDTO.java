@@ -1,9 +1,5 @@
 package ru.reksoft.demo.dto;
 
-import ru.reksoft.demo.domain.AlbumEntity;
-import ru.reksoft.demo.domain.MediaEntity;
-import ru.reksoft.demo.mapper.PictureMapper;
-
 public class MediaShortDTO {
 
     private Integer id;
@@ -14,20 +10,6 @@ public class MediaShortDTO {
     private String type;
 
     private PictureDTO picture;
-
-
-    public MediaShortDTO(MediaEntity entity) {
-        this.id = entity.getId();
-        this.price = entity.getPrice();
-        this.type = entity.getType().getName();
-
-        AlbumEntity albumEntity = entity.getAlbum();
-        this.label = albumEntity.getLabel().getName();
-        this.singer = albumEntity.getSinger().getName();
-        this.album = albumEntity.getName();
-
-        this.picture = PictureMapper.INSTANCE.toDTO(albumEntity.getPicture());
-    }
 
 
     public Integer getId() {

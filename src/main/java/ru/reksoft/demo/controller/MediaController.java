@@ -18,16 +18,6 @@ public class MediaController {
 
 
     /**
-     * Return total list of media
-     *
-     * @return page with media
-     */
-    @GetMapping(value = "/list")
-    public PageDTO<MediaShortDTO> getMediaList() {
-        return mediaService.getMediaList(new MediaFilterDTO());
-    }
-
-    /**
      * Return list of media with base information for current filter
      *
      * @return page with media
@@ -39,61 +29,33 @@ public class MediaController {
 
 
     /**
-     * Return list of media by singer by id
-     *
-     * @return page with media
-     */
-    @GetMapping(value = "/singer/{id}")
-    public PageDTO<MediaShortDTO> getMediaListBySinger(@PathVariable int id) {
-        return mediaService.getMediaListBySinger(id, new PageDividerDTO());
-    }
-
-    /**
      * Return list of media with pagination by singer by id
      *
      * @return page with media
      */
-    @PostMapping(value = "/singer/{id}")
+    @PostMapping(value = "/bySinger/{id}")
     public PageDTO<MediaShortDTO> getMediaListBySinger(@PathVariable int id, @RequestBody PageDividerDTO pd) {
         return mediaService.getMediaListBySinger(id, pd);
     }
 
-    /**
-     * Return list of media by label by id
-     *
-     * @return page with media
-     */
-    @GetMapping(value = "/label/{id}")
-    public PageDTO<MediaShortDTO> getMediaListByLabel(@PathVariable int id) {
-        return mediaService.getMediaListByLabel(id, new PageDividerDTO());
-    }
 
     /**
      * Return list of media with pagination by label by id
      *
      * @return page with media
      */
-    @PostMapping(value = "/label/{id}")
+    @PostMapping(value = "/byLabel/{id}")
     public PageDTO<MediaShortDTO> getMediaListByLabel(@PathVariable int id, @RequestBody PageDividerDTO pd) {
         return mediaService.getMediaListByLabel(id, pd);
     }
 
-    /**
-     * Return list of media by album by id
-     *
-     * @return page with media
-     */
-    @GetMapping(value = "/album/{id}")
-    public PageDTO<MediaShortDTO> getMediaListByAlbum(@PathVariable int id) {
-        return mediaService.getMediaListByAlbum(id, new PageDividerDTO());
-    }
 
     /**
      * Return list of media with pagination by album by id
      *
      * @return page with media
      */
-    @PostMapping(value = "/album/{id}")
+    @PostMapping(value = "/byAlbum/{id}")
     public PageDTO<MediaShortDTO> getMediaListByAlbum(@PathVariable int id, @RequestBody PageDividerDTO pd) {
         return mediaService.getMediaListByAlbum(id, pd);
     }

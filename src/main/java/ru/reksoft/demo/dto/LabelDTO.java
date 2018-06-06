@@ -1,24 +1,26 @@
 package ru.reksoft.demo.dto;
 
-import ru.reksoft.demo.domain.LabelEntity;
-
 public class LabelDTO {
 
     private Integer id;
     private String name;
 
 
-    public LabelDTO(LabelEntity entity) {
-        this.id = entity.getId();
-        this.name = entity.getName();
-    }
-
-
     public Integer getId() {
         return id;
     }
 
+    public LabelDTO setId(Integer id) {
+        this.id = id;
+        return this;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public LabelDTO setName(String name) {
+        this.name = name;
+        return this;
     }
 }

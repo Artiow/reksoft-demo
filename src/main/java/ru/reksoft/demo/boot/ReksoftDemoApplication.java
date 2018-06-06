@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EntityScan("ru.reksoft.demo.domain")
 @EnableJpaRepositories("ru.reksoft.demo.repository")
 @ComponentScan({
+        "ru.reksoft.demo.mapper",
         "ru.reksoft.demo.config",
         "ru.reksoft.demo.service",
         "ru.reksoft.demo.controller"

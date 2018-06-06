@@ -1,10 +1,5 @@
 package ru.reksoft.demo.dto;
 
-import ru.reksoft.demo.domain.AlbumEntity;
-import ru.reksoft.demo.domain.CompositionEntity;
-import ru.reksoft.demo.domain.GenreEntity;
-import ru.reksoft.demo.domain.PictureEntity;
-
 import java.time.LocalDate;
 import java.util.*;
 
@@ -19,75 +14,88 @@ public class AlbumDTO {
     private SingerDTO singer;
     private PictureDTO picture;
 
-    private List<GenreDTO> genres;
-    private List<CompositionDTO> compositions;
-
-
-    public AlbumDTO(AlbumEntity entity) {
-        this.id = entity.getId();
-        this.name = entity.getName();
-        this.description = entity.getDescription();
-        this.releaseYear = entity.getReleaseYear().toLocalDateTime().toLocalDate();
-
-        this.label = new LabelDTO(entity.getLabel());
-        this.singer = new SingerDTO(entity.getSinger());
-
-        PictureEntity pictureEntity = entity.getPicture();
-        if (pictureEntity != null) {
-            this.picture = new PictureDTO(pictureEntity);
-        }
-
-        Collection<GenreEntity> genreEntities = entity.getGenres();
-        this.genres = new ArrayList<>(genreEntities.size());
-        for(GenreEntity e: genreEntities) {
-            this.genres.add(new GenreDTO(e));
-        }
-
-        Collections.sort(this.genres);
-
-        Collection<CompositionEntity> compositionEntities = entity.getCompositions();
-        this.compositions = new ArrayList<>(compositionEntities.size());
-        for(CompositionEntity e: compositionEntities) {
-            this.compositions.add(new CompositionDTO(e));
-        }
-
-        Collections.sort(this.compositions);
-    }
+    private PriorityQueue<GenreDTO> genres;
+    private PriorityQueue<CompositionDTO> compositions;
 
 
     public Integer getId() {
         return id;
     }
 
+    public AlbumDTO setId(Integer id) {
+        this.id = id;
+        return this;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public AlbumDTO setName(String name) {
+        this.name = name;
+        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public AlbumDTO setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
     public LocalDate getReleaseYear() {
         return releaseYear;
+    }
+
+    public AlbumDTO setReleaseYear(LocalDate releaseYear) {
+        this.releaseYear = releaseYear;
+        return this;
     }
 
     public LabelDTO getLabel() {
         return label;
     }
 
+    public AlbumDTO setLabel(LabelDTO label) {
+        this.label = label;
+        return this;
+    }
+
     public SingerDTO getSinger() {
         return singer;
+    }
+
+    public AlbumDTO setSinger(SingerDTO singer) {
+        this.singer = singer;
+        return this;
     }
 
     public PictureDTO getPicture() {
         return picture;
     }
 
-    public Collection<GenreDTO> getGenres() {
+    public AlbumDTO setPicture(PictureDTO picture) {
+        this.picture = picture;
+        return this;
+    }
+
+    public PriorityQueue<GenreDTO> getGenres() {
         return genres;
     }
 
-    public Collection<CompositionDTO> getCompositions() {
+    public AlbumDTO setGenres(PriorityQueue<GenreDTO> genres) {
+        this.genres = genres;
+        return this;
+    }
+
+    public PriorityQueue<CompositionDTO> getCompositions() {
         return compositions;
+    }
+
+    public AlbumDTO setCompositions(PriorityQueue<CompositionDTO> compositions) {
+        this.compositions = compositions;
+        return this;
     }
 }

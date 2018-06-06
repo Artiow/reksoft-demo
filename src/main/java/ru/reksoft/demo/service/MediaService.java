@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.domain.*;
 import ru.reksoft.demo.dto.*;
+import ru.reksoft.demo.mapper.MediaMapper;
 import ru.reksoft.demo.repository.MediaRepository;
 import ru.reksoft.demo.util.MediaSearchType;
 
@@ -22,9 +23,16 @@ public class MediaService extends AbstractService {
 
     private MediaRepository mediaRepository;
 
+    private MediaMapper mediaMapper;
+
     @Autowired
     public void setMediaRepository(MediaRepository mediaRepository) {
         this.mediaRepository = mediaRepository;
+    }
+
+    @Autowired
+    public void setMediaMapper(MediaMapper mediaMapper) {
+        this.mediaMapper = mediaMapper;
     }
 
 
@@ -37,7 +45,7 @@ public class MediaService extends AbstractService {
     @Transactional(readOnly = true)
     public PageDTO<MediaShortDTO> getMediaList(@NotNull MediaFilterDTO filterDTO) {
         MediaFilter filter = new MediaFilter(filterDTO);
-        return new PageDTO<>(mediaRepository.findAll(filter, filter.getPageRequest()).map(MediaShortDTO::new));
+        return new PageDTO<>(mediaRepository.findAll(filter, filter.getPageRequest()).map(mediaMapper::toShortDTO));
     }
 
 
@@ -51,7 +59,7 @@ public class MediaService extends AbstractService {
     @Transactional(readOnly = true)
     public PageDTO<MediaShortDTO> getMediaListBySinger(@NotNull Integer id, @NotNull PageDividerDTO pdDTO) {
         PageDivider pd = new PageDivider(pdDTO);
-        return new PageDTO<>(mediaRepository.findByAlbumSingerId(id, pd.getPageRequest()).map(MediaShortDTO::new));
+        return new PageDTO<>(mediaRepository.findByAlbumSingerId(id, pd.getPageRequest()).map(mediaMapper::toShortDTO));
     }
 
     /**
@@ -64,7 +72,7 @@ public class MediaService extends AbstractService {
     @Transactional(readOnly = true)
     public PageDTO<MediaShortDTO> getMediaListByLabel(@NotNull Integer id, @NotNull PageDividerDTO pdDTO) {
         PageDivider pd = new PageDivider(pdDTO);
-        return new PageDTO<>(mediaRepository.findByAlbumLabelId(id, pd.getPageRequest()).map(MediaShortDTO::new));
+        return new PageDTO<>(mediaRepository.findByAlbumLabelId(id, pd.getPageRequest()).map(mediaMapper::toShortDTO));
     }
 
     /**
@@ -77,7 +85,7 @@ public class MediaService extends AbstractService {
     @Transactional(readOnly = true)
     public PageDTO<MediaShortDTO> getMediaListByAlbum(@NotNull Integer id, @NotNull PageDividerDTO pdDTO) {
         PageDivider pd = new PageDivider(pdDTO);
-        return new PageDTO<>(mediaRepository.findByAlbumId(id, pd.getPageRequest()).map(MediaShortDTO::new));
+        return new PageDTO<>(mediaRepository.findByAlbumId(id, pd.getPageRequest()).map(mediaMapper::toShortDTO));
     }
 
 
@@ -88,7 +96,7 @@ public class MediaService extends AbstractService {
      */
     @Transactional(readOnly = true)
     public MediaDTO getMedia(Integer id) {
-        return new MediaDTO(mediaRepository.getOne(id));
+        return mediaMapper.toDTO(mediaRepository.getOne(id));
     }
 
 
@@ -100,10 +108,6 @@ public class MediaService extends AbstractService {
         private Collection<String> typeCodes;
         private Collection<String> genreCodes;
 
-
-        public MediaFilter() {
-            super();
-        }
 
         public MediaFilter(MediaFilterDTO dto) {
             super(dto);

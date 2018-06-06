@@ -3,16 +3,13 @@ package ru.reksoft.demo.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.mapstruct.factory.Mappers;
 import ru.reksoft.demo.domain.MediaEntity;
 import ru.reksoft.demo.dto.MediaDTO;
 import ru.reksoft.demo.dto.MediaShortDTO;
 import ru.reksoft.demo.mapper.manual.JavaTimeMapper;
 
-@Mapper(uses = JavaTimeMapper.class)
+@Mapper(uses = JavaTimeMapper.class, componentModel = "spring")
 public interface MediaMapper extends AbstractEntityMapper<MediaEntity, MediaDTO> {
-
-    MediaMapper INSTANCE = Mappers.getMapper(MediaMapper.class);
 
     @Mappings({
             @Mapping(source = "type.name", target = "type"),

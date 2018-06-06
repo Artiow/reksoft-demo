@@ -101,19 +101,6 @@ public class MediaService extends AbstractService {
         return new PageDTO<>(mediaRepository.findByGenreId(id, pd.getPageRequest()).map(mediaMapper::toShortDTO));
     }
 
-    /**
-     * Returns page with media by album genre by code
-     *
-     * @param code - genre code
-     * @param pdDTO - page divider
-     * @return media page
-     */
-    @Transactional(readOnly = true)
-    public PageDTO<MediaShortDTO> getMediaListByGenre(@NotNull String code, @NotNull PageDividerDTO pdDTO) {
-        PageDivider pd = new PageDivider(pdDTO);
-        return new PageDTO<>(mediaRepository.findByGenreCode(code, pd.getPageRequest()).map(mediaMapper::toShortDTO));
-    }
-
 
     /**
      * Returns media by id

@@ -16,9 +16,9 @@ public interface MediaRepository extends JpaRepository<MediaEntity, Integer>, Jp
 
     Page<MediaEntity> findByAlbumId(Integer id, Pageable pageable);
 
-    @Query("SELECT album.media FROM AlbumEntity album INNER JOIN album.genres genre WHERE genre.id = :id")
+    @Query("SELECT media FROM MediaEntity media INNER JOIN media.album album INNER JOIN album.genres genre WHERE genre.id = :id")
     Page<MediaEntity> findByGenreId(@Param("id") Integer id, Pageable pageable);
 
-    @Query("SELECT album.media FROM AlbumEntity album INNER JOIN album.genres genre WHERE genre.code = :code")
+    @Query("SELECT media FROM MediaEntity media INNER JOIN media.album album INNER JOIN album.genres genre WHERE genre.code = :code")
     Page<MediaEntity> findByGenreCode(@Param("code") String code, Pageable pageable);
 }

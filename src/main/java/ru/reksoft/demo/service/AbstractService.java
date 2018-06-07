@@ -18,16 +18,21 @@ public abstract class AbstractService {
 
         public PageDivider(PageDividerDTO dto) {
             Integer pageSize = dto.getPageSize();
-            if (pageSize != null) {
-                if (pageSize < 1) {
-                    throw new IllegalArgumentException("Page index must not be less than one!");
-                }
+            Integer pageNum = dto.getPageNum();
 
-                Integer pageNum = dto.getPageNum();
-                if (pageNum == null) {
-                    throw new IllegalArgumentException("Page index must not be null!");
-                }
-                if (pageNum < 0) {
+            Boolean unpaged = ((pageSize == null) && (pageNum == null));
+            if ((pageSize != null) && (pageNum != null)) {
+                unpaged = ((pageSize == 0) && (pageNum == 0));
+            }
+
+            if (!unpaged) {
+                if (pageSize == null) {
+                    throw new IllegalArgumentException("Page size must not be null! If you want disable the pagination, set \"pageNum\" to null also.");
+                } else if (pageNum == null) {
+                    throw new IllegalArgumentException("Page index must not be null! If you want disable the pagination, set \"pageSize\" to null also.");
+                } else if (pageSize < 1) {
+                    throw new IllegalArgumentException("Page size must not be less than one! ");
+                } else if (pageNum < 0) {
                     throw new IllegalArgumentException("Page index must not be less than zero!");
                 }
 

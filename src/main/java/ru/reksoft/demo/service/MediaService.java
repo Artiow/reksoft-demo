@@ -148,15 +148,10 @@ public class MediaService extends AbstractService {
             MediaSearchType searchType = dto.getSearchType();
             if (searchType != null) {
                 String searchString = dto.getSearchString();
-                if (searchString == null) {
-                    throw new IllegalArgumentException("Search string must not be null!");
+                if ((searchString != null) && (!searchString.equals(""))) {
+                    this.searchType = searchType;
+                    this.searchString = searchString;
                 }
-                if (searchString.equals("")) {
-                    throw new IllegalArgumentException("Search string must not be empty!");
-                }
-
-                this.searchType = searchType;
-                this.searchString = searchString;
             }
         }
 

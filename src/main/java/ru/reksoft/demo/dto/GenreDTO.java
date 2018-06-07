@@ -37,6 +37,6 @@ public class GenreDTO implements Comparable<GenreDTO> {
 
     @Override
     public int compareTo(GenreDTO o) {
-        return name.compareTo(o.name);
+        return code.compareTo(o.code);
     }
 }

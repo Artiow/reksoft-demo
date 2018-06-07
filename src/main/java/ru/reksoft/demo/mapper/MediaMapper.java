@@ -14,6 +14,7 @@ public interface MediaMapper extends AbstractEntityMapper<MediaEntity, MediaDTO>
     @Mappings({
             @Mapping(source = "type.name", target = "type"),
             @Mapping(source = "album.name", target = "album"),
+            @Mapping(source = "album.picture", target = "picture"),
             @Mapping(source = "album.label.name", target = "label"),
             @Mapping(source = "album.singer.name", target = "singer")
     })

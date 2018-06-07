@@ -38,7 +38,6 @@ public class MediaController {
         return mediaService.getMediaListBySinger(id, pd);
     }
 
-
     /**
      * Return list of media with pagination by label by id
      *
@@ -49,7 +48,6 @@ public class MediaController {
         return mediaService.getMediaListByLabel(id, pd);
     }
 
-
     /**
      * Return list of media with pagination by album by id
      *
@@ -58,6 +56,27 @@ public class MediaController {
     @PostMapping(value = "/byAlbum/{id}")
     public PageDTO<MediaShortDTO> getMediaListByAlbum(@PathVariable int id, @RequestBody PageDividerDTO pd) {
         return mediaService.getMediaListByAlbum(id, pd);
+    }
+
+
+    /**
+     * Return list of media with pagination by genre by id
+     *
+     * @return page with media
+     */
+    @PostMapping(value = "/byGenreId/{id}")
+    public PageDTO<MediaShortDTO> getMediaListByGenre(@PathVariable Integer id, @RequestBody PageDividerDTO pd) {
+        return mediaService.getMediaListByGenre(id, pd);
+    }
+
+    /**
+     * Return list of media with pagination by genre by code
+     *
+     * @return page with media
+     */
+    @PostMapping(value = "/byGenreCode/{code}")
+    public PageDTO<MediaShortDTO> getMediaListByGenre(@PathVariable String code, @RequestBody PageDividerDTO pd) {
+        return mediaService.getMediaListByGenre(code, pd);
     }
 
 

@@ -1,11 +1,14 @@
 package ru.reksoft.demo.mapper.manual;
 
+import org.springframework.stereotype.Component;
+
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+@Component
 public class JavaTimeMapper {
 
     public Time toTime(LocalTime localTime) {

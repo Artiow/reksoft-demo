@@ -88,6 +88,32 @@ public class MediaService extends AbstractService {
         return new PageDTO<>(mediaRepository.findByAlbumId(id, pd.getPageRequest()).map(mediaMapper::toShortDTO));
     }
 
+    /**
+     * Returns page with media by album genre by id
+     *
+     * @param id - genre id
+     * @param pdDTO - page divider
+     * @return media page
+     */
+    @Transactional(readOnly = true)
+    public PageDTO<MediaShortDTO> getMediaListByGenre(@NotNull Integer id, @NotNull PageDividerDTO pdDTO) {
+        PageDivider pd = new PageDivider(pdDTO);
+        return new PageDTO<>(mediaRepository.findByGenreId(id, pd.getPageRequest()).map(mediaMapper::toShortDTO));
+    }
+
+    /**
+     * Returns page with media by album genre by code
+     *
+     * @param code - genre code
+     * @param pdDTO - page divider
+     * @return media page
+     */
+    @Transactional(readOnly = true)
+    public PageDTO<MediaShortDTO> getMediaListByGenre(@NotNull String code, @NotNull PageDividerDTO pdDTO) {
+        PageDivider pd = new PageDivider(pdDTO);
+        return new PageDTO<>(mediaRepository.findByGenreCode(code, pd.getPageRequest()).map(mediaMapper::toShortDTO));
+    }
+
 
     /**
      * Returns media by id
@@ -122,15 +148,10 @@ public class MediaService extends AbstractService {
             MediaSearchType searchType = dto.getSearchType();
             if (searchType != null) {
                 String searchString = dto.getSearchString();
-                if (searchString == null) {
-                    throw new IllegalArgumentException("Search string must not be null!");
+                if ((searchString != null) && (!searchString.equals(""))) {
+                    this.searchType = searchType;
+                    this.searchString = searchString;
                 }
-                if (searchString.equals("")) {
-                    throw new IllegalArgumentException("Search string must not be empty!");
-                }
-
-                this.searchType = searchType;
-                this.searchString = searchString;
             }
         }
 

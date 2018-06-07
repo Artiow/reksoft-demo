@@ -10,10 +10,7 @@ import ru.reksoft.demo.mapper.MediaMapper;
 import ru.reksoft.demo.repository.MediaRepository;
 import ru.reksoft.demo.util.MediaSearchType;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -128,8 +125,8 @@ public class MediaService extends AbstractService {
 
     public static class MediaFilter extends PageDivider implements Specification<MediaEntity> {
 
+        private String[] searchWords;
         private MediaSearchType searchType;
-        private String searchString;
 
         private Collection<String> typeCodes;
         private Collection<String> genreCodes;
@@ -149,8 +146,8 @@ public class MediaService extends AbstractService {
             if (searchType != null) {
                 String searchString = dto.getSearchString();
                 if ((searchString != null) && (!searchString.equals(""))) {
+                    this.searchWords = searchString.trim().toLowerCase().split(" ");
                     this.searchType = searchType;
-                    this.searchString = searchString;
                 }
             }
         }
@@ -173,30 +170,55 @@ public class MediaService extends AbstractService {
         @Override
         public Predicate toPredicate(Root<MediaEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
             Collection<Predicate> predicates = new ArrayList<>();
-
             if (searchType != null) {
-                switch (searchType) {
-                    case BY_SINGER:
-                        predicates.add(cb.and(root.join(MediaEntity_.album).join(AlbumEntity_.singer).get(SingerEntity_.name).in(searchString)));
-                        break;
-                    case BY_LABEL:
-                        predicates.add(cb.and(root.join(MediaEntity_.album).join(AlbumEntity_.label).get(LabelEntity_.name).in(searchString)));
-                        break;
-                    case BY_ALBUM:
-                        predicates.add(cb.and(root.join(MediaEntity_.album).get(AlbumEntity_.name).in(searchString)));
-                        break;
-                }
+                predicates.add(searchByStringPredicate(root, query, cb));
             }
-
             if (genreCodes != null) {
-                predicates.add(cb.and(root.join(MediaEntity_.album).join(AlbumEntity_.genres).get(GenreEntity_.code).in(genreCodes)));
+                predicates.add(searchByGenrePredicate(root, query, cb));
             }
-
             if (typeCodes != null) {
-                predicates.add(cb.and(root.join(MediaEntity_.type).get(MediaTypeEntity_.code).in(typeCodes)));
+                predicates.add(searchByTypePredicate(root, query, cb));
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));
+        }
+
+        private Predicate searchByStringPredicate(Root<MediaEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            Join<MediaEntity, AlbumEntity> album = root.join(MediaEntity_.album);
+            Expression<String> sought = null;
+            switch (searchType) {
+                case BY_SINGER:
+                    sought = album.join(AlbumEntity_.singer).get(SingerEntity_.name);
+                    break;
+                case BY_LABEL:
+                    sought = album.join(AlbumEntity_.label).get(LabelEntity_.name);
+                    break;
+                case BY_ALBUM:
+                    sought = album.get(AlbumEntity_.name);
+                    break;
+            }
+
+            Collection<Predicate> occurrences = new ArrayList<>();
+            for (String searchWord: searchWords) {
+                String[] words = new String[]{(searchWord + " %"), ("% " + searchWord + " %"), ("% " + searchWord)};
+
+                Collection<Predicate> occurrence = new ArrayList<>();
+                for (String word : words) {
+                    occurrence.add(cb.like(cb.lower(sought), word));
+                }
+
+                occurrences.add(cb.or(occurrence.toArray(new Predicate[0])));
+            }
+
+            return cb.and(occurrences.toArray(new Predicate[0]));
+        }
+
+        private Predicate searchByGenrePredicate(Root<MediaEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            return root.join(MediaEntity_.album).join(AlbumEntity_.genres).get(GenreEntity_.code).in(genreCodes);
+        }
+
+        private Predicate searchByTypePredicate(Root<MediaEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            return root.join(MediaEntity_.type).get(MediaTypeEntity_.code).in(typeCodes);
         }
     }
 }

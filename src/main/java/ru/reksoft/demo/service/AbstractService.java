@@ -2,9 +2,10 @@ package ru.reksoft.demo.service;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import ru.reksoft.demo.dto.PageDividerDTO;
+import ru.reksoft.demo.dto.pagination.PageDividerDTO;
 
 public abstract class AbstractService {
+
     public static class PageDivider {
 
         private Integer pageSize;

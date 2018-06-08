@@ -1,4 +1,4 @@
-package ru.reksoft.demo.dto;
+package ru.reksoft.demo.dto.pagination;
 
 import org.springframework.data.domain.Page;
 

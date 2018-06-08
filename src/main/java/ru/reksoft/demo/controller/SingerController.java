@@ -28,17 +28,17 @@ public class SingerController {
      * @return page with singers
      */
     @PostMapping("/list")
-    public PageDTO<SingerDTO> getLabelList(@RequestBody StringSearcherDTO searcher) {
+    public PageDTO<SingerDTO> getSingerList(@RequestBody StringSearcherDTO searcher) {
         return singerService.getSingerList(searcher);
     }
 
     /**
-     * Return saved label
+     * Return saved singer
      *
-     * @return label
+     * @return singer
      */
     @PostMapping("/save")
-    public SingerDTO saveLabel(@RequestBody SingerDTO dto) {
+    public SingerDTO saveSinger(@RequestBody SingerDTO dto) {
         return singerService.saveSinger(dto);
     }
 }

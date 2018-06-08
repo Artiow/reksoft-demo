@@ -44,6 +44,18 @@ public class SingerService extends AbstractService {
     }
 
 
+    /**
+     * Save singer
+     *
+     * @param dto - singer
+     * @return saved entity
+     */
+    @Transactional
+    public SingerDTO saveSinger(@NotNull SingerDTO dto) {
+        return singerMapper.toDTO(singerRepository.save(singerMapper.toEntity(dto)));
+    }
+
+
     public static class SingerSearcher extends StringSearcher<SingerEntity> {
 
         public SingerSearcher(StringSearcherDTO dto) {

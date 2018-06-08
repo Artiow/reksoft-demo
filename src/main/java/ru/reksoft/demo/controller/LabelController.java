@@ -31,4 +31,14 @@ public class LabelController {
     public PageDTO<LabelDTO> getLabelList(@RequestBody StringSearcherDTO searcher) {
         return labelService.getLabelList(searcher);
     }
+
+    /**
+     * Return saved label
+     *
+     * @return label
+     */
+    @PostMapping("/save")
+    public LabelDTO saveLabel(@RequestBody LabelDTO dto) {
+        return labelService.saveLabel(dto);
+    }
 }

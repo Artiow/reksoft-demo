@@ -44,6 +44,18 @@ public class LabelService extends AbstractService {
     }
 
 
+    /**
+     * Save label
+     *
+     * @param dto - label
+     * @return saved entity
+     */
+    @Transactional
+    public LabelDTO saveLabel(@NotNull LabelDTO dto) {
+        return labelMapper.toDTO(labelRepository.save(labelMapper.toEntity(dto)));
+    }
+
+
     public static class LabelSearcher extends StringSearcher<LabelEntity> {
 
         public LabelSearcher(StringSearcherDTO dto) {

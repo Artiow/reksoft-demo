@@ -25,7 +25,7 @@ public class MediaController {
      *
      * @return page with media
      */
-    @PostMapping(value = "/list")
+    @PostMapping("/list")
     public PageDTO<MediaShortDTO> getMediaList(@RequestBody MediaFilterDTO filter) {
         return mediaService.getMediaList(filter);
     }
@@ -36,7 +36,7 @@ public class MediaController {
      *
      * @return page with media
      */
-    @PostMapping(value = "/bySinger/{id}")
+    @PostMapping("/bySinger/{id}")
     public PageDTO<MediaShortDTO> getMediaListBySinger(@PathVariable int id, @RequestBody PageDividerDTO pd) {
         return mediaService.getMediaListBySinger(id, pd);
     }
@@ -46,7 +46,7 @@ public class MediaController {
      *
      * @return page with media
      */
-    @PostMapping(value = "/byLabel/{id}")
+    @PostMapping("/byLabel/{id}")
     public PageDTO<MediaShortDTO> getMediaListByLabel(@PathVariable int id, @RequestBody PageDividerDTO pd) {
         return mediaService.getMediaListByLabel(id, pd);
     }
@@ -56,7 +56,7 @@ public class MediaController {
      *
      * @return page with media
      */
-    @PostMapping(value = "/byAlbum/{id}")
+    @PostMapping("/byAlbum/{id}")
     public PageDTO<MediaShortDTO> getMediaListByAlbum(@PathVariable int id, @RequestBody PageDividerDTO pd) {
         return mediaService.getMediaListByAlbum(id, pd);
     }
@@ -67,7 +67,7 @@ public class MediaController {
      *
      * @return page with media
      */
-    @PostMapping(value = "/byGenreId/{id}")
+    @PostMapping("/byGenreId/{id}")
     public PageDTO<MediaShortDTO> getMediaListByGenre(@PathVariable Integer id, @RequestBody PageDividerDTO pd) {
         return mediaService.getMediaListByGenre(id, pd);
     }
@@ -77,7 +77,7 @@ public class MediaController {
      *
      * @return page with media
      */
-    @PostMapping(value = "/byGenreCode/{code}")
+    @PostMapping("/byGenreCode/{code}")
     public PageDTO<MediaShortDTO> getMediaListByGenre(@PathVariable String code, @RequestBody PageDividerDTO pd) {
         return mediaService.getMediaListByGenre(code, pd);
     }
@@ -88,7 +88,7 @@ public class MediaController {
      *
      * @return media
      */
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public MediaDTO getMedia(@PathVariable int id) {
         return mediaService.getMedia(id);
     }

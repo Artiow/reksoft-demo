@@ -2,7 +2,7 @@ package ru.reksoft.demo.dto.filters;
 
 import ru.reksoft.demo.dto.pagination.PageDividerDTO;
 
-public abstract class AbstractSearchFilterDTO extends PageDividerDTO {
+public class StringSearcherDTO extends PageDividerDTO {
 
     private String searchString;
 
@@ -11,7 +11,7 @@ public abstract class AbstractSearchFilterDTO extends PageDividerDTO {
         return searchString;
     }
 
-    public AbstractSearchFilterDTO setSearchString(String searchString) {
+    public StringSearcherDTO setSearchString(String searchString) {
         this.searchString = searchString;
         return this;
     }

@@ -4,7 +4,7 @@ import ru.reksoft.demo.util.MediaSearchType;
 
 import java.util.Collection;
 
-public class MediaFilterDTO extends AbstractSearchFilterDTO {
+public class MediaFilterDTO extends StringSearcherDTO {
 
     private MediaSearchType searchType;
     private Collection<String> typeCodes;

@@ -51,6 +51,7 @@ public abstract class AbstractService {
 
     public static class PageDivider {
 
+        private Integer LIMIT = 150;
         private Integer pageSize;
         private Integer pageNum;
 
@@ -58,16 +59,18 @@ public abstract class AbstractService {
             Integer pageSize = dto.getPageSize();
             Integer pageNum = dto.getPageNum();
 
-            Boolean unpaged = ((pageSize == null) && (pageNum == null));
-            if ((pageSize != null) && (pageNum != null)) {
-                unpaged = ((pageSize == 0) && (pageNum == 0));
+            Boolean def = ((pageSize == null) && (pageNum == null));
+            if ((!def) && (pageSize != null) && (pageNum != null)) {
+                def = ((pageSize == 0) && (pageNum == 0));
             }
 
-            if (!unpaged) {
+            if (!def) {
                 if (pageSize == null) {
-                    throw new IllegalArgumentException("Page size must not be null! If you want disable the pagination, set \"pageNum\" to null also.");
+                    throw new IllegalArgumentException("Page size must not be null! If you want to set the default value, set \"pageNum\" to null also.");
                 } else if (pageNum == null) {
-                    throw new IllegalArgumentException("Page index must not be null! If you want disable the pagination, set \"pageSize\" to null also.");
+                    throw new IllegalArgumentException("Page index must not be null! If you want to set the default value, set \"pageSize\" to null also.");
+                } else if (pageSize > LIMIT) {
+                    throw new IllegalArgumentException("Page size must not be more than the limit value! ");
                 } else if (pageSize < 1) {
                     throw new IllegalArgumentException("Page size must not be less than one! ");
                 } else if (pageNum < 0) {
@@ -76,6 +79,9 @@ public abstract class AbstractService {
 
                 this.pageSize = pageSize;
                 this.pageNum = pageNum;
+            } else {
+                this.pageSize = LIMIT;
+                this.pageNum = 0;
             }
         }
 

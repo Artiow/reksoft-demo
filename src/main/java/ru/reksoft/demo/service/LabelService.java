@@ -45,14 +45,20 @@ public class LabelService extends AbstractService {
 
 
     /**
-     * Save label
+     * Save label.
+     * Returns an existing one if it finds by name.
      *
      * @param dto - label
      * @return saved entity
      */
     @Transactional
     public LabelDTO saveLabel(@NotNull LabelDTO dto) {
-        return labelMapper.toDTO(labelRepository.save(labelMapper.toEntity(dto)));
+        LabelEntity entity = labelRepository.findByName(dto.getName());
+        if (entity == null) {
+            entity = labelRepository.save(labelMapper.toEntity(dto));
+        }
+
+        return labelMapper.toDTO(entity);
     }
 
 

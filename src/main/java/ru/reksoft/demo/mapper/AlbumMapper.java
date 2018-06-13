@@ -16,4 +16,7 @@ public interface AlbumMapper extends AbstractEntityMapper<AlbumEntity, AlbumDTO>
             @Mapping(source = "singer.name", target = "singer")
     })
     AlbumShortDTO toShortDTO(AlbumEntity entity);
+
+    @Mapping(target = "id", ignore = true)
+    AlbumEntity toEntity(AlbumDTO dto);
 }

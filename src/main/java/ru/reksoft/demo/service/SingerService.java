@@ -45,14 +45,20 @@ public class SingerService extends AbstractService {
 
 
     /**
-     * Save singer
+     * Save singer.
+     * Returns an existing one if it finds by name.
      *
      * @param dto - singer
      * @return saved entity
      */
     @Transactional
     public SingerDTO saveSinger(@NotNull SingerDTO dto) {
-        return singerMapper.toDTO(singerRepository.save(singerMapper.toEntity(dto)));
+        SingerEntity entity = singerRepository.findByName(dto.getName());
+        if (entity == null) {
+            entity = singerRepository.save(singerMapper.toEntity(dto));
+        }
+
+        return singerMapper.toDTO(entity);
     }
 
 

@@ -110,7 +110,7 @@ public class AlbumEntity {
         this.genres = genres;
     }
 
-    @OneToMany(mappedBy = "album")
+    @OneToMany(mappedBy = "album", cascade = CascadeType.PERSIST)
     public Collection<CompositionEntity> getCompositions() {
         return compositions;
     }

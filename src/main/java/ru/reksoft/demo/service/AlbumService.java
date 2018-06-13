@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.domain.AlbumEntity;
 import ru.reksoft.demo.domain.AlbumEntity_;
 import ru.reksoft.demo.domain.CompositionEntity;
+import ru.reksoft.demo.domain.GenreEntity;
 import ru.reksoft.demo.dto.*;
 import ru.reksoft.demo.dto.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
@@ -24,12 +25,8 @@ public class AlbumService extends AbstractService {
     private SingerService singerService;
 
     private AlbumRepository albumRepository;
-    private CompositionRepository compositionRepository;
-    private GenreRepository genreRepository;
 
     private AlbumMapper albumMapper;
-    private CompositionMapper compositionMapper;
-    private GenreMapper genreMapper;
 
     @Autowired
     public void setLabelService(LabelService labelService) {
@@ -47,28 +44,8 @@ public class AlbumService extends AbstractService {
     }
 
     @Autowired
-    public void setCompositionRepository(CompositionRepository compositionRepository) {
-        this.compositionRepository = compositionRepository;
-    }
-
-    @Autowired
-    public void setGenreRepository(GenreRepository genreRepository) {
-        this.genreRepository = genreRepository;
-    }
-
-    @Autowired
     public void setAlbumMapper(AlbumMapper albumMapper) {
         this.albumMapper = albumMapper;
-    }
-
-    @Autowired
-    public void setCompositionMapper(CompositionMapper compositionMapper) {
-        this.compositionMapper = compositionMapper;
-    }
-
-    @Autowired
-    public void setGenreMapper(GenreMapper genreMapper) {
-        this.genreMapper = genreMapper;
     }
 
     /**
@@ -106,16 +83,12 @@ public class AlbumService extends AbstractService {
             dto.setSinger(singerService.saveSinger(singerDTO));
         }
 
-        Collection<CompositionEntity> compositions = compositionMapper.toEntity(dto.getCompositions());
-
-        dto.setCompositions(null);
-        AlbumEntity savedEntity = albumRepository.save(albumMapper.toEntity(dto));
-        for (CompositionEntity e: compositions) {
-            e.setAlbum(savedEntity);
+        AlbumEntity entity = albumMapper.toEntity(dto);
+        for (CompositionEntity e: entity.getCompositions()) {
+            e.setAlbum(entity);
         }
 
-        compositionRepository.saveAll(compositions);
-        return albumMapper.toDTO(savedEntity); //TODO: fix returned entity!
+        return albumMapper.toDTO(albumRepository.save(entity));
     }
 
 

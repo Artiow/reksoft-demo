@@ -27,7 +27,8 @@
         <java.version>1.8</java.version>
         <javax.servlet.version>3.0.1</javax.servlet.version>
 
-        <org.hibernate.version>5.2.17.Final</org.hibernate.version>
+        <org.postgresql.version>42.2.2</org.postgresql.version>
+        <org.hibernate.version>5.3.1.Final</org.hibernate.version>
         <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
         <org.flywaydb.version>5.1.1</org.flywaydb.version>
         <io.springfox.version>2.8.0</io.springfox.version>
@@ -75,13 +76,18 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
+            <version>${org.postgresql.version}</version>
         </dependency>
 
         <!-- HIBERNATE -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
+            <version>${org.hibernate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-java8</artifactId>
             <version>${org.hibernate.version}</version>
         </dependency>
         <dependency>

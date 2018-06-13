@@ -1,7 +1,7 @@
 package ru.reksoft.demo.domain;
 
 import javax.persistence.*;
-import java.sql.Time;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "composition")
@@ -10,7 +10,7 @@ public class CompositionEntity {
     private Integer id;
     private Integer position;
     private String name;
-    private Time duration;
+    private Timestamp duration;
 
     private AlbumEntity album;
 
@@ -48,11 +48,11 @@ public class CompositionEntity {
 
     @Basic
     @Column(name = "duration", nullable = false)
-    public Time getDuration() {
+    public Timestamp getDuration() {
         return duration;
     }
 
-    public void setDuration(Time duration) {
+    public void setDuration(Timestamp duration) {
         this.duration = duration;
     }
 

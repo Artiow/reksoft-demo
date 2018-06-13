@@ -114,9 +114,8 @@ public class AlbumService extends AbstractService {
             e.setAlbum(savedEntity);
         }
 
-//        TODO: save composition! fix interval parsing!
-//        compositionRepository.saveAll(compositions);
-        return albumMapper.toDTO(savedEntity);
+        compositionRepository.saveAll(compositions);
+        return albumMapper.toDTO(savedEntity); //TODO: fix returned entity!
     }
 
 

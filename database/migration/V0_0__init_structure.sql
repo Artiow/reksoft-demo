@@ -213,7 +213,7 @@ create table demo.composition
 
   album_pos integer     not null,
   name      varchar(45) not null,
-  duration  interval    not null
+  duration  timestamp   not null
 );
 
 create unique index composition_album_id_album_pos_uindex

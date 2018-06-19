@@ -159,8 +159,8 @@ create table demo.album
   release_year  timestamp   not null
 );
 
-create unique index album_name_uindex
-  on demo.album (name);
+create unique index album_singer_id_name_uindex
+  on demo.album (singer_id, name);
 
 
 -- genre
@@ -218,6 +218,9 @@ create table demo.composition
 
 create unique index composition_album_id_album_pos_uindex
   on demo.composition (album_id, album_pos);
+
+create unique index composition_album_id_name_uindex
+  on demo.composition (album_id, name);
 
 
 -- media_type

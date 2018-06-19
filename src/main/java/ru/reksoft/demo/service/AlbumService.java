@@ -16,31 +16,37 @@ import ru.reksoft.demo.mapper.GenreMapper;
 import ru.reksoft.demo.repository.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
 public class AlbumService extends AbstractService {
 
-    private LabelService labelService;
-    private SingerService singerService;
-
+    private LabelRepository labelRepository;
+    private SingerRepository singerRepository;
     private AlbumRepository albumRepository;
+    private GenreRepository genreRepository;
 
     private AlbumMapper albumMapper;
 
     @Autowired
-    public void setLabelService(LabelService labelService) {
-        this.labelService = labelService;
+    public void setLabelRepository(LabelRepository labelRepository) {
+        this.labelRepository = labelRepository;
     }
 
     @Autowired
-    public void setSingerService(SingerService singerService) {
-        this.singerService = singerService;
+    public void setSingerRepository(SingerRepository singerRepository) {
+        this.singerRepository = singerRepository;
     }
 
     @Autowired
     public void setAlbumRepository(AlbumRepository albumRepository) {
         this.albumRepository = albumRepository;
+    }
+
+    @Autowired
+    public void setGenreRepository(GenreRepository genreRepository) {
+        this.genreRepository = genreRepository;
     }
 
     @Autowired
@@ -64,7 +70,7 @@ public class AlbumService extends AbstractService {
     /**
      * Save album.
      *
-     * If label or singer do not exist then they will be created.
+     * Label and singer must exist.
      * All compositions will be created.
      * All genres must exist.
      *
@@ -73,19 +79,18 @@ public class AlbumService extends AbstractService {
      */
     @Transactional
     public AlbumDTO saveAlbum(@NotNull AlbumDTO dto) {
-        LabelDTO labelDTO = dto.getLabel();
-        if (labelDTO.getName() != null)  {
-            dto.setLabel(labelService.saveLabel(labelDTO));
-        }
-
-        SingerDTO singerDTO = dto.getSinger();
-        if (singerDTO.getName() != null)  {
-            dto.setSinger(singerService.saveSinger(singerDTO));
-        }
-
         AlbumEntity entity = albumMapper.toEntity(dto);
-        for (CompositionEntity e: entity.getCompositions()) {
-            e.setAlbum(entity);
+        entity.setLabel(labelRepository.getOne(dto.getLabel().getId()));
+        entity.setSinger(singerRepository.getOne(dto.getSinger().getId()));
+
+        ArrayList<GenreEntity> genres = new ArrayList<>(entity.getGenres());
+        entity.getGenres().clear();
+        for (GenreEntity genre: genres) {
+            entity.getGenres().add(genreRepository.findByCode(genre.getCode()));
+        }
+
+        for (CompositionEntity composition: entity.getCompositions()) {
+            composition.setAlbum(entity);
         }
 
         return albumMapper.toDTO(albumRepository.save(entity));

@@ -1,11 +1,18 @@
 package ru.reksoft.demo.domain.generic;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+
+@MappedSuperclass
 public abstract class AbstractDictionaryEntity extends AbstractIdentifiedEntity {
 
     private String code;
     private String name;
 
 
+    @Basic
+    @Column(name = "code", nullable = false)
     public String getCode() {
         return code;
     }
@@ -14,6 +21,8 @@ public abstract class AbstractDictionaryEntity extends AbstractIdentifiedEntity 
         this.code = code;
     }
 
+    @Basic
+    @Column(name = "name", nullable = false)
     public String getName() {
         return name;
     }

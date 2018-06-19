@@ -23,17 +23,6 @@ public class AlbumEntity extends AbstractIdentifiedEntity {
     private Collection<CompositionEntity> compositions;
 
 
-    @Id
-    @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getId() {
-        return super.getId();
-    }
-
-    public void setId(Integer id) {
-        super.setId(id);
-    }
-
     @Basic
     @Column(name = "name", nullable = false)
     public String getName() {

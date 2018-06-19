@@ -39,10 +39,10 @@ public class MediaController {
      */
     @PostMapping("/byAttribute")
     public PageDTO<MediaShortDTO> getMediaListByAttribute(
-            @RequestParam("attribute") MediaSearchType attributeType, @RequestParam("id") Integer attributeId,
+            @RequestParam("attribute") String attributeType, @RequestParam("id") Integer attributeId,
             @RequestBody PageDividerDTO pageDivider
     ) {
-        return mediaService.getMediaListByAttribute(attributeType, attributeId, pageDivider);
+        return mediaService.getMediaListByAttribute(MediaSearchType.fromValue(attributeType), attributeId, pageDivider);
     }
 
 

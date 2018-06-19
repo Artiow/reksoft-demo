@@ -16,17 +16,6 @@ public class PictureEntity extends AbstractIdentifiedEntity {
     private Timestamp uploaded;
 
 
-    @Id
-    @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getId() {
-        return super.getId();
-    }
-
-    public void setId(Integer id) {
-        super.setId(id);
-    }
-
     @Basic
     @Column(name = "url", nullable = false)
     public String getUrl() {

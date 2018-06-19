@@ -16,17 +16,6 @@ public class CompositionEntity extends AbstractIdentifiedEntity {
     private AlbumEntity album;
 
 
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getId() {
-        return super.getId();
-    }
-
-    public void setId(Integer id) {
-        super.setId(id);
-    }
-
     @Basic
     @Column(name = "album_pos", nullable = false)
     public Integer getPosition() {

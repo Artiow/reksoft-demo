@@ -18,17 +18,6 @@ public class MediaEntity extends AbstractIdentifiedEntity {
     private Collection<MediaOrderEntity> orders;
 
 
-    @Id
-    @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getId() {
-        return super.getId();
-    }
-
-    public void setId(Integer id) {
-        super.setId(id);
-    }
-
     @Basic
     @Column(name = "price", nullable = false)
     public Integer getPrice() {

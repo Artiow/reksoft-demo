@@ -3,7 +3,7 @@ package ru.reksoft.demo.service;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import ru.reksoft.demo.dto.filters.StringSearcherDTO;
+import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDividerDTO;
 
 import javax.persistence.criteria.CriteriaBuilder;

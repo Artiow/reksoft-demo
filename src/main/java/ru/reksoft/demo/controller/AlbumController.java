@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.reksoft.demo.dto.AlbumDTO;
 import ru.reksoft.demo.dto.AlbumShortDTO;
-import ru.reksoft.demo.dto.filters.StringSearcherDTO;
+import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.service.AlbumService;
 

@@ -3,7 +3,7 @@ package ru.reksoft.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.*;
-import ru.reksoft.demo.dto.filters.MediaFilterDTO;
+import ru.reksoft.demo.dto.pagination.filters.MediaFilterDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.dto.pagination.PageDividerDTO;
 import ru.reksoft.demo.service.MediaService;

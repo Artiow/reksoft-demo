@@ -1,8 +1,9 @@
 package ru.reksoft.demo.dto;
 
-public class MediaShortDTO {
+import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
 
-    private Integer id;
+public class MediaShortDTO extends AbstractIdentifiedDTO {
+
     private Integer price;
     private String label;
     private String singer;
@@ -12,14 +13,10 @@ public class MediaShortDTO {
     private PictureDTO picture;
 
 
-    public Integer getId() {
-        return id;
+    public MediaShortDTO setId(Integer id) {
+        return (MediaShortDTO) super.setId(id);
     }
 
-    public MediaShortDTO setId(Integer id) {
-        this.id = id;
-        return this;
-    }
 
     public Integer getPrice() {
         return price;

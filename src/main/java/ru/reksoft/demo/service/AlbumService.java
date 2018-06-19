@@ -8,16 +8,13 @@ import ru.reksoft.demo.domain.AlbumEntity_;
 import ru.reksoft.demo.domain.CompositionEntity;
 import ru.reksoft.demo.domain.GenreEntity;
 import ru.reksoft.demo.dto.*;
-import ru.reksoft.demo.dto.filters.StringSearcherDTO;
+import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.mapper.AlbumMapper;
-import ru.reksoft.demo.mapper.CompositionMapper;
-import ru.reksoft.demo.mapper.GenreMapper;
 import ru.reksoft.demo.repository.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
-import java.util.Collection;
 
 @Service
 public class AlbumService extends AbstractService {

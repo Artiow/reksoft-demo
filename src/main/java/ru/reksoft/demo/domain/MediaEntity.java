@@ -17,6 +17,7 @@ public class MediaEntity extends AbstractIdentifiedEntity {
     private Collection<CurrentBasketEntity> baskets;
     private Collection<MediaOrderEntity> orders;
 
+
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

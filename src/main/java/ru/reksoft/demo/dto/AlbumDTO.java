@@ -1,11 +1,12 @@
 package ru.reksoft.demo.dto;
 
+import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
+
 import java.time.LocalDate;
 import java.util.*;
 
-public class AlbumDTO {
+public class AlbumDTO extends AbstractIdentifiedDTO {
 
-    private Integer id;
     private String name;
     private String description;
     private LocalDate releaseYear;
@@ -18,14 +19,10 @@ public class AlbumDTO {
     private PriorityQueue<CompositionDTO> compositions;
 
 
-    public Integer getId() {
-        return id;
+    public AlbumDTO setId(Integer id) {
+        return (AlbumDTO) super.setId(id);
     }
 
-    public AlbumDTO setId(Integer id) {
-        this.id = id;
-        return this;
-    }
 
     public String getName() {
         return name;

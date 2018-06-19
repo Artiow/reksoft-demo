@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.domain.LabelEntity;
 import ru.reksoft.demo.domain.LabelEntity_;
 import ru.reksoft.demo.dto.LabelDTO;
-import ru.reksoft.demo.dto.filters.StringSearcherDTO;
+import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.mapper.LabelMapper;
 import ru.reksoft.demo.repository.LabelRepository;

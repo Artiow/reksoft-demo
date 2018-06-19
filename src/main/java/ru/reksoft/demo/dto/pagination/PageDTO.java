@@ -1,11 +1,12 @@
 package ru.reksoft.demo.dto.pagination;
 
 import org.springframework.data.domain.Page;
+import ru.reksoft.demo.dto.generic.DataTransferObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PageDTO<T> {
+public class PageDTO<T> implements DataTransferObject {
 
     private List<T> content;
     private Integer pageNumber;

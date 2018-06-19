@@ -1,19 +1,16 @@
 package ru.reksoft.demo.dto;
 
-public class SingerDTO {
+import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
 
-    private Integer id;
+public class SingerDTO extends AbstractIdentifiedDTO {
+
     private String name;
 
 
-    public Integer getId() {
-        return id;
+    public MediaTypeDTO setId(Integer id) {
+        return (MediaTypeDTO) super.setId(id);
     }
 
-    public SingerDTO setId(Integer id) {
-        this.id = id;
-        return this;
-    }
 
     public String getName() {
         return name;

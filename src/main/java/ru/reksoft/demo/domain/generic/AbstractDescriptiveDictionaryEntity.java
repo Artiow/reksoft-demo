@@ -4,6 +4,7 @@ public abstract class AbstractDescriptiveDictionaryEntity extends AbstractDictio
 
     private String description;
 
+
     public String getDescription() {
         return description;
     }

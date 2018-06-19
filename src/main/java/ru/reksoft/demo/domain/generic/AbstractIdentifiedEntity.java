@@ -4,6 +4,7 @@ public abstract class AbstractIdentifiedEntity implements DomainObject {
 
     private Integer id;
 
+
     public Integer getId() {
         return id;
     }

@@ -5,6 +5,7 @@ public abstract class AbstractDictionaryEntity extends AbstractIdentifiedEntity 
     private String code;
     private String name;
 
+
     public String getCode() {
         return code;
     }

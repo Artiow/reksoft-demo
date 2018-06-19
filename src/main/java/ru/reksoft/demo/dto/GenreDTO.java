@@ -1,42 +1,24 @@
 package ru.reksoft.demo.dto;
 
-public class GenreDTO implements Comparable<GenreDTO> {
+import ru.reksoft.demo.dto.generic.AbstractDictionaryDTO;
 
-    private Integer id;
-    private String code;
-    private String name;
-
-
-    public Integer getId() {
-        return id;
-    }
+public class GenreDTO extends AbstractDictionaryDTO implements Comparable<GenreDTO> {
 
     public GenreDTO setId(Integer id) {
-        this.id = id;
-        return this;
-    }
-
-    public String getCode() {
-        return code;
+        return (GenreDTO) super.setId(id);
     }
 
     public GenreDTO setCode(String code) {
-        this.code = code;
-        return this;
-    }
-
-    public String getName() {
-        return name;
+        return (GenreDTO) super.setCode(code);
     }
 
     public GenreDTO setName(String name) {
-        this.name = name;
-        return this;
+        return (GenreDTO) super.setName(name);
     }
 
 
     @Override
     public int compareTo(GenreDTO o) {
-        return code.compareTo(o.code);
+        return getCode().compareTo(o.getCode());
     }
 }

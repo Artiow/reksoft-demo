@@ -1,10 +1,11 @@
 package ru.reksoft.demo.dto;
 
+import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
+
 import java.time.LocalDateTime;
 
-public class PictureDTO {
+public class PictureDTO extends AbstractIdentifiedDTO {
 
-    private Integer id;
     private String url;
     private String name;
     private Integer width;
@@ -12,14 +13,10 @@ public class PictureDTO {
     private LocalDateTime uploaded;
 
 
-    public Integer getId() {
-        return id;
+    public PictureDTO setId(Integer id) {
+        return (PictureDTO) super.setId(id);
     }
 
-    public PictureDTO setId(Integer id) {
-        this.id = id;
-        return this;
-    }
 
     public String getUrl() {
         return url;

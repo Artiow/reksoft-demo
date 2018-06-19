@@ -1,19 +1,16 @@
 package ru.reksoft.demo.dto;
 
-public class LabelDTO {
+import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
 
-    private Integer id;
+public class LabelDTO extends AbstractIdentifiedDTO {
+
     private String name;
 
 
-    public Integer getId() {
-        return id;
+    public LabelDTO setId(Integer id) {
+        return (LabelDTO) super.setId(id);
     }
 
-    public LabelDTO setId(Integer id) {
-        this.id = id;
-        return this;
-    }
 
     public String getName() {
         return name;

@@ -11,6 +11,7 @@ public class GenreEntity extends AbstractDictionaryEntity {
 
     private Collection<AlbumEntity> albums;
 
+
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

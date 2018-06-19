@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.domain.SingerEntity;
 import ru.reksoft.demo.domain.SingerEntity_;
 import ru.reksoft.demo.dto.SingerDTO;
-import ru.reksoft.demo.dto.filters.StringSearcherDTO;
+import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.mapper.SingerMapper;
 import ru.reksoft.demo.repository.SingerRepository;

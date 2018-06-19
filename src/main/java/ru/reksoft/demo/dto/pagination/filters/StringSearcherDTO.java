@@ -1,4 +1,4 @@
-package ru.reksoft.demo.dto.filters;
+package ru.reksoft.demo.dto.pagination.filters;
 
 import ru.reksoft.demo.dto.pagination.PageDividerDTO;
 

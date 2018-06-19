@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.reksoft.demo.domain.MediaEntity;
 
+import java.util.List;
+
 public interface MediaRepository extends JpaRepository<MediaEntity, Integer>, JpaSpecificationExecutor<MediaEntity> {
 
     Page<MediaEntity> findByAlbumSingerId(Integer id, Pageable pageable);
@@ -16,9 +18,6 @@ public interface MediaRepository extends JpaRepository<MediaEntity, Integer>, Jp
 
     Page<MediaEntity> findByAlbumId(Integer id, Pageable pageable);
 
-    @Query("SELECT media FROM MediaEntity media INNER JOIN media.album album INNER JOIN album.genres genre WHERE genre.id = :id")
-    Page<MediaEntity> findByGenreId(@Param("id") Integer id, Pageable pageable);
-
-    @Query("SELECT media FROM MediaEntity media INNER JOIN media.album album INNER JOIN album.genres genre WHERE genre.code = :code")
-    Page<MediaEntity> findByGenreCode(@Param("code") String code, Pageable pageable);
+    @Query("SELECT DISTINCT media FROM MediaEntity media INNER JOIN media.album album INNER JOIN album.genres genre WHERE genre.code IN (:codes)")
+    Page<MediaEntity> findByGenreCodes(@Param("codes") List<String> codes, Pageable pageable);
 }

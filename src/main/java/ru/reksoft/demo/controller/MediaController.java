@@ -7,6 +7,9 @@ import ru.reksoft.demo.dto.pagination.filters.MediaFilterDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.dto.pagination.PageDividerDTO;
 import ru.reksoft.demo.service.MediaService;
+import ru.reksoft.demo.util.MediaSearchType;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/media")
@@ -32,54 +35,30 @@ public class MediaController {
 
 
     /**
-     * Return list of media with pagination by singer by id
+     * Return list of media with pagination by label id, singer id or album id
      *
      * @return page with media
      */
-    @PostMapping("/bySinger/{id}")
-    public PageDTO<MediaShortDTO> getMediaListBySinger(@PathVariable int id, @RequestBody PageDividerDTO pd) {
-        return mediaService.getMediaListBySinger(id, pd);
-    }
-
-    /**
-     * Return list of media with pagination by label by id
-     *
-     * @return page with media
-     */
-    @PostMapping("/byLabel/{id}")
-    public PageDTO<MediaShortDTO> getMediaListByLabel(@PathVariable int id, @RequestBody PageDividerDTO pd) {
-        return mediaService.getMediaListByLabel(id, pd);
-    }
-
-    /**
-     * Return list of media with pagination by album by id
-     *
-     * @return page with media
-     */
-    @PostMapping("/byAlbum/{id}")
-    public PageDTO<MediaShortDTO> getMediaListByAlbum(@PathVariable int id, @RequestBody PageDividerDTO pd) {
-        return mediaService.getMediaListByAlbum(id, pd);
+    @PostMapping("/byAttribute")
+    public PageDTO<MediaShortDTO> getMediaListByAttribute(
+            @RequestParam("attribute") MediaSearchType attributeType, @RequestParam("id") Integer attributeId,
+            @RequestBody PageDividerDTO pageDivider
+    ) {
+        return mediaService.getMediaListByAttribute(attributeType, attributeId, pageDivider);
     }
 
 
     /**
-     * Return list of media with pagination by genre by id
+     * Return list of media with pagination by genre codes
      *
      * @return page with media
      */
-    @PostMapping("/byGenreId/{id}")
-    public PageDTO<MediaShortDTO> getMediaListByGenre(@PathVariable Integer id, @RequestBody PageDividerDTO pd) {
-        return mediaService.getMediaListByGenre(id, pd);
-    }
-
-    /**
-     * Return list of media with pagination by genre by code
-     *
-     * @return page with media
-     */
-    @PostMapping("/byGenreCode/{code}")
-    public PageDTO<MediaShortDTO> getMediaListByGenre(@PathVariable String code, @RequestBody PageDividerDTO pd) {
-        return mediaService.getMediaListByGenre(code, pd);
+    @PostMapping("/byGenres") //TODO: remove this?
+    public PageDTO<MediaShortDTO> getMediaListByGenre(
+            @RequestParam("genre") List<String> genreCodes,
+            @RequestBody PageDividerDTO pageDivider
+    ) {
+        return mediaService.getMediaListByGenres(genreCodes, pageDivider);
     }
 
 

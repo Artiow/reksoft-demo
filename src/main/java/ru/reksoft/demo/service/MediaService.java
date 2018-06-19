@@ -1,6 +1,8 @@
 package ru.reksoft.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,7 @@ import javax.persistence.criteria.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class MediaService extends AbstractService {
@@ -48,70 +51,44 @@ public class MediaService extends AbstractService {
         return new PageDTO<>(mediaRepository.findAll(filter, filter.getPageRequest()).map(mediaMapper::toShortDTO));
     }
 
-
     /**
-     * Returns page with media by album by id
+     * Returns page with media by one of attribute (album, label, singer) id
      *
-     * @param id - album id
+     * @param attribute_type - attribute type
+     * @param attribute_id - attribute id
      * @param pdDTO - page divider
      * @return media page
      */
     @Transactional(readOnly = true)
-    public PageDTO<MediaShortDTO> getMediaListBySinger(@NotNull Integer id, @NotNull PageDividerDTO pdDTO) {
-        PageDivider pd = new PageDivider(pdDTO);
-        return new PageDTO<>(mediaRepository.findByAlbumSingerId(id, pd.getPageRequest()).map(mediaMapper::toShortDTO));
+    public PageDTO<MediaShortDTO> getMediaListByAttribute(@NotNull MediaSearchType attribute_type, Integer attribute_id, PageDividerDTO pdDTO) {
+        Pageable request = new PageDivider(pdDTO).getPageRequest();
+
+        Page<MediaEntity> page = null;
+        switch (attribute_type) {
+            case BY_ALBUM:
+                page = mediaRepository.findByAlbumId(attribute_id, request);
+                break;
+            case BY_LABEL:
+                page = mediaRepository.findByAlbumLabelId(attribute_id, request);
+                break;
+            case BY_SINGER:
+                page = mediaRepository.findByAlbumSingerId(attribute_id, request);
+                break;
+        }
+
+        return new PageDTO<>(page.map(mediaMapper::toShortDTO));
     }
 
     /**
-     * Returns page with media by label by id
+     * Returns page with media by album genre codes
      *
-     * @param id - label id
+     * @param codes - list of genre codes
      * @param pdDTO - page divider
      * @return media page
      */
     @Transactional(readOnly = true)
-    public PageDTO<MediaShortDTO> getMediaListByLabel(@NotNull Integer id, @NotNull PageDividerDTO pdDTO) {
-        PageDivider pd = new PageDivider(pdDTO);
-        return new PageDTO<>(mediaRepository.findByAlbumLabelId(id, pd.getPageRequest()).map(mediaMapper::toShortDTO));
-    }
-
-    /**
-     * Returns page with media by album by id
-     *
-     * @param id - album id
-     * @param pdDTO - page divider
-     * @return media page
-     */
-    @Transactional(readOnly = true)
-    public PageDTO<MediaShortDTO> getMediaListByAlbum(@NotNull Integer id, @NotNull PageDividerDTO pdDTO) {
-        PageDivider pd = new PageDivider(pdDTO);
-        return new PageDTO<>(mediaRepository.findByAlbumId(id, pd.getPageRequest()).map(mediaMapper::toShortDTO));
-    }
-
-    /**
-     * Returns page with media by album genre by id
-     *
-     * @param id - genre id
-     * @param pdDTO - page divider
-     * @return media page
-     */
-    @Transactional(readOnly = true)
-    public PageDTO<MediaShortDTO> getMediaListByGenre(@NotNull Integer id, @NotNull PageDividerDTO pdDTO) {
-        PageDivider pd = new PageDivider(pdDTO);
-        return new PageDTO<>(mediaRepository.findByGenreId(id, pd.getPageRequest()).map(mediaMapper::toShortDTO));
-    }
-
-    /**
-     * Returns page with media by album genre by code
-     *
-     * @param code - genre code
-     * @param pdDTO - page divider
-     * @return media page
-     */
-    @Transactional(readOnly = true)
-    public PageDTO<MediaShortDTO> getMediaListByGenre(@NotNull String code, @NotNull PageDividerDTO pdDTO) {
-        PageDivider pd = new PageDivider(pdDTO);
-        return new PageDTO<>(mediaRepository.findByGenreCode(code, pd.getPageRequest()).map(mediaMapper::toShortDTO));
+    public PageDTO<MediaShortDTO> getMediaListByGenres(@NotNull List<String> codes, @NotNull PageDividerDTO pdDTO) {
+        return new PageDTO<>(mediaRepository.findByGenreCodes(codes, new PageDivider(pdDTO).getPageRequest()).map(mediaMapper::toShortDTO));
     }
 
 

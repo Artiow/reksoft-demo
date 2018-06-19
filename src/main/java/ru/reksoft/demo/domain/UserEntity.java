@@ -9,21 +9,42 @@ import java.util.Collection;
 @Table(name = "user")
 public class UserEntity extends AbstractIdentifiedEntity {
 
-    private String login;
-    private String password;
-    private String name;
-    private String surname;
-    private String patronymic;
-    private String address;
-    private String phone;
-
-    private UserRoleEntity role;
-
-    private Collection<CurrentBasketEntity> baskets;
-
-
     @Basic
     @Column(name = "login", nullable = false)
+    private String login;
+
+    @Basic
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @Basic
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Basic
+    @Column(name = "surname", nullable = false)
+    private String surname;
+
+    @Basic
+    @Column(name = "patronymic", nullable = false)
+    private String patronymic;
+
+    @Basic
+    @Column(name = "address", nullable = false)
+    private String address;
+
+    @Basic
+    @Column(name = "phone", nullable = false)
+    private String phone;
+
+    @OneToMany(mappedBy = "user")
+    private Collection<CurrentBasketEntity> baskets;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
+    private UserRoleEntity role;
+
+
     public String getLogin() {
         return login;
     }
@@ -32,8 +53,6 @@ public class UserEntity extends AbstractIdentifiedEntity {
         this.login = login;
     }
 
-    @Basic
-    @Column(name = "password", nullable = false)
     public String getPassword() {
         return password;
     }
@@ -42,8 +61,6 @@ public class UserEntity extends AbstractIdentifiedEntity {
         this.password = password;
     }
 
-    @Basic
-    @Column(name = "name", nullable = false)
     public String getName() {
         return name;
     }
@@ -52,8 +69,6 @@ public class UserEntity extends AbstractIdentifiedEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "surname", nullable = false)
     public String getSurname() {
         return surname;
     }
@@ -62,8 +77,6 @@ public class UserEntity extends AbstractIdentifiedEntity {
         this.surname = surname;
     }
 
-    @Basic
-    @Column(name = "patronymic", nullable = false)
     public String getPatronymic() {
         return patronymic;
     }
@@ -72,8 +85,6 @@ public class UserEntity extends AbstractIdentifiedEntity {
         this.patronymic = patronymic;
     }
 
-    @Basic
-    @Column(name = "address", nullable = false)
     public String getAddress() {
         return address;
     }
@@ -82,8 +93,6 @@ public class UserEntity extends AbstractIdentifiedEntity {
         this.address = address;
     }
 
-    @Basic
-    @Column(name = "phone", nullable = false)
     public String getPhone() {
         return phone;
     }
@@ -92,8 +101,6 @@ public class UserEntity extends AbstractIdentifiedEntity {
         this.phone = phone;
     }
 
-
-    @OneToMany(mappedBy = "user")
     public Collection<CurrentBasketEntity> getBaskets() {
         return baskets;
     }
@@ -102,9 +109,6 @@ public class UserEntity extends AbstractIdentifiedEntity {
         this.baskets = baskets;
     }
 
-
-    @ManyToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     public UserRoleEntity getRole() {
         return role;
     }

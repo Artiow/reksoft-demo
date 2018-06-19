@@ -1,7 +1,6 @@
 package ru.reksoft.demo.util;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import org.springframework.beans.factory.annotation.Value;
 
 public enum MediaSearchType {
     BY_SINGER("bySinger"),

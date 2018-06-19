@@ -5,12 +5,12 @@ import javax.persistence.*;
 @MappedSuperclass
 public abstract class AbstractIdentifiedEntity implements DomainObject {
 
-    private Integer id;
-
-
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+
     public Integer getId() {
         return id;
     }

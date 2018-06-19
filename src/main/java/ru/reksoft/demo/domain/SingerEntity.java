@@ -9,13 +9,14 @@ import java.util.Collection;
 @Table(name = "singer")
 public class SingerEntity extends AbstractIdentifiedEntity {
 
+    @Basic
+    @Column(name = "name", nullable = false)
     private String name;
 
+    @OneToMany(mappedBy = "singer")
     private Collection<AlbumEntity> albums;
 
 
-    @Basic
-    @Column(name = "name", nullable = false)
     public String getName() {
         return name;
     }
@@ -24,8 +25,6 @@ public class SingerEntity extends AbstractIdentifiedEntity {
         this.name = name;
     }
 
-
-    @OneToMany(mappedBy = "singer")
     public Collection<AlbumEntity> getAlbums() {
         return albums;
     }

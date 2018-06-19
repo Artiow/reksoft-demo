@@ -7,8 +7,8 @@ public class SingerDTO extends AbstractIdentifiedDTO {
     private String name;
 
 
-    public MediaTypeDTO setId(Integer id) {
-        return (MediaTypeDTO) super.setId(id);
+    public SingerDTO setId(Integer id) {
+        return (SingerDTO) super.setId(id);
     }
 
 

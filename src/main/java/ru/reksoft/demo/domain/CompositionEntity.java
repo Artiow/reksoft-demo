@@ -9,25 +9,23 @@ import java.sql.Timestamp;
 @Table(name = "composition")
 public class CompositionEntity extends AbstractIdentifiedEntity {
 
+    @Basic
+    @Column(name = "name", nullable = false)
     private String name;
-    private Integer position;
-    private Timestamp duration;
-
-    private AlbumEntity album;
-
 
     @Basic
     @Column(name = "album_pos", nullable = false)
-    public Integer getPosition() {
-        return position;
-    }
-
-    public void setPosition(Integer position) {
-        this.position = position;
-    }
+    private Integer position;
 
     @Basic
-    @Column(name = "name", nullable = false)
+    @Column(name = "duration", nullable = false)
+    private Timestamp duration;
+
+    @ManyToOne
+    @JoinColumn(name = "album_id", referencedColumnName = "id", nullable = false)
+    private AlbumEntity album;
+
+
     public String getName() {
         return name;
     }
@@ -36,8 +34,14 @@ public class CompositionEntity extends AbstractIdentifiedEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "duration", nullable = false)
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
     public Timestamp getDuration() {
         return duration;
     }
@@ -46,9 +50,6 @@ public class CompositionEntity extends AbstractIdentifiedEntity {
         this.duration = duration;
     }
 
-
-    @ManyToOne
-    @JoinColumn(name = "album_id", referencedColumnName = "id", nullable = false)
     public AlbumEntity getAlbum() {
         return album;
     }

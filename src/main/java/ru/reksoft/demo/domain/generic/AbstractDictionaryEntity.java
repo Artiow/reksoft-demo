@@ -7,12 +7,15 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class AbstractDictionaryEntity extends AbstractIdentifiedEntity {
 
+    @Basic
+    @Column(name = "code", nullable = false)
     private String code;
+
+    @Basic
+    @Column(name = "name", nullable = false)
     private String name;
 
 
-    @Basic
-    @Column(name = "code", nullable = false)
     public String getCode() {
         return code;
     }
@@ -21,8 +24,6 @@ public abstract class AbstractDictionaryEntity extends AbstractIdentifiedEntity 
         this.code = code;
     }
 
-    @Basic
-    @Column(name = "name", nullable = false)
     public String getName() {
         return name;
     }

@@ -9,15 +9,27 @@ import java.sql.Timestamp;
 @Table(name = "picture")
 public class PictureEntity extends AbstractIdentifiedEntity {
 
+    @Basic
+    @Column(name = "url", nullable = false)
     private String url;
+
+    @Basic
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @Basic
+    @Column(name = "width", nullable = false)
     private Integer width;
+
+    @Basic
+    @Column(name = "height", nullable = false)
     private Integer height;
+
+    @Basic
+    @Column(name = "uploaded", nullable = false)
     private Timestamp uploaded;
 
 
-    @Basic
-    @Column(name = "url", nullable = false)
     public String getUrl() {
         return url;
     }
@@ -26,8 +38,6 @@ public class PictureEntity extends AbstractIdentifiedEntity {
         this.url = url;
     }
 
-    @Basic
-    @Column(name = "name", nullable = false)
     public String getName() {
         return name;
     }
@@ -36,8 +46,6 @@ public class PictureEntity extends AbstractIdentifiedEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "width", nullable = false)
     public Integer getWidth() {
         return width;
     }
@@ -46,8 +54,6 @@ public class PictureEntity extends AbstractIdentifiedEntity {
         this.width = width;
     }
 
-    @Basic
-    @Column(name = "height", nullable = false)
     public Integer getHeight() {
         return height;
     }
@@ -56,8 +62,6 @@ public class PictureEntity extends AbstractIdentifiedEntity {
         this.height = height;
     }
 
-    @Basic
-    @Column(name = "uploaded", nullable = false)
     public Timestamp getUploaded() {
         return uploaded;
     }

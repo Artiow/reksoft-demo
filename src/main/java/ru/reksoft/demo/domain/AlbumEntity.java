@@ -5,26 +5,51 @@ import ru.reksoft.demo.domain.generic.AbstractIdentifiedEntity;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "album")
 public class AlbumEntity extends AbstractIdentifiedEntity {
 
-    private String name;
-    private String description;
-    private Timestamp releaseYear;
-
-    private LabelEntity label;
-    private SingerEntity singer;
-    private PictureEntity picture;
-
-    private Collection<MediaEntity> media;
-    private Collection<GenreEntity> genres;
-    private Collection<CompositionEntity> compositions;
-
-
     @Basic
     @Column(name = "name", nullable = false)
+    private String name;
+
+    @Basic
+    @Column(name = "description")
+    private String description;
+
+    @Basic
+    @Column(name = "release_year", nullable = false)
+    private Timestamp releaseYear;
+
+    @OneToOne
+    @JoinColumn(name = "picture_id", referencedColumnName = "id")
+    private PictureEntity picture;
+
+    @OneToMany(mappedBy = "album")
+    private Collection<MediaEntity> media;
+
+    @OneToMany(mappedBy = "album", cascade = CascadeType.PERSIST)
+    private Collection<CompositionEntity> compositions;
+
+    @ManyToOne
+    @JoinColumn(name = "label_id", referencedColumnName = "id", nullable = false)
+    private LabelEntity label;
+
+    @ManyToOne
+    @JoinColumn(name = "singer_id", referencedColumnName = "id", nullable = false)
+    private SingerEntity singer;
+
+    @ManyToMany
+    @JoinTable(
+            name = "album_genres",
+            joinColumns = @JoinColumn(name = "album_id", referencedColumnName = "id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id", nullable = false)
+    )
+    private Collection<GenreEntity> genres;
+
+
     public String getName() {
         return name;
     }
@@ -33,8 +58,6 @@ public class AlbumEntity extends AbstractIdentifiedEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "description")
     public String getDescription() {
         return description;
     }
@@ -43,8 +66,6 @@ public class AlbumEntity extends AbstractIdentifiedEntity {
         this.description = description;
     }
 
-    @Basic
-    @Column(name = "release_year", nullable = false)
     public Timestamp getReleaseYear() {
         return releaseYear;
     }
@@ -53,9 +74,6 @@ public class AlbumEntity extends AbstractIdentifiedEntity {
         this.releaseYear = releaseYear;
     }
 
-
-    @OneToOne
-    @JoinColumn(name = "picture_id", referencedColumnName = "id")
     public PictureEntity getPicture() {
         return picture;
     }
@@ -64,8 +82,6 @@ public class AlbumEntity extends AbstractIdentifiedEntity {
         this.picture = picture;
     }
 
-
-    @OneToMany(mappedBy = "album")
     public Collection<MediaEntity> getMedia() {
         return media;
     }
@@ -74,7 +90,6 @@ public class AlbumEntity extends AbstractIdentifiedEntity {
         this.media = media;
     }
 
-    @OneToMany(mappedBy = "album", cascade = CascadeType.PERSIST)
     public Collection<CompositionEntity> getCompositions() {
         return compositions;
     }
@@ -83,9 +98,6 @@ public class AlbumEntity extends AbstractIdentifiedEntity {
         this.compositions = compositions;
     }
 
-
-    @ManyToOne
-    @JoinColumn(name = "label_id", referencedColumnName = "id", nullable = false)
     public LabelEntity getLabel() {
         return label;
     }
@@ -94,8 +106,6 @@ public class AlbumEntity extends AbstractIdentifiedEntity {
         this.label = label;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "singer_id", referencedColumnName = "id", nullable = false)
     public SingerEntity getSinger() {
         return singer;
     }
@@ -104,9 +114,6 @@ public class AlbumEntity extends AbstractIdentifiedEntity {
         this.singer = singer;
     }
 
-
-    @ManyToMany
-    @JoinTable(name = "album_genres", catalog = "reksoft", schema = "demo", joinColumns = @JoinColumn(name = "album_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id", nullable = false))
     public Collection<GenreEntity> getGenres() {
         return genres;
     }

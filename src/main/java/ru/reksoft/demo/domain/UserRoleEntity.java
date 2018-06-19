@@ -9,10 +9,10 @@ import java.util.Collection;
 @Table(name = "user_role")
 public class UserRoleEntity extends AbstractDescriptiveDictionaryEntity {
 
+    @OneToMany(mappedBy = "role")
     private Collection<UserEntity> users;
 
 
-    @OneToMany(mappedBy = "role")
     public Collection<UserEntity> getUsers() {
         return users;
     }

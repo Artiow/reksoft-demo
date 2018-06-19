@@ -9,10 +9,10 @@ import java.util.Collection;
 @Table(name = "genre")
 public class GenreEntity extends AbstractDictionaryEntity {
 
+    @ManyToMany(mappedBy = "genres")
     private Collection<AlbumEntity> albums;
 
 
-    @ManyToMany(mappedBy = "genres")
     public Collection<AlbumEntity> getAlbums() {
         return albums;
     }

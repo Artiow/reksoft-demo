@@ -7,11 +7,11 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class AbstractDescriptiveDictionaryEntity extends AbstractDictionaryEntity {
 
+    @Basic
+    @Column(name = "description")
     private String description;
 
 
-    @Basic
-    @Column(name = "description")
     public String getDescription() {
         return description;
     }

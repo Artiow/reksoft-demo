@@ -10,16 +10,22 @@ import java.util.Collection;
 @Table(name = "order")
 public class OrderEntity extends AbstractIdentifiedEntity {
 
-    private String address;
-    private Timestamp orderedTime;
-
-    private OrderStatusEntity status;
-
-    private Collection<MediaOrderEntity> media;
-
-
     @Basic
     @Column(name = "address")
+    private String address;
+
+    @Basic
+    @Column(name = "ordered")
+    private Timestamp orderedTime;
+
+    @OneToMany(mappedBy = "order")
+    private Collection<MediaOrderEntity> media;
+
+    @ManyToOne
+    @JoinColumn(name = "status_id", referencedColumnName = "id", nullable = false)
+    private OrderStatusEntity status;
+
+
     public String getAddress() {
         return address;
     }
@@ -28,8 +34,6 @@ public class OrderEntity extends AbstractIdentifiedEntity {
         this.address = address;
     }
 
-    @Basic
-    @Column(name = "ordered")
     public Timestamp getOrderedTime() {
         return orderedTime;
     }
@@ -38,8 +42,6 @@ public class OrderEntity extends AbstractIdentifiedEntity {
         this.orderedTime = orderedTime;
     }
 
-
-    @OneToMany(mappedBy = "order")
     public Collection<MediaOrderEntity> getMedia() {
         return media;
     }
@@ -48,9 +50,6 @@ public class OrderEntity extends AbstractIdentifiedEntity {
         this.media = media;
     }
 
-
-    @ManyToOne
-    @JoinColumn(name = "status_id", referencedColumnName = "id", nullable = false)
     public OrderStatusEntity getStatus() {
         return status;
     }

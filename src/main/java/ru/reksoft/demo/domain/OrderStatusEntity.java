@@ -9,10 +9,10 @@ import java.util.Collection;
 @Table(name = "order_status")
 public class OrderStatusEntity extends AbstractDescriptiveDictionaryEntity {
 
+    @OneToMany(mappedBy = "status")
     private Collection<OrderEntity> orders;
 
 
-    @OneToMany(mappedBy = "status")
     public Collection<OrderEntity> getOrders() {
         return orders;
     }

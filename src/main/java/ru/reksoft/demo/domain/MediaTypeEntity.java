@@ -9,10 +9,10 @@ import java.util.Collection;
 @Table(name = "media_type")
 public class MediaTypeEntity extends AbstractDescriptiveDictionaryEntity {
 
+    @OneToMany(mappedBy = "type")
     private Collection<MediaEntity> media;
 
 
-    @OneToMany(mappedBy = "type")
     public Collection<MediaEntity> getMedia() {
         return media;
     }

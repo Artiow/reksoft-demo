@@ -9,17 +9,25 @@ import java.util.Collection;
 @Table(name = "media")
 public class MediaEntity extends AbstractIdentifiedEntity {
 
-    private Integer price;
-
-    private MediaTypeEntity type;
-    private AlbumEntity album;
-
-    private Collection<CurrentBasketEntity> baskets;
-    private Collection<MediaOrderEntity> orders;
-
-
     @Basic
     @Column(name = "price", nullable = false)
+    private Integer price;
+
+    @OneToMany(mappedBy = "media")
+    private Collection<CurrentBasketEntity> baskets;
+
+    @OneToMany(mappedBy = "media")
+    private Collection<MediaOrderEntity> orders;
+
+    @ManyToOne
+    @JoinColumn(name = "type_id", referencedColumnName = "id", nullable = false)
+    private MediaTypeEntity type;
+
+    @ManyToOne
+    @JoinColumn(name = "album_id", referencedColumnName = "id", nullable = false)
+    private AlbumEntity album;
+
+
     public Integer getPrice() {
         return price;
     }
@@ -28,8 +36,6 @@ public class MediaEntity extends AbstractIdentifiedEntity {
         this.price = price;
     }
 
-
-    @OneToMany(mappedBy = "media")
     public Collection<CurrentBasketEntity> getBaskets() {
         return baskets;
     }
@@ -38,7 +44,6 @@ public class MediaEntity extends AbstractIdentifiedEntity {
         this.baskets = baskets;
     }
 
-    @OneToMany(mappedBy = "media")
     public Collection<MediaOrderEntity> getOrders() {
         return orders;
     }
@@ -47,9 +52,6 @@ public class MediaEntity extends AbstractIdentifiedEntity {
         this.orders = orders;
     }
 
-
-    @ManyToOne
-    @JoinColumn(name = "type_id", referencedColumnName = "id", nullable = false)
     public MediaTypeEntity getType() {
         return type;
     }
@@ -58,8 +60,6 @@ public class MediaEntity extends AbstractIdentifiedEntity {
         this.type = type;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "album_id", referencedColumnName = "id", nullable = false)
     public AlbumEntity getAlbum() {
         return album;
     }

@@ -9,8 +9,6 @@ import ru.reksoft.demo.dto.pagination.PageDividerDTO;
 import ru.reksoft.demo.service.MediaService;
 import ru.reksoft.demo.util.MediaSearchType;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("api/media")
 public class MediaController {
@@ -28,14 +26,14 @@ public class MediaController {
      *
      * @return page with media
      */
-    @PostMapping("/list")
+    @PostMapping("/byFilter")
     public PageDTO<MediaShortDTO> getMediaList(@RequestBody MediaFilterDTO filter) {
         return mediaService.getMediaList(filter);
     }
 
 
     /**
-     * Return list of media with pagination by label id, singer id or album id
+     * Return list of media with pagination by one of attribute (album, label, singer) id
      *
      * @return page with media
      */
@@ -45,20 +43,6 @@ public class MediaController {
             @RequestBody PageDividerDTO pageDivider
     ) {
         return mediaService.getMediaListByAttribute(attributeType, attributeId, pageDivider);
-    }
-
-
-    /**
-     * Return list of media with pagination by genre codes
-     *
-     * @return page with media
-     */
-    @PostMapping("/byGenres") //TODO: remove this?
-    public PageDTO<MediaShortDTO> getMediaListByGenre(
-            @RequestParam("genre") List<String> genreCodes,
-            @RequestBody PageDividerDTO pageDivider
-    ) {
-        return mediaService.getMediaListByGenres(genreCodes, pageDivider);
     }
 
 

@@ -19,7 +19,6 @@ import javax.persistence.criteria.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Service
 public class MediaService extends AbstractService {
@@ -51,44 +50,32 @@ public class MediaService extends AbstractService {
         return new PageDTO<>(mediaRepository.findAll(filter, filter.getPageRequest()).map(mediaMapper::toShortDTO));
     }
 
+
     /**
      * Returns page with media by one of attribute (album, label, singer) id
      *
-     * @param attribute_type - attribute type
-     * @param attribute_id - attribute id
-     * @param pdDTO - page divider
+     * @param attributeType - attribute type
+     * @param attributeId - attribute id
+     * @param pageDivider - page divider
      * @return media page
      */
     @Transactional(readOnly = true)
-    public PageDTO<MediaShortDTO> getMediaListByAttribute(@NotNull MediaSearchType attribute_type, Integer attribute_id, PageDividerDTO pdDTO) {
-        Pageable request = new PageDivider(pdDTO).getPageRequest();
-
+    public PageDTO<MediaShortDTO> getMediaListByAttribute(@NotNull MediaSearchType attributeType, @NotNull Integer attributeId, @NotNull PageDividerDTO pageDivider) {
+        Pageable request = new PageDivider(pageDivider).getPageRequest();
         Page<MediaEntity> page = null;
-        switch (attribute_type) {
+        switch (attributeType) {
             case BY_ALBUM:
-                page = mediaRepository.findByAlbumId(attribute_id, request);
+                page = mediaRepository.findByAlbumId(attributeId, request);
                 break;
             case BY_LABEL:
-                page = mediaRepository.findByAlbumLabelId(attribute_id, request);
+                page = mediaRepository.findByAlbumLabelId(attributeId, request);
                 break;
             case BY_SINGER:
-                page = mediaRepository.findByAlbumSingerId(attribute_id, request);
+                page = mediaRepository.findByAlbumSingerId(attributeId, request);
                 break;
         }
 
         return new PageDTO<>(page.map(mediaMapper::toShortDTO));
-    }
-
-    /**
-     * Returns page with media by album genre codes
-     *
-     * @param codes - list of genre codes
-     * @param pdDTO - page divider
-     * @return media page
-     */
-    @Transactional(readOnly = true)
-    public PageDTO<MediaShortDTO> getMediaListByGenres(@NotNull List<String> codes, @NotNull PageDividerDTO pdDTO) {
-        return new PageDTO<>(mediaRepository.findByGenreCodes(codes, new PageDivider(pdDTO).getPageRequest()).map(mediaMapper::toShortDTO));
     }
 
 
@@ -98,7 +85,7 @@ public class MediaService extends AbstractService {
      * @return media
      */
     @Transactional(readOnly = true)
-    public MediaDTO getMedia(Integer id) {
+    public MediaDTO getMedia(@NotNull Integer id) {
         return mediaMapper.toDTO(mediaRepository.getOne(id));
     }
 

@@ -1,15 +1,16 @@
 package ru.reksoft.demo.domain;
 
+import ru.reksoft.demo.domain.generic.AbstractIdentifiedEntity;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "composition")
-public class CompositionEntity {
+public class CompositionEntity extends AbstractIdentifiedEntity {
 
-    private Integer id;
-    private Integer position;
     private String name;
+    private Integer position;
     private Timestamp duration;
 
     private AlbumEntity album;
@@ -19,11 +20,11 @@ public class CompositionEntity {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
-        return id;
+        return super.getId();
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        super.setId(id);
     }
 
     @Basic
@@ -54,22 +55,6 @@ public class CompositionEntity {
 
     public void setDuration(Timestamp duration) {
         this.duration = duration;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CompositionEntity that = (CompositionEntity) o;
-
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
     }
 
 

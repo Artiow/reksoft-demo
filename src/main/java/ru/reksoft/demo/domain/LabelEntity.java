@@ -1,13 +1,14 @@
 package ru.reksoft.demo.domain;
 
+import ru.reksoft.demo.domain.generic.AbstractIdentifiedEntity;
+
 import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
 @Table(name = "label")
-public class LabelEntity {
+public class LabelEntity extends AbstractIdentifiedEntity {
 
-    private Integer id;
     private String name;
 
     private Collection<AlbumEntity> albums;
@@ -16,11 +17,11 @@ public class LabelEntity {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
-        return id;
+        return super.getId();
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        super.setId(id);
     }
 
     @Basic
@@ -31,22 +32,6 @@ public class LabelEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        LabelEntity that = (LabelEntity) o;
-
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
     }
 
 

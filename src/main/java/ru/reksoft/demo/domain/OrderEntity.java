@@ -1,16 +1,17 @@
 package ru.reksoft.demo.domain;
 
+import ru.reksoft.demo.domain.generic.AbstractIdentifiedEntity;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
 
 @Entity
 @Table(name = "order")
-public class OrderEntity {
+public class OrderEntity extends AbstractIdentifiedEntity {
 
-    private Integer id;
     private String address;
-    private Timestamp ordered;
+    private Timestamp orderedTime;
 
     private OrderStatusEntity status;
 
@@ -21,11 +22,11 @@ public class OrderEntity {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
-        return id;
+        return super.getId();
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        super.setId(id);
     }
 
     @Basic
@@ -40,28 +41,22 @@ public class OrderEntity {
 
     @Basic
     @Column(name = "ordered")
-    public Timestamp getOrdered() {
-        return ordered;
+    public Timestamp getOrderedTime() {
+        return orderedTime;
     }
 
-    public void setOrdered(Timestamp ordered) {
-        this.ordered = ordered;
+    public void setOrderedTime(Timestamp orderedTime) {
+        this.orderedTime = orderedTime;
     }
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        OrderEntity that = (OrderEntity) o;
-
-        return id.equals(that.id);
+    @OneToMany(mappedBy = "order")
+    public Collection<MediaOrderEntity> getMedia() {
+        return media;
     }
 
-    @Override
-    public int hashCode() {
-        return id.hashCode();
+    public void setMedia(Collection<MediaOrderEntity> media) {
+        this.media = media;
     }
 
 
@@ -73,15 +68,5 @@ public class OrderEntity {
 
     public void setStatus(OrderStatusEntity status) {
         this.status = status;
-    }
-
-
-    @OneToMany(mappedBy = "order")
-    public Collection<MediaOrderEntity> getMedia() {
-        return media;
-    }
-
-    public void setMedia(Collection<MediaOrderEntity> media) {
-        this.media = media;
     }
 }

@@ -54,22 +54,6 @@ public class MediaOrderEntity {
     }
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        MediaOrderEntity that = (MediaOrderEntity) o;
-
-        return pk.equals(that.pk);
-    }
-
-    @Override
-    public int hashCode() {
-        return pk.hashCode();
-    }
-
-
     @ManyToOne
     @JoinColumn(name = "media_id", referencedColumnName = "id", nullable = false)
     public MediaEntity getMedia() {

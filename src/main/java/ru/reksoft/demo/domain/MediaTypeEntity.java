@@ -1,16 +1,13 @@
 package ru.reksoft.demo.domain;
 
+import ru.reksoft.demo.domain.generic.AbstractDescriptiveDictionaryEntity;
+
 import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
 @Table(name = "media_type")
-public class MediaTypeEntity {
-
-    private Integer id;
-    private String code;
-    private String name;
-    private String description;
+public class MediaTypeEntity extends AbstractDescriptiveDictionaryEntity {
 
     private Collection<MediaEntity> media;
 
@@ -19,57 +16,41 @@ public class MediaTypeEntity {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
-        return id;
+        return super.getId();
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        super.setId(id);
     }
 
     @Basic
     @Column(name = "code", nullable = false)
     public String getCode() {
-        return code;
+        return super.getCode();
     }
 
     public void setCode(String code) {
-        this.code = code;
+        super.setCode(code);
     }
 
     @Basic
     @Column(name = "name", nullable = false)
     public String getName() {
-        return name;
+        return super.getName();
     }
 
     public void setName(String name) {
-        this.name = name;
+        super.setName(name);
     }
 
     @Basic
     @Column(name = "description")
     public String getDescription() {
-        return description;
+        return super.getDescription();
     }
 
     public void setDescription(String description) {
-        this.description = description;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        MediaTypeEntity that = (MediaTypeEntity) o;
-
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
+        super.setDescription(description);
     }
 
 

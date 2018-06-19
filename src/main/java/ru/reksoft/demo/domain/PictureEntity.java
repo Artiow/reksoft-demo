@@ -1,13 +1,14 @@
 package ru.reksoft.demo.domain;
 
+import ru.reksoft.demo.domain.generic.AbstractIdentifiedEntity;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "picture")
-public class PictureEntity {
+public class PictureEntity extends AbstractIdentifiedEntity {
 
-    private Integer id;
     private String url;
     private String name;
     private Integer width;
@@ -18,11 +19,11 @@ public class PictureEntity {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
-        return id;
+        return super.getId();
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        super.setId(id);
     }
 
     @Basic

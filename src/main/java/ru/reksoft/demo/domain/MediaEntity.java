@@ -1,13 +1,14 @@
 package ru.reksoft.demo.domain;
 
+import ru.reksoft.demo.domain.generic.AbstractIdentifiedEntity;
+
 import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
 @Table(name = "media")
-public class MediaEntity {
+public class MediaEntity extends AbstractIdentifiedEntity {
 
-    private Integer id;
     private Integer price;
 
     private MediaTypeEntity type;
@@ -20,11 +21,11 @@ public class MediaEntity {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
-        return id;
+        return super.getId();
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        super.setId(id);
     }
 
     @Basic
@@ -38,19 +39,22 @@ public class MediaEntity {
     }
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        MediaEntity that = (MediaEntity) o;
-
-        return id.equals(that.id);
+    @OneToMany(mappedBy = "media")
+    public Collection<CurrentBasketEntity> getBaskets() {
+        return baskets;
     }
 
-    @Override
-    public int hashCode() {
-        return id.hashCode();
+    public void setBaskets(Collection<CurrentBasketEntity> baskets) {
+        this.baskets = baskets;
+    }
+
+    @OneToMany(mappedBy = "media")
+    public Collection<MediaOrderEntity> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Collection<MediaOrderEntity> orders) {
+        this.orders = orders;
     }
 
 
@@ -72,24 +76,5 @@ public class MediaEntity {
 
     public void setAlbum(AlbumEntity album) {
         this.album = album;
-    }
-
-
-    @OneToMany(mappedBy = "media")
-    public Collection<CurrentBasketEntity> getBaskets() {
-        return baskets;
-    }
-
-    public void setBaskets(Collection<CurrentBasketEntity> baskets) {
-        this.baskets = baskets;
-    }
-
-    @OneToMany(mappedBy = "media")
-    public Collection<MediaOrderEntity> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(Collection<MediaOrderEntity> orders) {
-        this.orders = orders;
     }
 }

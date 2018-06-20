@@ -12,7 +12,9 @@ import ru.reksoft.demo.dto.pagination.filters.MediaFilterDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.dto.pagination.PageDividerDTO;
 import ru.reksoft.demo.mapper.MediaMapper;
+import ru.reksoft.demo.repository.AlbumRepository;
 import ru.reksoft.demo.repository.MediaRepository;
+import ru.reksoft.demo.repository.MediaTypeRepository;
 import ru.reksoft.demo.util.MediaSearchType;
 
 import javax.persistence.criteria.*;
@@ -23,13 +25,25 @@ import java.util.Collection;
 @Service
 public class MediaService extends AbstractService {
 
+    private AlbumRepository albumRepository;
     private MediaRepository mediaRepository;
+    private MediaTypeRepository mediaTypeRepository;
 
     private MediaMapper mediaMapper;
 
     @Autowired
+    public void setAlbumRepository(AlbumRepository albumRepository) {
+        this.albumRepository = albumRepository;
+    }
+
+    @Autowired
     public void setMediaRepository(MediaRepository mediaRepository) {
         this.mediaRepository = mediaRepository;
+    }
+
+    @Autowired
+    public void setMediaTypeRepository(MediaTypeRepository mediaTypeRepository) {
+        this.mediaTypeRepository = mediaTypeRepository;
     }
 
     @Autowired
@@ -87,6 +101,22 @@ public class MediaService extends AbstractService {
     @Transactional(readOnly = true)
     public MediaDTO getMedia(@NotNull Integer id) {
         return mediaMapper.toDTO(mediaRepository.getOne(id));
+    }
+
+
+    /**
+     * Save media.
+     *
+     * @param dto - media
+     * @return saved entity
+     */
+    @Transactional
+    public MediaDTO saveMedia(@NotNull MediaDTO dto) {
+        MediaEntity entity = mediaMapper.toEntity(dto);
+        entity.setAlbum(albumRepository.getOne(dto.getAlbum().getId()));
+        entity.setType(mediaTypeRepository.findByCode(dto.getType().getCode())); //todo: code or id?
+
+        return mediaMapper.toDTO(mediaRepository.save(entity));  //todo: put in a separate read transaction?
     }
 
 

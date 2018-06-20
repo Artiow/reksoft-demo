@@ -22,8 +22,9 @@ public class MediaController {
 
 
     /**
-     * Return list of media with base information for current filter
+     * Return list of media with base information for current filter.
      *
+     * @param filter - media filter
      * @return page with media
      */
     @PostMapping("/byFilter")
@@ -35,9 +36,11 @@ public class MediaController {
     /**
      * Return list of media with pagination by one of attribute (album, label, singer) id
      *
+     * @param attributeType - attribute search type (byAlbum, byLabel, bySinger)
+     * @param attributeId - attribute id
      * @return page with media
      */
-    @PostMapping("/byAttribute")
+    @PostMapping("/byAttribute") //todo: merge to byFilter?
     public PageDTO<MediaShortDTO> getMediaListByAttribute(
             @RequestParam("attribute") String attributeType, @RequestParam("id") Integer attributeId,
             @RequestBody PageDividerDTO pageDivider
@@ -47,8 +50,21 @@ public class MediaController {
 
 
     /**
+     * Return saved media.
+     *
+     * @param dto - sent media
+     * @return saved media
+     */
+    @PostMapping("/save")
+    public MediaDTO saveMedia(@RequestBody MediaDTO dto) {
+        return mediaService.saveMedia(dto);
+    }
+
+
+    /**
      * Return media by id with full information
      *
+     * @param id - media id
      * @return media
      */
     @GetMapping("/{id}")

@@ -83,14 +83,14 @@ public class AlbumService extends AbstractService {
         ArrayList<GenreEntity> genres = new ArrayList<>(entity.getGenres());
         entity.getGenres().clear();
         for (GenreEntity genre: genres) {
-            entity.getGenres().add(genreRepository.findByCode(genre.getCode())); //TODO: code or id?
+            entity.getGenres().add(genreRepository.findByCode(genre.getCode())); //todo: code or id?
         }
 
         for (CompositionEntity composition: entity.getCompositions()) {
             composition.setAlbum(entity);
         }
 
-        return albumMapper.toDTO(albumRepository.save(entity));
+        return albumMapper.toDTO(albumRepository.save(entity)); //todo: put in a separate read transaction?
     }
 
 

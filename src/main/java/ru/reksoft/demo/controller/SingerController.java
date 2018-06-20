@@ -23,8 +23,9 @@ public class SingerController {
 
 
     /**
-     * Return list of singers for current searcher
+     * Return list of singers for current searcher.
      *
+     * @param searcher - page divider with search string
      * @return page with singers
      */
     @PostMapping("/list")
@@ -33,9 +34,10 @@ public class SingerController {
     }
 
     /**
-     * Return saved singer
+     * Return saved singer.
      *
-     * @return singer
+     * @param dto - sent singer
+     * @return saved singer
      */
     @PostMapping("/save")
     public SingerDTO saveSinger(@RequestBody SingerDTO dto) {

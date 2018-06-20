@@ -10,27 +10,51 @@ import java.time.LocalTime;
 @Component
 public class JavaTimeMapper {
 
-    public Timestamp toTimestamp(LocalTime localTime) {
-        return Timestamp.valueOf(LocalDateTime.of(LocalDate.of(1,1,1), localTime));
-    }
-
     public LocalTime toLocalTime(Timestamp timestamp) {
+        if (timestamp == null) {
+            return null;
+        }
+
         return timestamp.toLocalDateTime().toLocalTime();
     }
 
+    public Timestamp toTimestamp(LocalTime localTime) {
+        if (localTime == null) {
+            return null;
+        }
+
+        return Timestamp.valueOf(LocalDateTime.of(LocalDate.of(1,1,1), localTime));
+    }
+
     public LocalDate toLocalDate(Timestamp timestamp) {
+        if (timestamp == null) {
+            return null;
+        }
+
         return timestamp.toLocalDateTime().toLocalDate();
     }
 
     public Timestamp toTimestamp(LocalDate localDate) {
+        if (localDate == null) {
+            return null;
+        }
+
         return Timestamp.valueOf(localDate.atStartOfDay());
     }
 
     public LocalDateTime toLocalDateTime(Timestamp timestamp) {
+        if (timestamp == null) {
+            return null;
+        }
+
         return timestamp.toLocalDateTime();
     }
 
     public Timestamp toTimestamp(LocalDateTime localDateTime) {
+        if (localDateTime == null) {
+            return null;
+        }
+
         return Timestamp.valueOf(localDateTime);
     }
 }

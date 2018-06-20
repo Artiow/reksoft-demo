@@ -23,8 +23,9 @@ public class LabelController {
 
 
     /**
-     * Return list of labels for current searcher
+     * Return list of labels for current searcher.
      *
+     * @param searcher - page divider with search string
      * @return page with labels
      */
     @PostMapping("/list")
@@ -33,9 +34,10 @@ public class LabelController {
     }
 
     /**
-     * Return saved label
+     * Return saved label.
      *
-     * @return label
+     * @param dto - sent label
+     * @return saved label
      */
     @PostMapping("/save")
     public LabelDTO saveLabel(@RequestBody LabelDTO dto) {

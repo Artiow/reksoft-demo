@@ -1,13 +1,14 @@
 package ru.reksoft.demo.domain;
 
+import org.hibernate.annotations.Proxy;
 import ru.reksoft.demo.domain.generic.AbstractIdentifiedEntity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.Set;
 
 @Entity
+@Proxy(lazy = false) //todo: unproxy?
 @Table(name = "album")
 public class AlbumEntity extends AbstractIdentifiedEntity {
 

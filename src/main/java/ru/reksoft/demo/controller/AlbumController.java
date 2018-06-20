@@ -24,8 +24,9 @@ public class AlbumController {
 
 
     /**
-     * Return list of albums for current searcher
+     * Return list of albums for current searcher.
      *
+     * @param searcher - page divider with search string
      * @return page with albums
      */
     @PostMapping("/list")
@@ -34,9 +35,10 @@ public class AlbumController {
     }
 
     /**
-     * Return saved album
+     * Return saved album.
      *
-     * @return album
+     * @param dto - sent album
+     * @return saved album
      */
     @PostMapping("/save")
     public AlbumDTO saveSinger(@RequestBody AlbumDTO dto) {

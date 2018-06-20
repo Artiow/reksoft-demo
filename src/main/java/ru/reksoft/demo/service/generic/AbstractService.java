@@ -1,4 +1,4 @@
-package ru.reksoft.demo.service;
+package ru.reksoft.demo.service.generic;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

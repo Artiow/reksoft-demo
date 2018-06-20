@@ -10,6 +10,7 @@ import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.mapper.LabelMapper;
 import ru.reksoft.demo.repository.LabelRepository;
+import ru.reksoft.demo.service.generic.AbstractService;
 
 import javax.validation.constraints.NotNull;
 
@@ -46,14 +47,24 @@ public class LabelService extends AbstractService {
 
     /**
      * Save label.
-     * Returns an existing one if it finds by name.
      *
      * @param dto - label
-     * @return saved entity
+     * @return saved entity id
      */
     @Transactional
-    public LabelDTO createLabel(@NotNull LabelDTO dto) {
-        return labelMapper.toDTO(labelRepository.save(labelMapper.toEntity(dto)));
+    public Integer createLabel(@NotNull LabelDTO dto) {
+        return labelRepository.save(labelMapper.toEntity(dto)).getId();
+    }
+
+
+    /**
+     * Returns label by id
+     *
+     * @return album
+     */
+    @Transactional(readOnly = true)
+    public LabelDTO getLabel(@NotNull Integer id) {
+        return labelMapper.toDTO(labelRepository.getOne(id));
     }
 
 

@@ -8,6 +8,7 @@ import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.dto.pagination.PageDividerDTO;
 import ru.reksoft.demo.service.MediaService;
 import ru.reksoft.demo.util.MediaSearchType;
+import ru.reksoft.demo.util.ResourceLocationBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,13 +60,10 @@ public class MediaController {
      */
     @PostMapping("/create")
     public void createMedia(@RequestBody MediaDTO dto, HttpServletRequest request, HttpServletResponse response) {
-        StringBuilder builder = new StringBuilder(request.getRequestURL());
-
         String id = mediaService.createMedia(dto).toString();
-        String location = builder.replace(builder.lastIndexOf("/") + 1, builder.length(), id).toString();
 
         response.setHeader("id", id);
-        response.setHeader("location", location);
+        response.setHeader("location", ResourceLocationBuilder.build(request.getRequestURL(), id));
         response.setStatus(HttpServletResponse.SC_CREATED);
     }
 

@@ -10,6 +10,7 @@ import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.mapper.SingerMapper;
 import ru.reksoft.demo.repository.SingerRepository;
+import ru.reksoft.demo.service.generic.AbstractService;
 
 import javax.validation.constraints.NotNull;
 
@@ -46,14 +47,24 @@ public class SingerService extends AbstractService {
 
     /**
      * Save singer.
-     * Returns an existing one if it finds by name.
      *
      * @param dto - singer
-     * @return saved entity
+     * @return saved entity id
      */
     @Transactional
-    public SingerDTO createSinger(@NotNull SingerDTO dto) {
-        return singerMapper.toDTO(singerRepository.save(singerMapper.toEntity(dto)));
+    public Integer createSinger(@NotNull SingerDTO dto) {
+        return singerRepository.save(singerMapper.toEntity(dto)).getId();
+    }
+
+
+    /**
+     * Returns label by id
+     *
+     * @return album
+     */
+    @Transactional(readOnly = true)
+    public SingerDTO getSinger(@NotNull Integer id) {
+        return singerMapper.toDTO(singerRepository.getOne(id));
     }
 
 

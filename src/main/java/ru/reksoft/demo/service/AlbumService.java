@@ -6,15 +6,14 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.domain.AlbumEntity;
 import ru.reksoft.demo.domain.AlbumEntity_;
 import ru.reksoft.demo.domain.CompositionEntity;
-import ru.reksoft.demo.domain.GenreEntity;
 import ru.reksoft.demo.dto.*;
 import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.mapper.AlbumMapper;
 import ru.reksoft.demo.repository.*;
+import ru.reksoft.demo.service.generic.AbstractService;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 
 @Service
 public class AlbumService extends AbstractService {

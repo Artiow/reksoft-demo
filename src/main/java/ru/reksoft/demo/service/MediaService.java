@@ -12,9 +12,8 @@ import ru.reksoft.demo.dto.pagination.filters.MediaFilterDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.dto.pagination.PageDividerDTO;
 import ru.reksoft.demo.mapper.MediaMapper;
-import ru.reksoft.demo.repository.AlbumRepository;
 import ru.reksoft.demo.repository.MediaRepository;
-import ru.reksoft.demo.repository.MediaTypeRepository;
+import ru.reksoft.demo.service.generic.AbstractService;
 import ru.reksoft.demo.util.MediaSearchType;
 
 import javax.persistence.criteria.*;

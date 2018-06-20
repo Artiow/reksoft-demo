@@ -15,8 +15,8 @@ public class AlbumDTO extends AbstractIdentifiedDTO {
     private SingerDTO singer;
     private PictureDTO picture;
 
-    private PriorityQueue<GenreDTO> genres;
-    private PriorityQueue<CompositionDTO> compositions;
+    private List<GenreDTO> genres;
+    private List<CompositionDTO> compositions;
 
 
     public AlbumDTO setId(Integer id) {
@@ -78,20 +78,20 @@ public class AlbumDTO extends AbstractIdentifiedDTO {
         return this;
     }
 
-    public PriorityQueue<GenreDTO> getGenres() {
+    public List<GenreDTO> getGenres() {
         return genres;
     }
 
-    public AlbumDTO setGenres(PriorityQueue<GenreDTO> genres) {
+    public AlbumDTO setGenres(List<GenreDTO> genres) {
         this.genres = genres;
         return this;
     }
 
-    public PriorityQueue<CompositionDTO> getCompositions() {
+    public List<CompositionDTO> getCompositions() {
         return compositions;
     }
 
-    public AlbumDTO setCompositions(PriorityQueue<CompositionDTO> compositions) {
+    public AlbumDTO setCompositions(List<CompositionDTO> compositions) {
         this.compositions = compositions;
         return this;
     }

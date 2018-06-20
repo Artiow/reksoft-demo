@@ -4,7 +4,7 @@ import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
 
 import java.time.LocalTime;
 
-public class CompositionDTO extends AbstractIdentifiedDTO implements Comparable<CompositionDTO> {
+public class CompositionDTO extends AbstractIdentifiedDTO {
 
     private String name;
     private Integer position;
@@ -41,11 +41,5 @@ public class CompositionDTO extends AbstractIdentifiedDTO implements Comparable<
     public CompositionDTO setDuration(LocalTime duration) {
         this.duration = duration;
         return this;
-    }
-
-
-    @Override
-    public int compareTo(CompositionDTO o) {
-        return position.compareTo(o.position);
     }
 }

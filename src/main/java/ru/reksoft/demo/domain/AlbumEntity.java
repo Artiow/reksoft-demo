@@ -29,6 +29,7 @@ public class AlbumEntity extends AbstractIdentifiedEntity {
     @OneToMany(mappedBy = "album")
     private Collection<MediaEntity> media;
 
+    @OrderBy("position")
     @OneToMany(mappedBy = "album", cascade = CascadeType.PERSIST)
     private Collection<CompositionEntity> compositions;
 

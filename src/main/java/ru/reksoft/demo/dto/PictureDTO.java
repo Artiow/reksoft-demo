@@ -1,13 +1,25 @@
 package ru.reksoft.demo.dto;
 
 import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
+import ru.reksoft.demo.dto.generic.checkgroups.CreateCheck;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class PictureDTO extends AbstractIdentifiedDTO {
 
+    @NotNull(message = "url must not be null!", groups = CreateCheck.class)
+    @NotEmpty(message = "url must not be empty!", groups = CreateCheck.class)
+    @Max(value = 255, message = "url must not be longer than 255 characters!", groups = CreateCheck.class)
     private String url;
+
+    @NotNull(message = "name must not be null!", groups = CreateCheck.class)
+    @NotEmpty(message = "name must not be empty!", groups = CreateCheck.class)
+    @Max(value = 45, message = "name must not be longer than 45 characters!", groups = CreateCheck.class)
     private String name;
+
     private Integer width;
     private Integer height;
     private LocalDateTime uploaded;

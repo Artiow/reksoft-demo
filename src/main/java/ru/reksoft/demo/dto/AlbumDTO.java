@@ -1,21 +1,48 @@
 package ru.reksoft.demo.dto;
 
 import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
+import ru.reksoft.demo.dto.generic.checkgroups.CreateCheck;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.*;
 
 public class AlbumDTO extends AbstractIdentifiedDTO {
 
+    @NotNull(message = "name must not be null!", groups = CreateCheck.class)
+    @NotEmpty(message = "name must not be empty!", groups = CreateCheck.class)
+    @Max(value = 45, message = "name must not be longer than 45 characters!", groups = CreateCheck.class)
     private String name;
+
+    @NotEmpty(message = "description must not be empty!", groups = CreateCheck.class)
+    @Max(value = 255, message = "description must not be longer than 255 characters!", groups = CreateCheck.class)
     private String description;
+
+    @NotNull(message = "releaseYear must not be null!", groups = CreateCheck.class)
     private LocalDate releaseYear;
 
+    @Valid
+    @NotNull(message = "label must not be null!", groups = CreateCheck.class)
     private LabelDTO label;
+
+    @Valid
+    @NotNull(message = "singer must not be null!", groups = CreateCheck.class)
     private SingerDTO singer;
+
+    @Valid
     private PictureDTO picture;
 
+    @Valid
+    @NotNull(message = "genre list must not be null!", groups = CreateCheck.class)
+    @NotEmpty(message = "genre list must not be empty!", groups = CreateCheck.class)
     private List<GenreDTO> genres;
+
+    @Valid
+    @NotNull(message = "composition list not be null!", groups = CreateCheck.class)
+    @NotEmpty(message = "composition list must not be empty!", groups = CreateCheck.class)
     private List<CompositionDTO> compositions;
 
 

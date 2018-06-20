@@ -1,6 +1,7 @@
 package ru.reksoft.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.AlbumDTO;
 import ru.reksoft.demo.dto.AlbumShortDTO;

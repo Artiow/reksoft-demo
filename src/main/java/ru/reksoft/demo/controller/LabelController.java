@@ -1,15 +1,20 @@
 package ru.reksoft.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.LabelDTO;
+import ru.reksoft.demo.dto.generic.checkgroups.CreateCheck;
 import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.service.LabelService;
+import ru.reksoft.demo.util.BindingResultErrorMessageBuilder;
 import ru.reksoft.demo.util.ResourceLocationBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ValidationException;
 
 @RestController
 @RequestMapping("api/label")
@@ -37,11 +42,15 @@ public class LabelController {
     /**
      * Returns created label id and location.
      *
-     * @param dto - sent label
+     * @param labelDTO - sent label
      */
     @PostMapping("/create")
-    public void createLabel(@RequestBody LabelDTO dto, HttpServletRequest request, HttpServletResponse response) {
-        String id = labelService.createLabel(dto).toString();
+    public void createLabel(@RequestBody @Validated(CreateCheck.class) LabelDTO labelDTO, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) {
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(BindingResultErrorMessageBuilder.build(bindingResult.getObjectName(), bindingResult.getAllErrors()));
+        }
+
+        String id = labelService.createLabel(labelDTO).toString();
 
         response.setHeader("id", id);
         response.setHeader("location", ResourceLocationBuilder.build(request.getRequestURL(), id));

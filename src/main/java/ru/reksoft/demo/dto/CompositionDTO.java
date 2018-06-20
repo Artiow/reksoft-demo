@@ -1,23 +1,20 @@
 package ru.reksoft.demo.dto;
 
+import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
+
 import java.time.LocalTime;
 
-public class CompositionDTO implements Comparable<CompositionDTO> {
+public class CompositionDTO extends AbstractIdentifiedDTO implements Comparable<CompositionDTO> {
 
-    private Integer id;
-    private Integer position;
     private String name;
+    private Integer position;
     private LocalTime duration;
 
 
-    public Integer getId() {
-        return id;
+    public CompositionDTO setId(Integer id) {
+        return (CompositionDTO) super.setId(id);
     }
 
-    public CompositionDTO setId(Integer id) {
-        this.id = id;
-        return this;
-    }
 
     public Integer getPosition() {
         return position;

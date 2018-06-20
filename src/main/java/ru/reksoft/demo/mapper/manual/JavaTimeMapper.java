@@ -2,7 +2,6 @@ package ru.reksoft.demo.mapper.manual;
 
 import org.springframework.stereotype.Component;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,12 +10,12 @@ import java.time.LocalTime;
 @Component
 public class JavaTimeMapper {
 
-    public Time toTime(LocalTime localTime) {
-        return Time.valueOf(localTime);
+    public Timestamp toTimestamp(LocalTime localTime) {
+        return Timestamp.valueOf(LocalDateTime.of(LocalDate.of(1,1,1), localTime));
     }
 
-    public LocalTime toLocalTime(Time time) {
-        return time.toLocalTime();
+    public LocalTime toLocalTime(Timestamp timestamp) {
+        return timestamp.toLocalDateTime().toLocalTime();
     }
 
     public LocalDate toLocalDate(Timestamp timestamp) {

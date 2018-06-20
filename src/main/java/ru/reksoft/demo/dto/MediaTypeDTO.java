@@ -1,46 +1,22 @@
 package ru.reksoft.demo.dto;
 
-public class MediaTypeDTO {
+import ru.reksoft.demo.dto.generic.AbstractDescriptiveDictionaryDTO;
 
-    private Integer id;
-    private String code;
-    private String name;
-    private String description;
-
-
-    public Integer getId() {
-        return id;
-    }
+public class MediaTypeDTO extends AbstractDescriptiveDictionaryDTO {
 
     public MediaTypeDTO setId(Integer id) {
-        this.id = id;
-        return this;
-    }
-
-    public String getCode() {
-        return code;
+        return (MediaTypeDTO) super.setId(id);
     }
 
     public MediaTypeDTO setCode(String code) {
-        this.code = code;
-        return this;
-    }
-
-    public String getName() {
-        return name;
+        return (MediaTypeDTO) super.setCode(code);
     }
 
     public MediaTypeDTO setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public String getDescription() {
-        return description;
+        return (MediaTypeDTO) super.setName(name);
     }
 
     public MediaTypeDTO setDescription(String description) {
-        this.description = description;
-        return this;
+        return (MediaTypeDTO) super.setDescription(description);
     }
 }

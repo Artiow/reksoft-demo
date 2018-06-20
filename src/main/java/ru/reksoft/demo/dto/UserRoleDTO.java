@@ -1,46 +1,22 @@
 package ru.reksoft.demo.dto;
 
-public class UserRoleDTO {
+import ru.reksoft.demo.dto.generic.AbstractDescriptiveDictionaryDTO;
 
-    private Integer id;
-    private String code;
-    private String name;
-    private String description;
-
-
-    public Integer getId() {
-        return id;
-    }
+public class UserRoleDTO  extends AbstractDescriptiveDictionaryDTO {
 
     public UserRoleDTO setId(Integer id) {
-        this.id = id;
-        return this;
-    }
-
-    public String getCode() {
-        return code;
+        return (UserRoleDTO) super.setId(id);
     }
 
     public UserRoleDTO setCode(String code) {
-        this.code = code;
-        return this;
-    }
-
-    public String getName() {
-        return name;
+        return (UserRoleDTO) super.setCode(code);
     }
 
     public UserRoleDTO setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public String getDescription() {
-        return description;
+        return (UserRoleDTO) super.setName(name);
     }
 
     public UserRoleDTO setDescription(String description) {
-        this.description = description;
-        return this;
+        return (UserRoleDTO) super.setDescription(description);
     }
 }

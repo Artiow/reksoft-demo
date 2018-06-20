@@ -1,6 +1,8 @@
-package ru.reksoft.demo.dto;
+package ru.reksoft.demo.dto.pagination;
 
-public class PageDividerDTO {
+import ru.reksoft.demo.dto.generic.DataTransferObject;
+
+public class PageDividerDTO implements DataTransferObject {
 
     private Integer pageSize;
     private Integer pageNum;

@@ -1,32 +1,35 @@
 package ru.reksoft.demo.domain;
 
+import ru.reksoft.demo.domain.generic.AbstractIdentifiedEntity;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "picture")
-public class PictureEntity {
-
-    private Integer id;
-    private String url;
-    private String name;
-    private Integer width;
-    private Integer height;
-    private Timestamp uploaded;
-
-    @Id
-    @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+public class PictureEntity extends AbstractIdentifiedEntity {
 
     @Basic
     @Column(name = "url", nullable = false)
+    private String url;
+
+    @Basic
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Basic
+    @Column(name = "width", nullable = false)
+    private Integer width;
+
+    @Basic
+    @Column(name = "height", nullable = false)
+    private Integer height;
+
+    @Basic
+    @Column(name = "uploaded", nullable = false)
+    private Timestamp uploaded;
+
+
     public String getUrl() {
         return url;
     }
@@ -35,8 +38,6 @@ public class PictureEntity {
         this.url = url;
     }
 
-    @Basic
-    @Column(name = "name", nullable = false)
     public String getName() {
         return name;
     }
@@ -45,8 +46,6 @@ public class PictureEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "width", nullable = false)
     public Integer getWidth() {
         return width;
     }
@@ -55,8 +54,6 @@ public class PictureEntity {
         this.width = width;
     }
 
-    @Basic
-    @Column(name = "height", nullable = false)
     public Integer getHeight() {
         return height;
     }
@@ -65,8 +62,6 @@ public class PictureEntity {
         this.height = height;
     }
 
-    @Basic
-    @Column(name = "uploaded", nullable = false)
     public Timestamp getUploaded() {
         return uploaded;
     }

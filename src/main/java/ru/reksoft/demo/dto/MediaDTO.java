@@ -1,22 +1,19 @@
 package ru.reksoft.demo.dto;
 
-public class MediaDTO {
+import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
 
-    private Integer id;
+public class MediaDTO extends AbstractIdentifiedDTO {
+
     private Integer price;
 
     private MediaTypeDTO type;
     private AlbumDTO album;
 
 
-    public Integer getId() {
-        return id;
+    public MediaDTO setId(Integer id) {
+        return (MediaDTO) super.setId(id);
     }
 
-    public MediaDTO setId(Integer id) {
-        this.id = id;
-        return this;
-    }
 
     public Integer getPrice() {
         return price;

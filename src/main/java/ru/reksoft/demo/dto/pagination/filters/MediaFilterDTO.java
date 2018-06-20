@@ -1,14 +1,12 @@
-package ru.reksoft.demo.dto;
+package ru.reksoft.demo.dto.pagination.filters;
 
 import ru.reksoft.demo.util.MediaSearchType;
 
 import java.util.Collection;
 
-public class MediaFilterDTO extends PageDividerDTO {
+public class MediaFilterDTO extends StringSearcherDTO {
 
     private MediaSearchType searchType;
-    private String searchString;
-
     private Collection<String> typeCodes;
     private Collection<String> genreCodes;
 
@@ -19,15 +17,6 @@ public class MediaFilterDTO extends PageDividerDTO {
 
     public MediaFilterDTO setSearchType(MediaSearchType searchType) {
         this.searchType = searchType;
-        return this;
-    }
-
-    public String getSearchString() {
-        return searchString;
-    }
-
-    public MediaFilterDTO setSearchString(String searchString) {
-        this.searchString = searchString;
         return this;
     }
 

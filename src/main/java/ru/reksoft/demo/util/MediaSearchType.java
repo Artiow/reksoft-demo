@@ -8,14 +8,24 @@ public enum MediaSearchType {
     BY_ALBUM("byAlbum");
 
     @JsonValue
-    private String code;
+    private String value;
 
-    MediaSearchType(String code) {
-        this.code = code;
+    MediaSearchType(String value) {
+        this.value = value;
+    }
+
+    public static MediaSearchType fromValue(String value) {
+        for(MediaSearchType v : values()) {
+            if(v.value.equalsIgnoreCase(value)) {
+                return v;
+            }
+        }
+
+        throw new IllegalArgumentException();
     }
 
     @Override
     public String toString() {
-        return code;
+        return value;
     }
 }

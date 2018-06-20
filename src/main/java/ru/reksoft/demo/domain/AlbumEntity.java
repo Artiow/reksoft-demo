@@ -1,40 +1,55 @@
 package ru.reksoft.demo.domain;
 
+import ru.reksoft.demo.domain.generic.AbstractIdentifiedEntity;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "album")
-public class AlbumEntity {
-
-    private Integer id;
-    private String name;
-    private String description;
-    private Timestamp releaseYear;
-
-    private LabelEntity label;
-    private SingerEntity singer;
-    private PictureEntity picture;
-
-    private Collection<MediaEntity> media;
-    private Collection<GenreEntity> genres;
-    private Collection<CompositionEntity> compositions;
-
-
-    @Id
-    @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+public class AlbumEntity extends AbstractIdentifiedEntity {
 
     @Basic
     @Column(name = "name", nullable = false)
+    private String name;
+
+    @Basic
+    @Column(name = "description")
+    private String description;
+
+    @Basic
+    @Column(name = "release_year", nullable = false)
+    private Timestamp releaseYear;
+
+    @OneToOne
+    @JoinColumn(name = "picture_id", referencedColumnName = "id")
+    private PictureEntity picture;
+
+    @OneToMany(mappedBy = "album")
+    private Collection<MediaEntity> media;
+
+    @OneToMany(mappedBy = "album", cascade = CascadeType.PERSIST)
+    private Collection<CompositionEntity> compositions;
+
+    @ManyToOne
+    @JoinColumn(name = "label_id", referencedColumnName = "id", nullable = false)
+    private LabelEntity label;
+
+    @ManyToOne
+    @JoinColumn(name = "singer_id", referencedColumnName = "id", nullable = false)
+    private SingerEntity singer;
+
+    @ManyToMany
+    @JoinTable(
+            name = "album_genres",
+            joinColumns = @JoinColumn(name = "album_id", referencedColumnName = "id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id", nullable = false)
+    )
+    private Collection<GenreEntity> genres;
+
+
     public String getName() {
         return name;
     }
@@ -43,8 +58,6 @@ public class AlbumEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "description")
     public String getDescription() {
         return description;
     }
@@ -53,8 +66,6 @@ public class AlbumEntity {
         this.description = description;
     }
 
-    @Basic
-    @Column(name = "release_year", nullable = false)
     public Timestamp getReleaseYear() {
         return releaseYear;
     }
@@ -63,25 +74,6 @@ public class AlbumEntity {
         this.releaseYear = releaseYear;
     }
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        AlbumEntity that = (AlbumEntity) o;
-
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
-
-
-    @OneToOne
-    @JoinColumn(name = "picture_id", referencedColumnName = "id")
     public PictureEntity getPicture() {
         return picture;
     }
@@ -90,8 +82,6 @@ public class AlbumEntity {
         this.picture = picture;
     }
 
-
-    @OneToMany(mappedBy = "album")
     public Collection<MediaEntity> getMedia() {
         return media;
     }
@@ -100,17 +90,6 @@ public class AlbumEntity {
         this.media = media;
     }
 
-    @ManyToMany
-    @JoinTable(name = "album_genres", catalog = "reksoft", schema = "demo", joinColumns = @JoinColumn(name = "album_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id", nullable = false))
-    public Collection<GenreEntity> getGenres() {
-        return genres;
-    }
-
-    public void setGenres(Collection<GenreEntity> genres) {
-        this.genres = genres;
-    }
-
-    @OneToMany(mappedBy = "album")
     public Collection<CompositionEntity> getCompositions() {
         return compositions;
     }
@@ -119,9 +98,6 @@ public class AlbumEntity {
         this.compositions = compositions;
     }
 
-
-    @ManyToOne
-    @JoinColumn(name = "label_id", referencedColumnName = "id", nullable = false)
     public LabelEntity getLabel() {
         return label;
     }
@@ -130,13 +106,19 @@ public class AlbumEntity {
         this.label = label;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "singer_id", referencedColumnName = "id", nullable = false)
     public SingerEntity getSinger() {
         return singer;
     }
 
     public void setSinger(SingerEntity singer) {
         this.singer = singer;
+    }
+
+    public Collection<GenreEntity> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(Collection<GenreEntity> genres) {
+        this.genres = genres;
     }
 }

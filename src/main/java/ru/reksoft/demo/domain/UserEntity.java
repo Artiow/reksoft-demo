@@ -1,39 +1,50 @@
 package ru.reksoft.demo.domain;
 
+import ru.reksoft.demo.domain.generic.AbstractIdentifiedEntity;
+
 import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
 @Table(name = "user")
-public class UserEntity {
-
-    private Integer id;
-    private String login;
-    private String password;
-    private String name;
-    private String surname;
-    private String patronymic;
-    private String address;
-    private String phone;
-
-    private UserRoleEntity role;
-
-    private Collection<CurrentBasketEntity> baskets;
-
-
-    @Id
-    @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+public class UserEntity extends AbstractIdentifiedEntity {
 
     @Basic
     @Column(name = "login", nullable = false)
+    private String login;
+
+    @Basic
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @Basic
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Basic
+    @Column(name = "surname", nullable = false)
+    private String surname;
+
+    @Basic
+    @Column(name = "patronymic", nullable = false)
+    private String patronymic;
+
+    @Basic
+    @Column(name = "address", nullable = false)
+    private String address;
+
+    @Basic
+    @Column(name = "phone", nullable = false)
+    private String phone;
+
+    @OneToMany(mappedBy = "user")
+    private Collection<CurrentBasketEntity> baskets;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
+    private UserRoleEntity role;
+
+
     public String getLogin() {
         return login;
     }
@@ -42,8 +53,6 @@ public class UserEntity {
         this.login = login;
     }
 
-    @Basic
-    @Column(name = "password", nullable = false)
     public String getPassword() {
         return password;
     }
@@ -52,8 +61,6 @@ public class UserEntity {
         this.password = password;
     }
 
-    @Basic
-    @Column(name = "name", nullable = false)
     public String getName() {
         return name;
     }
@@ -62,8 +69,6 @@ public class UserEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "surname", nullable = false)
     public String getSurname() {
         return surname;
     }
@@ -72,8 +77,6 @@ public class UserEntity {
         this.surname = surname;
     }
 
-    @Basic
-    @Column(name = "patronymic", nullable = false)
     public String getPatronymic() {
         return patronymic;
     }
@@ -82,8 +85,6 @@ public class UserEntity {
         this.patronymic = patronymic;
     }
 
-    @Basic
-    @Column(name = "address", nullable = false)
     public String getAddress() {
         return address;
     }
@@ -92,8 +93,6 @@ public class UserEntity {
         this.address = address;
     }
 
-    @Basic
-    @Column(name = "phone", nullable = false)
     public String getPhone() {
         return phone;
     }
@@ -102,24 +101,6 @@ public class UserEntity {
         this.phone = phone;
     }
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        UserEntity that = (UserEntity) o;
-
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
-
-
-    @OneToMany(mappedBy = "user")
     public Collection<CurrentBasketEntity> getBaskets() {
         return baskets;
     }
@@ -128,9 +109,6 @@ public class UserEntity {
         this.baskets = baskets;
     }
 
-
-    @ManyToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     public UserRoleEntity getRole() {
         return role;
     }

@@ -31,23 +31,4 @@ public class MediaOrderEntityPK implements Serializable {
     public void setOrderId(Integer orderId) {
         this.orderId = orderId;
     }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        MediaOrderEntityPK that = (MediaOrderEntityPK) o;
-
-        if (!mediaId.equals(that.mediaId)) return false;
-        return orderId.equals(that.orderId);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = mediaId.hashCode();
-        result = 31 * result + orderId.hashCode();
-        return result;
-    }
 }

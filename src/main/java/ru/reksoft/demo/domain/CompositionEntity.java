@@ -1,43 +1,31 @@
 package ru.reksoft.demo.domain;
 
+import ru.reksoft.demo.domain.generic.AbstractIdentifiedEntity;
+
 import javax.persistence.*;
-import java.sql.Time;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "composition")
-public class CompositionEntity {
-
-    private Integer id;
-    private Integer position;
-    private String name;
-    private Time duration;
-
-    private AlbumEntity album;
-
-
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    @Basic
-    @Column(name = "album_pos", nullable = false)
-    public Integer getPosition() {
-        return position;
-    }
-
-    public void setPosition(Integer position) {
-        this.position = position;
-    }
+public class CompositionEntity extends AbstractIdentifiedEntity {
 
     @Basic
     @Column(name = "name", nullable = false)
+    private String name;
+
+    @Basic
+    @Column(name = "album_pos", nullable = false)
+    private Integer position;
+
+    @Basic
+    @Column(name = "duration", nullable = false)
+    private Timestamp duration;
+
+    @ManyToOne
+    @JoinColumn(name = "album_id", referencedColumnName = "id", nullable = false)
+    private AlbumEntity album;
+
+
     public String getName() {
         return name;
     }
@@ -46,35 +34,22 @@ public class CompositionEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "duration", nullable = false)
-    public Time getDuration() {
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
+    public Timestamp getDuration() {
         return duration;
     }
 
-    public void setDuration(Time duration) {
+    public void setDuration(Timestamp duration) {
         this.duration = duration;
     }
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CompositionEntity that = (CompositionEntity) o;
-
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
-
-
-    @ManyToOne
-    @JoinColumn(name = "album_id", referencedColumnName = "id", nullable = false)
     public AlbumEntity getAlbum() {
         return album;
     }

@@ -1,8 +1,9 @@
 package ru.reksoft.demo.dto;
 
-public class UserDTO {
+import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
 
-    private Integer id;
+public class UserDTO extends AbstractIdentifiedDTO {
+
     private String login;
     private String password;
     private String name;
@@ -14,14 +15,10 @@ public class UserDTO {
     private UserRoleDTO role;
 
 
-    public Integer getId() {
-        return id;
+    public UserDTO setId(Integer id) {
+        return (UserDTO) super.setId(id);
     }
 
-    public UserDTO setId(Integer id) {
-        this.id = id;
-        return this;
-    }
 
     public String getLogin() {
         return login;

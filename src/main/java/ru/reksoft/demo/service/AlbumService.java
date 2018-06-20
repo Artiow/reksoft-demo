@@ -21,30 +21,11 @@ public class AlbumService extends AbstractService {
 
     private AlbumRepository albumRepository;
 
-    private LabelRepository labelRepository;
-    private SingerRepository singerRepository;
-    private GenreRepository genreRepository;
-
     private AlbumMapper albumMapper;
 
     @Autowired
     public void setAlbumRepository(AlbumRepository albumRepository) {
         this.albumRepository = albumRepository;
-    }
-
-    @Autowired
-    public void setLabelRepository(LabelRepository labelRepository) {
-        this.labelRepository = labelRepository;
-    }
-
-    @Autowired
-    public void setSingerRepository(SingerRepository singerRepository) {
-        this.singerRepository = singerRepository;
-    }
-
-    @Autowired
-    public void setGenreRepository(GenreRepository genreRepository) {
-        this.genreRepository = genreRepository;
     }
 
     @Autowired
@@ -73,26 +54,27 @@ public class AlbumService extends AbstractService {
      * All genres must exist.
      *
      * @param dto - album
-     * @return saved entity
+     * @return saved entity id
      */
     @Transactional
-    public AlbumDTO saveAlbum(@NotNull AlbumDTO dto) {
+    public Integer createAlbum(@NotNull AlbumDTO dto) {
         AlbumEntity entity = albumMapper.toEntity(dto);
-        entity.setLabel(labelRepository.getOne(dto.getLabel().getId()));
-        entity.setSinger(singerRepository.getOne(dto.getSinger().getId()));
-
-        ArrayList<GenreEntity> genres = new ArrayList<>(entity.getGenres());
-
-        entity.getGenres().clear();
-        for (GenreEntity genre: genres) {
-            entity.getGenres().add(genreRepository.getOne(genre.getId()));
-        }
-
         for (CompositionEntity composition: entity.getCompositions()) {
             composition.setAlbum(entity);
         }
 
-        return albumMapper.toDTO(albumRepository.save(entity));
+        return albumRepository.save(entity).getId();
+    }
+
+
+    /**
+     * Returns album by id
+     *
+     * @return album
+     */
+    @Transactional(readOnly = true)
+    public AlbumDTO getAlbum(@NotNull Integer id) {
+        return albumMapper.toDTO(albumRepository.getOne(id));
     }
 
 

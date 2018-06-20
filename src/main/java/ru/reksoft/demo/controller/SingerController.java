@@ -39,8 +39,8 @@ public class SingerController {
      * @param dto - sent singer
      * @return saved singer
      */
-    @PostMapping("/save")
-    public SingerDTO saveSinger(@RequestBody SingerDTO dto) {
-        return singerService.saveSinger(dto);
+    @PostMapping("/create")
+    public SingerDTO createSinger(@RequestBody SingerDTO dto) {
+        return singerService.createSinger(dto);
     }
 }

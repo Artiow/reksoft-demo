@@ -39,8 +39,8 @@ public class LabelController {
      * @param dto - sent label
      * @return saved label
      */
-    @PostMapping("/save")
-    public LabelDTO saveLabel(@RequestBody LabelDTO dto) {
-        return labelService.saveLabel(dto);
+    @PostMapping("/create")
+    public LabelDTO createLabel(@RequestBody LabelDTO dto) {
+        return labelService.createLabel(dto);
     }
 }

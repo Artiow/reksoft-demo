@@ -9,6 +9,9 @@ import ru.reksoft.demo.dto.pagination.PageDividerDTO;
 import ru.reksoft.demo.service.MediaService;
 import ru.reksoft.demo.util.MediaSearchType;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @RequestMapping("api/media")
 public class MediaController {
@@ -22,7 +25,7 @@ public class MediaController {
 
 
     /**
-     * Return list of media with base information for current filter.
+     * Returns list of media with base information for current filter.
      *
      * @param filter - media filter
      * @return page with media
@@ -34,7 +37,7 @@ public class MediaController {
 
 
     /**
-     * Return list of media with pagination by one of attribute (album, label, singer) id
+     * Returns list of media with pagination by one of attribute (album, label, singer) id
      *
      * @param attributeType - attribute search type (byAlbum, byLabel, bySinger)
      * @param attributeId - attribute id
@@ -50,19 +53,25 @@ public class MediaController {
 
 
     /**
-     * Return saved media.
+     * Returns created media id and location.
      *
      * @param dto - sent media
-     * @return saved media
      */
-    @PostMapping("/save")
-    public MediaDTO saveMedia(@RequestBody MediaDTO dto) {
-        return mediaService.saveMedia(dto);
+    @PostMapping("/create")
+    public void createMedia(@RequestBody MediaDTO dto, HttpServletRequest request, HttpServletResponse response) {
+        StringBuilder builder = new StringBuilder(request.getRequestURL());
+
+        String id = mediaService.createMedia(dto).toString();
+        String location = builder.replace(builder.lastIndexOf("/") + 1, builder.length(), id).toString();
+
+        response.setHeader("id", id);
+        response.setHeader("location", location);
+        response.setStatus(HttpServletResponse.SC_CREATED);
     }
 
 
     /**
-     * Return media by id with full information
+     * Returns media by id with full information
      *
      * @param id - media id
      * @return media

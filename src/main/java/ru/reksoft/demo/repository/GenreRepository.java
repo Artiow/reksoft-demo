@@ -6,5 +6,4 @@ import ru.reksoft.demo.domain.GenreEntity;
 
 public interface GenreRepository extends JpaRepository<GenreEntity, Integer>, JpaSpecificationExecutor<GenreEntity> {
 
-    GenreEntity findByCode(String code);
 }

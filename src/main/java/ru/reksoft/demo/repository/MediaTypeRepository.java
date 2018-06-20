@@ -6,5 +6,4 @@ import ru.reksoft.demo.domain.MediaTypeEntity;
 
 public interface MediaTypeRepository extends JpaRepository<MediaTypeEntity, Integer>, JpaSpecificationExecutor<MediaTypeEntity> {
 
-    MediaTypeEntity findByCode(String code);
 }

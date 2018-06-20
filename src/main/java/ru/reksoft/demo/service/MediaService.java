@@ -25,16 +25,12 @@ import java.util.Collection;
 @Service
 public class MediaService extends AbstractService {
 
-    private AlbumRepository albumRepository;
     private MediaRepository mediaRepository;
+
     private MediaTypeRepository mediaTypeRepository;
+    private AlbumRepository albumRepository;
 
     private MediaMapper mediaMapper;
-
-    @Autowired
-    public void setAlbumRepository(AlbumRepository albumRepository) {
-        this.albumRepository = albumRepository;
-    }
 
     @Autowired
     public void setMediaRepository(MediaRepository mediaRepository) {
@@ -44,6 +40,11 @@ public class MediaService extends AbstractService {
     @Autowired
     public void setMediaTypeRepository(MediaTypeRepository mediaTypeRepository) {
         this.mediaTypeRepository = mediaTypeRepository;
+    }
+
+    @Autowired
+    public void setAlbumRepository(AlbumRepository albumRepository) {
+        this.albumRepository = albumRepository;
     }
 
     @Autowired
@@ -106,6 +107,7 @@ public class MediaService extends AbstractService {
 
     /**
      * Save media.
+     * Media type and album must exist.
      *
      * @param dto - media
      * @return saved entity
@@ -113,10 +115,10 @@ public class MediaService extends AbstractService {
     @Transactional
     public MediaDTO saveMedia(@NotNull MediaDTO dto) {
         MediaEntity entity = mediaMapper.toEntity(dto);
+        entity.setType(mediaTypeRepository.getOne(dto.getType().getId()));
         entity.setAlbum(albumRepository.getOne(dto.getAlbum().getId()));
-        entity.setType(mediaTypeRepository.findByCode(dto.getType().getCode())); //todo: code or id?
 
-        return mediaMapper.toDTO(mediaRepository.save(entity));  //todo: put in a separate read transaction?
+        return mediaMapper.toDTO(mediaRepository.save(entity));
     }
 
 

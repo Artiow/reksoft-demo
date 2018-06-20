@@ -19,12 +19,18 @@ import java.util.ArrayList;
 @Service
 public class AlbumService extends AbstractService {
 
+    private AlbumRepository albumRepository;
+
     private LabelRepository labelRepository;
     private SingerRepository singerRepository;
-    private AlbumRepository albumRepository;
     private GenreRepository genreRepository;
 
     private AlbumMapper albumMapper;
+
+    @Autowired
+    public void setAlbumRepository(AlbumRepository albumRepository) {
+        this.albumRepository = albumRepository;
+    }
 
     @Autowired
     public void setLabelRepository(LabelRepository labelRepository) {
@@ -34,11 +40,6 @@ public class AlbumService extends AbstractService {
     @Autowired
     public void setSingerRepository(SingerRepository singerRepository) {
         this.singerRepository = singerRepository;
-    }
-
-    @Autowired
-    public void setAlbumRepository(AlbumRepository albumRepository) {
-        this.albumRepository = albumRepository;
     }
 
     @Autowired
@@ -81,16 +82,17 @@ public class AlbumService extends AbstractService {
         entity.setSinger(singerRepository.getOne(dto.getSinger().getId()));
 
         ArrayList<GenreEntity> genres = new ArrayList<>(entity.getGenres());
+
         entity.getGenres().clear();
         for (GenreEntity genre: genres) {
-            entity.getGenres().add(genreRepository.findByCode(genre.getCode())); //todo: code or id?
+            entity.getGenres().add(genreRepository.getOne(genre.getId()));
         }
 
         for (CompositionEntity composition: entity.getCompositions()) {
             composition.setAlbum(entity);
         }
 
-        return albumMapper.toDTO(albumRepository.save(entity)); //todo: put in a separate read transaction?
+        return albumMapper.toDTO(albumRepository.save(entity));
     }
 
 

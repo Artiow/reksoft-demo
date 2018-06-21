@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         "ru.reksoft.demo.repository"
 })
 @ComponentScan({
+        "ru.reksoft.demo.dto",
         "ru.reksoft.demo.mapper",
         "ru.reksoft.demo.config",
         "ru.reksoft.demo.service",

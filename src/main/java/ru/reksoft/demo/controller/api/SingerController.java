@@ -1,6 +1,5 @@
 package ru.reksoft.demo.controller.api;
 
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +12,6 @@ import ru.reksoft.demo.util.ResourceLocationBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Api("singer")
 @RestController
 @RequestMapping("api/singer")
 public class SingerController {
@@ -43,7 +41,7 @@ public class SingerController {
      * @param singerDTO - sent singer
      */
     @PostMapping("/create")
-    public void createLabel(@RequestBody @Validated(SingerDTO.CreateCheck.class) SingerDTO singerDTO, HttpServletRequest request, HttpServletResponse response) {
+    public void createSinger(@RequestBody @Validated(SingerDTO.CreateCheck.class) SingerDTO singerDTO, HttpServletRequest request, HttpServletResponse response) {
         String id = singerService.createSinger(singerDTO).toString();
 
         response.setHeader("id", id);
@@ -58,7 +56,7 @@ public class SingerController {
      * @return singer
      */
     @GetMapping("/{id}")
-    public SingerDTO getAlbum(@PathVariable int id) {
+    public SingerDTO getSinger(@PathVariable int id) {
         return singerService.getSinger(id);
     }
 }

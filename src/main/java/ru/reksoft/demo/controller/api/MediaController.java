@@ -1,6 +1,5 @@
 package ru.reksoft.demo.controller.api;
 
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,6 @@ import ru.reksoft.demo.util.ResourceLocationBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Api("media")
 @RestController
 @RequestMapping("api/media")
 public class MediaController {
@@ -48,7 +46,7 @@ public class MediaController {
      * @return page with media
      */
     @PostMapping("/byAttribute") //todo: merge to byFilter?
-    public PageDTO<MediaShortDTO> getMediaListByAttribute(
+    public PageDTO<MediaShortDTO> getMediaList(
             @RequestParam("attribute") String attributeType, @RequestParam("id") Integer attributeId,
             @RequestBody PageDividerDTO pageDivider
     ) {

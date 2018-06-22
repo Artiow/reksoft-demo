@@ -1,6 +1,5 @@
 package ru.reksoft.demo.controller.api;
 
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,6 @@ import ru.reksoft.demo.util.ResourceLocationBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Api("album")
 @RestController
 @RequestMapping("api/album")
 public class AlbumController {

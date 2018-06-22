@@ -5,15 +5,16 @@ import org.springframework.validation.ObjectError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ValidateErrorDTO extends ErrorDTO {
 
     private final List<String> errors;
 
-    public ValidateErrorDTO(String exception, String message, List<ObjectError> errors) {
-        super(exception, message);
-        this.errors = new ArrayList<>(errors.size());
-        for (ObjectError error: errors) {
+    public ValidateErrorDTO(UUID uuid, String exception, String objectName, List<ObjectError> allErrors) {
+        super(uuid, exception, "Validation failed for " + objectName);
+        this.errors = new ArrayList<>(allErrors.size());
+        for (ObjectError error: allErrors) {
             this.errors.add(
                     ((DefaultMessageSourceResolvable) error.getArguments()[0]).getCodes()[0] + " " + error.getDefaultMessage()
             );

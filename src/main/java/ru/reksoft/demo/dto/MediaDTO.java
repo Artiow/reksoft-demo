@@ -8,8 +8,8 @@ import javax.validation.constraints.NotNull;
 
 public class MediaDTO extends AbstractIdentifiedDTO {
 
-    @NotNull(groups = IdentifierCheck.class)
-    @Min(value = 1, groups = IdentifierCheck.class)
+    @NotNull(groups = IdCheck.class)
+    @Min(value = 1, groups = IdCheck.class)
     private Integer id;
 
     @NotNull(groups = CreateCheck.class)
@@ -64,7 +64,7 @@ public class MediaDTO extends AbstractIdentifiedDTO {
     }
 
 
-    public interface IdentifierCheck extends UpdateCheck {
+    public interface IdCheck {
 
     }
 
@@ -73,7 +73,7 @@ public class MediaDTO extends AbstractIdentifiedDTO {
     }
 
     public interface UpdateCheck extends
-            MediaTypeDTO.IdentifierCheck, AlbumDTO.IdentifierCheck
+            MediaTypeDTO.IdCheck, AlbumDTO.IdCheck
     {
 
     }

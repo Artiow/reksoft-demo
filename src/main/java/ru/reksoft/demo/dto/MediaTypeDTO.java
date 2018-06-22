@@ -6,21 +6,18 @@ import javax.validation.constraints.*;
 
 public class MediaTypeDTO extends AbstractDescriptiveDictionaryDTO {
 
-    @NotNull(groups = IdentifierCheck.class)
-    @Min(value = 1, groups = IdentifierCheck.class)
+    @NotNull(groups = IdCheck.class)
+    @Min(value = 1, groups = IdCheck.class)
     private Integer id;
 
     @NotNull(groups = CreateCheck.class)
-    @NotEmpty(groups = UpdateCheck.class)
     @Size(min = 1, max = 45, groups = UpdateCheck.class)
     private String code;
 
     @NotNull(groups = CreateCheck.class)
-    @NotEmpty(groups = UpdateCheck.class)
     @Size(min = 1, max = 45, groups = UpdateCheck.class)
     private String name;
 
-    @NotEmpty(groups = UpdateCheck.class)
     @Size(min = 1, max = 90, groups = UpdateCheck.class)
     private String description;
 
@@ -70,7 +67,7 @@ public class MediaTypeDTO extends AbstractDescriptiveDictionaryDTO {
     }
 
 
-    public interface IdentifierCheck extends UpdateCheck {
+    public interface IdCheck {
 
     }
 

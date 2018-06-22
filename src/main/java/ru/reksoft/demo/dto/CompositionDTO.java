@@ -7,12 +7,11 @@ import java.time.LocalTime;
 
 public class CompositionDTO extends AbstractIdentifiedDTO {
 
-    @NotNull(groups = IdentifierCheck.class)
-    @Min(value = 1, groups = IdentifierCheck.class)
+    @NotNull(groups = IdCheck.class)
+    @Min(value = 1, groups = IdCheck.class)
     private Integer id;
 
     @NotNull(groups = CreateCheck.class)
-    @NotEmpty(groups = UpdateCheck.class)
     @Size(min = 1, max = 45, groups = UpdateCheck.class)
     private String name;
 
@@ -62,7 +61,7 @@ public class CompositionDTO extends AbstractIdentifiedDTO {
         return this;
     }
 
-    public interface IdentifierCheck extends UpdateCheck {
+    public interface IdCheck {
 
     }
 

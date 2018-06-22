@@ -2,10 +2,7 @@ package ru.reksoft.demo.dto;
 
 import ru.reksoft.demo.dto.generic.AbstractDescriptiveDictionaryDTO;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
 public class MediaTypeDTO extends AbstractDescriptiveDictionaryDTO {
 
@@ -15,16 +12,16 @@ public class MediaTypeDTO extends AbstractDescriptiveDictionaryDTO {
 
     @NotNull(groups = CreateCheck.class)
     @NotEmpty(groups = UpdateCheck.class)
-    @Max(value = 45, groups = UpdateCheck.class)
+    @Size(min = 1, max = 45, groups = UpdateCheck.class)
     private String code;
 
     @NotNull(groups = CreateCheck.class)
     @NotEmpty(groups = UpdateCheck.class)
-    @Max(value = 45, groups = UpdateCheck.class)
+    @Size(min = 1, max = 45, groups = UpdateCheck.class)
     private String name;
 
     @NotEmpty(groups = UpdateCheck.class)
-    @Max(value = 90, groups = UpdateCheck.class)
+    @Size(min = 1, max = 90, groups = UpdateCheck.class)
     private String description;
 
 

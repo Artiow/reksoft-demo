@@ -1,7 +1,6 @@
 package ru.reksoft.demo.dto;
 
 import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
-import ru.reksoft.demo.dto.generic.checkgroups.CreateCheck;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -9,23 +8,33 @@ import javax.validation.constraints.NotNull;
 
 public class MediaDTO extends AbstractIdentifiedDTO {
 
-    @NotNull(message = "id must not be null!", groups = CreateCheck.class)
-    @Min(value = 0, message = "id must not less then zero!", groups = CreateCheck.class)
+    @NotNull(groups = IdentifierCheck.class)
+    @Min(value = 1, groups = IdentifierCheck.class)
+    private Integer id;
+
+    @NotNull(groups = CreateCheck.class)
+    @Min(value = 0, groups = UpdateCheck.class)
     private Integer price;
 
     @Valid
-    @NotNull(message = "media type must not be null!", groups = CreateCheck.class)
+    @NotNull(groups = CreateCheck.class)
     private MediaTypeDTO type;
 
     @Valid
-    @NotNull(message = "album must not be null!", groups = CreateCheck.class)
+    @NotNull(groups = CreateCheck.class)
     private AlbumDTO album;
 
 
-    public MediaDTO setId(Integer id) {
-        return (MediaDTO) super.setId(id);
+    @Override
+    public Integer getId() {
+        return id;
     }
 
+    @Override
+    public MediaDTO setId(Integer id) {
+        this.id = id;
+        return this;
+    }
 
     public Integer getPrice() {
         return price;
@@ -52,5 +61,20 @@ public class MediaDTO extends AbstractIdentifiedDTO {
     public MediaDTO setAlbum(AlbumDTO album) {
         this.album = album;
         return this;
+    }
+
+
+    public interface IdentifierCheck extends UpdateCheck {
+
+    }
+
+    public interface CreateCheck extends UpdateCheck {
+
+    }
+
+    public interface UpdateCheck extends
+            MediaTypeDTO.IdentifierCheck, AlbumDTO.IdentifierCheck
+    {
+
     }
 }

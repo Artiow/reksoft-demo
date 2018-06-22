@@ -4,15 +4,22 @@ import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
 
 public class AlbumShortDTO extends AbstractIdentifiedDTO {
 
+    private Integer id;
     private String name;
     private String label;
     private String singer;
 
 
-    public AlbumShortDTO setId(Integer id) {
-        return (AlbumShortDTO) super.setId(id);
+    @Override
+    public Integer getId() {
+        return id;
     }
 
+    @Override
+    public AlbumShortDTO setId(Integer id) {
+        this.id = id;
+        return this;
+    }
 
     public String getName() {
         return name;

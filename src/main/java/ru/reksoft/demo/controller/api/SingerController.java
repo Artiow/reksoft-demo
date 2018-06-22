@@ -1,21 +1,19 @@
-package ru.reksoft.demo.controller;
+package ru.reksoft.demo.controller.api;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.SingerDTO;
-import ru.reksoft.demo.dto.generic.checkgroups.CreateCheck;
 import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.service.SingerService;
-import ru.reksoft.demo.util.BindingResultErrorMessageBuilder;
 import ru.reksoft.demo.util.ResourceLocationBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.ValidationException;
 
+@Api("singer")
 @RestController
 @RequestMapping("api/singer")
 public class SingerController {
@@ -45,11 +43,7 @@ public class SingerController {
      * @param singerDTO - sent singer
      */
     @PostMapping("/create")
-    public void createLabel(@RequestBody @Validated(CreateCheck.class) SingerDTO singerDTO, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) {
-        if (bindingResult.hasErrors()) {
-            throw new ValidationException(BindingResultErrorMessageBuilder.build(bindingResult.getObjectName(), bindingResult.getAllErrors()));
-        }
-
+    public void createLabel(@RequestBody @Validated(SingerDTO.CreateCheck.class) SingerDTO singerDTO, HttpServletRequest request, HttpServletResponse response) {
         String id = singerService.createSinger(singerDTO).toString();
 
         response.setHeader("id", id);

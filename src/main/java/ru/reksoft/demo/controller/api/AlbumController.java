@@ -1,30 +1,25 @@
-package ru.reksoft.demo.controller;
+package ru.reksoft.demo.controller.api;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.AlbumDTO;
 import ru.reksoft.demo.dto.AlbumShortDTO;
 import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
-import ru.reksoft.demo.dto.validation.AlbumValidator;
 import ru.reksoft.demo.service.AlbumService;
 import ru.reksoft.demo.util.ResourceLocationBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Api("album")
 @RestController
 @RequestMapping("api/album")
 public class AlbumController {
 
-    private AlbumValidator validator;
-
     private AlbumService albumService;
-
-    @Autowired
-    public void setValidator(AlbumValidator validator) {
-        this.validator = validator;
-    }
 
     @Autowired
     public void setAlbumService(AlbumService albumService) {
@@ -49,9 +44,7 @@ public class AlbumController {
      * @param dto - sent album
      */
     @PostMapping("/create")
-    public void createAlbum(@RequestBody AlbumDTO dto, HttpServletRequest request, HttpServletResponse response) {
-        //todo: validate album!
-
+    public void createAlbum(@RequestBody @Validated(AlbumDTO.CreateCheck.class) AlbumDTO dto, HttpServletRequest request, HttpServletResponse response) {
         String id = albumService.createAlbum(dto).toString();
 
         response.setHeader("id", id);

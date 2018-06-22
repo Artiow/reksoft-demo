@@ -1,7 +1,8 @@
-package ru.reksoft.demo.controller;
+package ru.reksoft.demo.controller.api;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.*;
 import ru.reksoft.demo.dto.pagination.filters.MediaFilterDTO;
@@ -14,6 +15,7 @@ import ru.reksoft.demo.util.ResourceLocationBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Api("media")
 @RestController
 @RequestMapping("api/media")
 public class MediaController {
@@ -60,7 +62,7 @@ public class MediaController {
      * @param mediaDTO - sent media
      */
     @PostMapping("/create")
-    public void createMedia(@RequestBody MediaDTO mediaDTO, HttpServletRequest request, HttpServletResponse response) {
+    public void createMedia(@RequestBody @Validated(MediaDTO.CreateCheck.class) MediaDTO mediaDTO, HttpServletRequest request, HttpServletResponse response) {
         String id = mediaService.createMedia(mediaDTO).toString();
 
         response.setHeader("id", id);

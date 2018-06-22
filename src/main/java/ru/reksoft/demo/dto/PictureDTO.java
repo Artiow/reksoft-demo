@@ -1,34 +1,34 @@
 package ru.reksoft.demo.dto;
 
 import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
-import ru.reksoft.demo.dto.generic.checkgroups.CreateCheck;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class PictureDTO extends AbstractIdentifiedDTO {
 
-    @NotNull(message = "url must not be null!", groups = CreateCheck.class)
-    @NotEmpty(message = "url must not be empty!", groups = CreateCheck.class)
-    @Max(value = 255, message = "url must not be longer than 255 characters!", groups = CreateCheck.class)
+    @NotNull(groups = IdentifierCheck.class)
+    @Min(value = 1, groups = IdentifierCheck.class)
+    private Integer id;
+
     private String url;
-
-    @NotNull(message = "name must not be null!", groups = CreateCheck.class)
-    @NotEmpty(message = "name must not be empty!", groups = CreateCheck.class)
-    @Max(value = 45, message = "name must not be longer than 45 characters!", groups = CreateCheck.class)
     private String name;
-
     private Integer width;
     private Integer height;
     private LocalDateTime uploaded;
 
 
-    public PictureDTO setId(Integer id) {
-        return (PictureDTO) super.setId(id);
+    @Override
+    public Integer getId() {
+        return id;
     }
 
+    @Override
+    public PictureDTO setId(Integer id) {
+        this.id = id;
+        return this;
+    }
 
     public String getUrl() {
         return url;
@@ -73,5 +73,18 @@ public class PictureDTO extends AbstractIdentifiedDTO {
     public PictureDTO setUploaded(LocalDateTime uploaded) {
         this.uploaded = uploaded;
         return this;
+    }
+
+
+    public interface IdentifierCheck extends UpdateCheck {
+
+    }
+
+    public interface CreateCheck extends UpdateCheck {
+
+    }
+
+    public interface UpdateCheck {
+
     }
 }

@@ -12,16 +12,16 @@ public class MediaDTO extends AbstractIdentifiedDTO {
     @Min(value = 1, groups = IdCheck.class)
     private Integer id;
 
-    @NotNull(groups = CreateCheck.class)
-    @Min(value = 0, groups = UpdateCheck.class)
+    @NotNull(groups = FieldCheck.class)
+    @Min(value = 0, groups = FieldCheck.class)
     private Integer price;
 
     @Valid
-    @NotNull(groups = CreateCheck.class)
+    @NotNull(groups = FieldCheck.class)
     private MediaTypeDTO type;
 
     @Valid
-    @NotNull(groups = CreateCheck.class)
+    @NotNull(groups = FieldCheck.class)
     private AlbumDTO album;
 
 
@@ -68,13 +68,8 @@ public class MediaDTO extends AbstractIdentifiedDTO {
 
     }
 
-    public interface CreateCheck extends UpdateCheck {
-
-    }
-
-    public interface UpdateCheck extends
-            MediaTypeDTO.IdCheck, AlbumDTO.IdCheck
-    {
+    public interface FieldCheck extends
+            MediaTypeDTO.IdCheck, AlbumDTO.IdCheck {
 
     }
 }

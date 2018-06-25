@@ -54,7 +54,7 @@ public class SingerController {
      * @param singerDTO - sent singer
      */
     @PostMapping
-    public void create(@RequestBody @Validated(SingerDTO.CreateCheck.class) SingerDTO singerDTO, HttpServletRequest request, HttpServletResponse response)
+    public void create(@RequestBody @Validated(SingerDTO.FieldCheck.class) SingerDTO singerDTO, HttpServletRequest request, HttpServletResponse response)
             throws CannotCreateException
     {
         response.setHeader("location", ResourceLocationBuilder.build(request, singerService.create(singerDTO)));
@@ -67,7 +67,7 @@ public class SingerController {
      * @param id - singer id
      */
     @PutMapping("/{id}")
-    public void update(@PathVariable int id, @RequestBody @Validated(SingerDTO.UpdateCheck.class) SingerDTO singerDTO, HttpServletResponse response)
+    public void update(@PathVariable int id, @RequestBody @Validated(SingerDTO.FieldCheck.class) SingerDTO singerDTO, HttpServletResponse response)
             throws NotFoundException
     {
         singerService.update(id, singerDTO);

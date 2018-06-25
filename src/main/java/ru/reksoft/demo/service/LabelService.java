@@ -3,6 +3,7 @@ package ru.reksoft.demo.service;
 import javassist.NotFoundException;
 import javassist.tools.reflect.CannotCreateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.domain.LabelEntity;
@@ -72,7 +73,11 @@ public class LabelService extends AbstractService<LabelDTO> {
     @Override
     @Transactional
     public Integer create(@NotNull LabelDTO labelDTO) throws CannotCreateException {
-        return labelRepository.save(labelMapper.toEntity(labelDTO)).getId();
+        try {
+            return labelRepository.save(labelMapper.toEntity(labelDTO)).getId();
+        } catch (DataAccessException e) {
+            throw new CannotCreateException(String.format("Cannot create label %s!", labelDTO.getName()));
+        }
     }
 
     /**
@@ -84,7 +89,11 @@ public class LabelService extends AbstractService<LabelDTO> {
     @Override
     @Transactional
     public void update(@NotNull Integer id, @NotNull LabelDTO labelDTO) throws NotFoundException {
-        //todo: update!
+        try {
+            labelRepository.save(labelMapper.merge(labelRepository.getOne(id), labelMapper.toEntity(labelDTO)));
+        } catch (EntityNotFoundException e) {
+            throw new NotFoundException(String.format("Label with id %d does not exist!", id));
+        }
     }
 
     /**

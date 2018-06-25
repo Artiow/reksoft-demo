@@ -54,7 +54,7 @@ public class LabelController {
      * @param labelDTO - sent label
      */
     @PostMapping
-    public void create(@RequestBody @Validated(LabelDTO.CreateCheck.class) LabelDTO labelDTO, HttpServletRequest request, HttpServletResponse response)
+    public void create(@RequestBody @Validated(LabelDTO.FieldCheck.class) LabelDTO labelDTO, HttpServletRequest request, HttpServletResponse response)
             throws CannotCreateException
     {
         response.setHeader("location", ResourceLocationBuilder.build(request, labelService.create(labelDTO)));
@@ -67,7 +67,7 @@ public class LabelController {
      * @param id - label id
      */
     @PutMapping("/{id}")
-    public void update(@PathVariable int id, @RequestBody @Validated(LabelDTO.UpdateCheck.class) LabelDTO labelDTO, HttpServletResponse response)
+    public void update(@PathVariable int id, @RequestBody @Validated(LabelDTO.FieldCheck.class) LabelDTO labelDTO, HttpServletResponse response)
             throws NotFoundException
     {
         labelService.update(id, labelDTO);

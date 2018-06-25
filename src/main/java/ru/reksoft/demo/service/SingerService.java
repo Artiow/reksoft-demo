@@ -3,6 +3,7 @@ package ru.reksoft.demo.service;
 import javassist.NotFoundException;
 import javassist.tools.reflect.CannotCreateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.domain.SingerEntity;
@@ -72,7 +73,11 @@ public class SingerService extends AbstractService<SingerDTO> {
     @Override
     @Transactional
     public Integer create(@NotNull SingerDTO singerDTO) throws CannotCreateException {
-        return singerRepository.save(singerMapper.toEntity(singerDTO)).getId();
+        try {
+            return singerRepository.save(singerMapper.toEntity(singerDTO)).getId();
+        } catch (DataAccessException e) {
+            throw new CannotCreateException(String.format("Cannot create singer %s!", singerDTO.getName()));
+        }
     }
 
     /**
@@ -84,7 +89,11 @@ public class SingerService extends AbstractService<SingerDTO> {
     @Override
     @Transactional
     public void update(@NotNull Integer id, @NotNull SingerDTO singerDTO) throws NotFoundException {
-        //todo: update!
+        try {
+            singerRepository.save(singerMapper.merge(singerRepository.getOne(id), singerMapper.toEntity(singerDTO)));
+        } catch (EntityNotFoundException e) {
+            throw new NotFoundException(String.format("Singer with id %d does not exist!", id));
+        }
     }
 
     /**

@@ -13,35 +13,35 @@ public class AlbumDTO extends AbstractIdentifiedDTO {
     @Min(value = 1, groups = IdCheck.class)
     private Integer id;
 
-    @NotNull(groups = CreateCheck.class)
-    @Size(min = 1, max = 45, groups = UpdateCheck.class)
+    @NotNull(groups = FieldCheck.class)
+    @Size(min = 1, max = 45, groups = FieldCheck.class)
     private String name;
 
-    @Size(min = 1, max = 255, groups = UpdateCheck.class)
+    @Size(min = 1, max = 255, groups = FieldCheck.class)
     private String description;
 
-    @NotNull(groups = CreateCheck.class)
+    @NotNull(groups = FieldCheck.class)
     private LocalDate releaseYear;
 
     @Valid
-    @NotNull(groups = CreateCheck.class)
+    @NotNull(groups = FieldCheck.class)
     private LabelDTO label;
 
     @Valid
-    @NotNull(groups = CreateCheck.class)
+    @NotNull(groups = FieldCheck.class)
     private SingerDTO singer;
 
     @Valid
     private PictureDTO picture;
 
     @Valid
-    @NotNull(groups = CreateCheck.class)
-    @NotEmpty(groups = UpdateCheck.class)
+    @NotNull(groups = FieldCheck.class)
+    @NotEmpty(groups = FieldCheck.class)
     private List<GenreDTO> genres;
 
     @Valid
-    @NotNull(groups = CreateCheck.class)
-    @NotEmpty(groups = UpdateCheck.class)
+    @NotNull(groups = FieldCheck.class)
+    @NotEmpty(groups = FieldCheck.class)
     private List<CompositionDTO> compositions;
 
 
@@ -133,13 +133,8 @@ public class AlbumDTO extends AbstractIdentifiedDTO {
 
     }
 
-    public interface CreateCheck extends UpdateCheck {
-
-    }
-
-    public interface UpdateCheck extends
-            LabelDTO.IdCheck, SingerDTO.IdCheck, PictureDTO.IdCheck, CompositionDTO.CreateCheck, GenreDTO.IdCheck
-    {
+    public interface FieldCheck extends
+            LabelDTO.IdCheck, SingerDTO.IdCheck, PictureDTO.IdCheck, GenreDTO.IdCheck, CompositionDTO.FieldCheck {
 
     }
 }

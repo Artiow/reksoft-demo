@@ -110,11 +110,7 @@ public class UserDTO extends AbstractIdentifiedDTO {
 
     }
 
-    public interface CreateCheck extends UpdateCheck {
-
-    }
-
-    public interface UpdateCheck {
+    public interface FieldCheck {
 
     }
 }

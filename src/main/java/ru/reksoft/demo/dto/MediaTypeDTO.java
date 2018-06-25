@@ -10,15 +10,15 @@ public class MediaTypeDTO extends AbstractDescriptiveDictionaryDTO {
     @Min(value = 1, groups = IdCheck.class)
     private Integer id;
 
-    @NotNull(groups = CreateCheck.class)
-    @Size(min = 1, max = 45, groups = UpdateCheck.class)
+    @NotNull(groups = FieldCheck.class)
+    @Size(min = 1, max = 45, groups = FieldCheck.class)
     private String code;
 
-    @NotNull(groups = CreateCheck.class)
-    @Size(min = 1, max = 45, groups = UpdateCheck.class)
+    @NotNull(groups = FieldCheck.class)
+    @Size(min = 1, max = 45, groups = FieldCheck.class)
     private String name;
 
-    @Size(min = 1, max = 90, groups = UpdateCheck.class)
+    @Size(min = 1, max = 90, groups = FieldCheck.class)
     private String description;
 
 
@@ -71,11 +71,7 @@ public class MediaTypeDTO extends AbstractDescriptiveDictionaryDTO {
 
     }
 
-    public interface CreateCheck extends UpdateCheck {
-
-    }
-
-    public interface UpdateCheck {
+    public interface FieldCheck {
 
     }
 }

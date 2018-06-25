@@ -72,7 +72,7 @@ public class MediaController {
      * @param mediaDTO - sent media
      */
     @PostMapping
-    public void create(@RequestBody @Validated(MediaDTO.CreateCheck.class) MediaDTO mediaDTO, HttpServletRequest request, HttpServletResponse response)
+    public void create(@RequestBody @Validated(MediaDTO.FieldCheck.class) MediaDTO mediaDTO, HttpServletRequest request, HttpServletResponse response)
             throws CannotCreateException
     {
         response.setHeader("location", ResourceLocationBuilder.build(request, mediaService.create(mediaDTO)));

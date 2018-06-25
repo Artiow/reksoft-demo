@@ -11,4 +11,11 @@ public interface LabelMapper extends AbstractEntityMapper<LabelEntity, LabelDTO>
 
     @Mapping(target = "id", ignore = true)
     LabelEntity toEntity(LabelDTO dto);
+
+    default LabelEntity merge(LabelEntity acceptor, LabelEntity donor) {
+        acceptor.setName(donor.getName());
+        acceptor.setAlbums(donor.getAlbums());
+
+        return acceptor;
+    }
 }

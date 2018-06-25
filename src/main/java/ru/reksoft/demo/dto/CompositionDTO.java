@@ -11,15 +11,15 @@ public class CompositionDTO extends AbstractIdentifiedDTO {
     @Min(value = 1, groups = IdCheck.class)
     private Integer id;
 
-    @NotNull(groups = CreateCheck.class)
-    @Size(min = 1, max = 45, groups = UpdateCheck.class)
+    @NotNull(groups = FieldCheck.class)
+    @Size(min = 1, max = 45, groups = FieldCheck.class)
     private String name;
 
-    @NotNull(groups = CreateCheck.class)
-    @Min(value = 1, groups = UpdateCheck.class)
+    @NotNull(groups = FieldCheck.class)
+    @Min(value = 1, groups = FieldCheck.class)
     private Integer position;
 
-    @NotNull(groups = UpdateCheck.class)
+    @NotNull(groups = FieldCheck.class)
     private LocalTime duration;
 
 
@@ -65,11 +65,7 @@ public class CompositionDTO extends AbstractIdentifiedDTO {
 
     }
 
-    public interface CreateCheck extends UpdateCheck {
-
-    }
-
-    public interface UpdateCheck {
+    public interface FieldCheck {
 
     }
 }

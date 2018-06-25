@@ -1,7 +1,5 @@
 package ru.reksoft.demo.controller.api;
 
-import javassist.NotFoundException;
-import javassist.tools.reflect.CannotCreateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -11,6 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.handling.ErrorDTO;
 import ru.reksoft.demo.dto.handling.ValidateErrorDTO;
+import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
+import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 
 import java.util.UUID;
 
@@ -39,15 +39,15 @@ public class AdviseController {
     }
 
 
-    @ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorDTO handleNotFoundException(NotFoundException ex) {
+    public ErrorDTO handleNotFoundException(ResourceNotFoundException ex) {
         return warnDTO(ex, "Requested Resource Not Found");
     }
 
-    @ExceptionHandler(CannotCreateException.class)
+    @ExceptionHandler(ResourceCannotCreateException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorDTO handleCannotCreateException(CannotCreateException ex) {
+    public ErrorDTO handleCannotCreateException(ResourceCannotCreateException ex) {
         return warnDTO(ex, "Sent Resource Cannot Create");
     }
 

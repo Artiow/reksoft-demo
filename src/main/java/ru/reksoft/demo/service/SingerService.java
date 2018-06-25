@@ -1,7 +1,5 @@
 package ru.reksoft.demo.service;
 
-import javassist.NotFoundException;
-import javassist.tools.reflect.CannotCreateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -14,6 +12,8 @@ import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.mapper.SingerMapper;
 import ru.reksoft.demo.repository.SingerRepository;
 import ru.reksoft.demo.service.generic.AbstractService;
+import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
+import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
@@ -56,11 +56,11 @@ public class SingerService extends AbstractService<SingerDTO> {
      */
     @Override
     @Transactional(readOnly = true)
-    public SingerDTO get(@NotNull Integer id) throws NotFoundException {
+    public SingerDTO get(@NotNull Integer id) throws ResourceNotFoundException {
         try {
             return singerMapper.toDTO(singerRepository.getOne(id));
         } catch (EntityNotFoundException e) {
-            throw new NotFoundException(String.format("Singer with id %d does not exist!", id));
+            throw new ResourceNotFoundException(String.format("Singer with id %d does not exist!", id));
         }
     }
 
@@ -72,12 +72,12 @@ public class SingerService extends AbstractService<SingerDTO> {
      */
     @Override
     @Transactional
-    public Integer create(@NotNull SingerDTO singerDTO) throws CannotCreateException {
-        try {
-            return singerRepository.save(singerMapper.toEntity(singerDTO)).getId();
-        } catch (DataAccessException e) {
-            throw new CannotCreateException(String.format("Cannot create singer %s!", singerDTO.getName()));
+    public Integer create(@NotNull SingerDTO singerDTO) throws ResourceCannotCreateException {
+        if (singerRepository.findByName(singerDTO.getName()) != null) {
+            throw new ResourceCannotCreateException(String.format("Label with name \'%s\' already exist!", singerDTO.getName()));
         }
+
+        return singerRepository.save(singerMapper.toEntity(singerDTO)).getId();
     }
 
     /**
@@ -88,11 +88,11 @@ public class SingerService extends AbstractService<SingerDTO> {
      */
     @Override
     @Transactional
-    public void update(@NotNull Integer id, @NotNull SingerDTO singerDTO) throws NotFoundException {
+    public void update(@NotNull Integer id, @NotNull SingerDTO singerDTO) throws ResourceNotFoundException {
         try {
             singerRepository.save(singerMapper.merge(singerRepository.getOne(id), singerMapper.toEntity(singerDTO)));
         } catch (EntityNotFoundException e) {
-            throw new NotFoundException(String.format("Singer with id %d does not exist!", id));
+            throw new ResourceNotFoundException(String.format("Singer with id %d does not exist!", id));
         }
     }
 
@@ -103,9 +103,9 @@ public class SingerService extends AbstractService<SingerDTO> {
      */
     @Override
     @Transactional
-    public void delete(@NotNull Integer id) throws NotFoundException {
+    public void delete(@NotNull Integer id) throws ResourceNotFoundException {
         if (!singerRepository.existsById(id)) {
-            throw new NotFoundException(String.format("Singer with id %d does not exist!", id));
+            throw new ResourceNotFoundException(String.format("Singer with id %d does not exist!", id));
         }
 
         singerRepository.deleteById(id);

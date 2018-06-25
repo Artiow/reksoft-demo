@@ -1,9 +1,6 @@
 package ru.reksoft.demo.service;
 
-import javassist.NotFoundException;
-import javassist.tools.reflect.CannotCreateException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.domain.LabelEntity;
@@ -14,6 +11,8 @@ import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.mapper.LabelMapper;
 import ru.reksoft.demo.repository.LabelRepository;
 import ru.reksoft.demo.service.generic.AbstractService;
+import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
+import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
@@ -56,11 +55,11 @@ public class LabelService extends AbstractService<LabelDTO> {
      */
     @Override
     @Transactional(readOnly = true)
-    public LabelDTO get(@NotNull Integer id) throws NotFoundException {
+    public LabelDTO get(@NotNull Integer id) throws ResourceNotFoundException {
         try {
             return labelMapper.toDTO(labelRepository.getOne(id));
         } catch (EntityNotFoundException e) {
-            throw new NotFoundException(String.format("Label with id %d does not exist!", id));
+            throw new ResourceNotFoundException(String.format("Label with id %d does not exist!", id));
         }
     }
 
@@ -72,12 +71,12 @@ public class LabelService extends AbstractService<LabelDTO> {
      */
     @Override
     @Transactional
-    public Integer create(@NotNull LabelDTO labelDTO) throws CannotCreateException {
-        try {
-            return labelRepository.save(labelMapper.toEntity(labelDTO)).getId();
-        } catch (DataAccessException e) {
-            throw new CannotCreateException(String.format("Cannot create label %s!", labelDTO.getName()));
+    public Integer create(@NotNull LabelDTO labelDTO) throws ResourceCannotCreateException {
+        if (labelRepository.findByName(labelDTO.getName()) != null) {
+            throw new ResourceCannotCreateException(String.format("Label with name \'%s\' already exist!", labelDTO.getName()));
         }
+
+        return labelRepository.save(labelMapper.toEntity(labelDTO)).getId();
     }
 
     /**
@@ -88,11 +87,11 @@ public class LabelService extends AbstractService<LabelDTO> {
      */
     @Override
     @Transactional
-    public void update(@NotNull Integer id, @NotNull LabelDTO labelDTO) throws NotFoundException {
+    public void update(@NotNull Integer id, @NotNull LabelDTO labelDTO) throws ResourceNotFoundException {
         try {
             labelRepository.save(labelMapper.merge(labelRepository.getOne(id), labelMapper.toEntity(labelDTO)));
         } catch (EntityNotFoundException e) {
-            throw new NotFoundException(String.format("Label with id %d does not exist!", id));
+            throw new ResourceNotFoundException(String.format("Label with id %d does not exist!", id));
         }
     }
 
@@ -103,9 +102,9 @@ public class LabelService extends AbstractService<LabelDTO> {
      */
     @Override
     @Transactional
-    public void delete(@NotNull Integer id) throws NotFoundException {
+    public void delete(@NotNull Integer id) throws ResourceNotFoundException {
         if (!labelRepository.existsById(id)) {
-            throw new NotFoundException(String.format("Label with id %d does not exist!", id));
+            throw new ResourceNotFoundException(String.format("Label with id %d does not exist!", id));
         }
 
         labelRepository.deleteById(id);

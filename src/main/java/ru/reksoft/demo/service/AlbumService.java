@@ -1,7 +1,5 @@
 package ru.reksoft.demo.service;
 
-import javassist.NotFoundException;
-import javassist.tools.reflect.CannotCreateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +12,8 @@ import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.mapper.AlbumMapper;
 import ru.reksoft.demo.repository.*;
 import ru.reksoft.demo.service.generic.AbstractService;
+import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
+import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
@@ -55,11 +55,11 @@ public class AlbumService extends AbstractService<AlbumDTO> {
      */
     @Override
     @Transactional(readOnly = true)
-    public AlbumDTO get(@NotNull Integer id) throws NotFoundException {
+    public AlbumDTO get(@NotNull Integer id) throws ResourceNotFoundException {
         try {
             return albumMapper.toDTO(albumRepository.getOne(id));
         } catch (EntityNotFoundException e) {
-            throw new NotFoundException(String.format("Album with id %d does not exist!", id));
+            throw new ResourceNotFoundException(String.format("Album with id %d does not exist!", id));
         }
     }
 
@@ -75,7 +75,7 @@ public class AlbumService extends AbstractService<AlbumDTO> {
      */
     @Override
     @Transactional
-    public Integer create(@NotNull AlbumDTO albumDTO) throws CannotCreateException {
+    public Integer create(@NotNull AlbumDTO albumDTO) throws ResourceCannotCreateException {
         AlbumEntity entity = albumMapper.toEntity(albumDTO);
         for (CompositionEntity composition: entity.getCompositions()) {
             composition.setAlbum(entity);
@@ -92,7 +92,7 @@ public class AlbumService extends AbstractService<AlbumDTO> {
      */
     @Override
     @Transactional
-    public void update(@NotNull Integer id, @NotNull AlbumDTO albumDTO) throws NotFoundException {
+    public void update(@NotNull Integer id, @NotNull AlbumDTO albumDTO) throws ResourceNotFoundException {
         //todo: update!
     }
 
@@ -103,9 +103,9 @@ public class AlbumService extends AbstractService<AlbumDTO> {
      */
     @Override
     @Transactional
-    public void delete(@NotNull Integer id) throws NotFoundException {
+    public void delete(@NotNull Integer id) throws ResourceNotFoundException {
         if (!albumRepository.existsById(id)) {
-            throw new NotFoundException(String.format("Album with id %d does not exist!", id));
+            throw new ResourceNotFoundException(String.format("Album with id %d does not exist!", id));
         }
 
         albumRepository.deleteById(id);

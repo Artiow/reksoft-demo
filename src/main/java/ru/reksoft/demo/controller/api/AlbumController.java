@@ -1,7 +1,5 @@
 package ru.reksoft.demo.controller.api;
 
-import javassist.NotFoundException;
-import javassist.tools.reflect.CannotCreateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +8,8 @@ import ru.reksoft.demo.dto.AlbumShortDTO;
 import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.service.AlbumService;
+import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
+import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 import ru.reksoft.demo.util.ResourceLocationBuilder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,7 +45,7 @@ public class AlbumController {
      * @return album
      */
     @GetMapping("/{id}")
-    public AlbumDTO get(@PathVariable int id) throws NotFoundException {
+    public AlbumDTO get(@PathVariable int id) throws ResourceNotFoundException {
         return albumService.get(id);
     }
 
@@ -56,7 +56,7 @@ public class AlbumController {
      */
     @PostMapping
     public void create(@RequestBody @Validated(AlbumDTO.FieldCheck.class) AlbumDTO albumDTO, HttpServletRequest request, HttpServletResponse response)
-            throws CannotCreateException
+            throws ResourceCannotCreateException
     {
         response.setHeader("location", ResourceLocationBuilder.build(request, albumService.create(albumDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);

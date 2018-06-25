@@ -1,7 +1,5 @@
 package ru.reksoft.demo.controller.api;
 
-import javassist.NotFoundException;
-import javassist.tools.reflect.CannotCreateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +8,8 @@ import ru.reksoft.demo.dto.pagination.filters.MediaFilterDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.dto.pagination.PageDividerDTO;
 import ru.reksoft.demo.service.MediaService;
+import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
+import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 import ru.reksoft.demo.util.MediaSearchType;
 import ru.reksoft.demo.util.ResourceLocationBuilder;
 
@@ -61,7 +61,7 @@ public class MediaController {
      * @return media
      */
     @GetMapping("/{id}")
-    public MediaDTO get(@PathVariable int id) throws NotFoundException {
+    public MediaDTO get(@PathVariable int id) throws ResourceNotFoundException {
         return mediaService.get(id);
     }
 
@@ -73,7 +73,7 @@ public class MediaController {
      */
     @PostMapping
     public void create(@RequestBody @Validated(MediaDTO.FieldCheck.class) MediaDTO mediaDTO, HttpServletRequest request, HttpServletResponse response)
-            throws CannotCreateException
+            throws ResourceCannotCreateException
     {
         response.setHeader("location", ResourceLocationBuilder.build(request, mediaService.create(mediaDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);

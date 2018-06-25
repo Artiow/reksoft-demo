@@ -1,7 +1,5 @@
 package ru.reksoft.demo.service.generic;
 
-import javassist.NotFoundException;
-import javassist.tools.reflect.CannotCreateException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -15,17 +13,16 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
-import javax.validation.constraints.NotNull;
 
 public abstract class AbstractService<T extends DataTransferObject> {
 
-    public abstract T get(Integer id) throws NotFoundException;
+    public abstract T get(Integer id) throws ResourceNotFoundException;
 
-    public abstract Integer create(T t) throws CannotCreateException;
+    public abstract Integer create(T t) throws ResourceCannotCreateException;
 
-    public abstract void update(Integer id, T t) throws NotFoundException;
+    public abstract void update(Integer id, T t) throws ResourceNotFoundException;
 
-    public abstract void delete(Integer id) throws NotFoundException;
+    public abstract void delete(Integer id) throws ResourceNotFoundException;
 
 
     public static class StringSearcher<T extends DomainObject> extends PageDivider implements Specification<T> {

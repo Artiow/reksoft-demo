@@ -32,32 +32,31 @@ public class AlbumController {
      * @return page with albums
      */
     @PostMapping("/list")
-    public PageDTO<AlbumShortDTO> getAlbumList(@RequestBody StringSearcherDTO searcher) {
-        return albumService.getAlbumList(searcher);
+    public PageDTO<AlbumShortDTO> getList(@RequestBody StringSearcherDTO searcher) {
+        return albumService.getList(searcher);
     }
 
     /**
-     * Returns created album id and location.
-     *
-     * @param dto - sent album
-     */
-    @PostMapping("/create")
-    public void createAlbum(@RequestBody @Validated(AlbumDTO.CreateCheck.class) AlbumDTO dto, HttpServletRequest request, HttpServletResponse response) {
-        String id = albumService.createAlbum(dto).toString();
-
-        response.setHeader("id", id);
-        response.setHeader("location", ResourceLocationBuilder.build(request.getRequestURL(), id));
-        response.setStatus(HttpServletResponse.SC_CREATED);
-    }
-
-    /**
-     * Returns album by id with full information
+     * Returns album by id with full information.
      *
      * @param id - album id
      * @return album
      */
     @GetMapping("/{id}")
-    public AlbumDTO getAlbum(@PathVariable int id) {
-        return albumService.getAlbum(id);
+    public AlbumDTO get(@PathVariable int id) {
+        return albumService.get(id);
+    }
+
+    /**
+     * Returns created album id and location.
+     *
+     * @param albumDTO - sent album
+     */
+    @PostMapping("/create")
+    public void create(@RequestBody @Validated(AlbumDTO.CreateCheck.class) AlbumDTO albumDTO, HttpServletRequest request, HttpServletResponse response) {
+        String id = albumService.create(albumDTO).toString();
+
+        response.setHeader("location", ResourceLocationBuilder.build(request.getRequestURI(), id));
+        response.setStatus(HttpServletResponse.SC_CREATED);
     }
 }

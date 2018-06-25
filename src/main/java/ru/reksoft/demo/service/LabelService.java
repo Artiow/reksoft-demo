@@ -15,7 +15,7 @@ import ru.reksoft.demo.service.generic.AbstractService;
 import javax.validation.constraints.NotNull;
 
 @Service
-public class LabelService extends AbstractService {
+public class LabelService extends AbstractService<LabelDTO> {
 
     private LabelRepository labelRepository;
 
@@ -33,38 +33,62 @@ public class LabelService extends AbstractService {
 
 
     /**
-     * Returns page with searched labels
+     * Returns page with searched labels.
      *
      * @param searcherDTO - searcher for label
      * @return label page
      */
     @Transactional(readOnly = true)
-    public PageDTO<LabelDTO> getLabelList(@NotNull StringSearcherDTO searcherDTO) {
+    public PageDTO<LabelDTO> getList(@NotNull StringSearcherDTO searcherDTO) {
         LabelSearcher searcher = new LabelSearcher(searcherDTO);
         return new PageDTO<>(labelRepository.findAll(searcher, searcher.getPageRequest()).map(labelMapper::toDTO));
     }
 
+    /**
+     * Returns label.
+     *
+     * @param id - label id
+     * @return found label
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public LabelDTO get(@NotNull Integer id) {
+        return labelMapper.toDTO(labelRepository.getOne(id));
+    }
 
     /**
      * Save label.
      *
-     * @param dto - label
+     * @param labelDTO - label
      * @return saved entity id
      */
+    @Override
     @Transactional
-    public Integer createLabel(@NotNull LabelDTO dto) {
-        return labelRepository.save(labelMapper.toEntity(dto)).getId();
+    public Integer create(@NotNull LabelDTO labelDTO) {
+        return labelRepository.save(labelMapper.toEntity(labelDTO)).getId();
     }
 
+    /**
+     * Update label.
+     *
+     * @param id - label id
+     * @param labelDTO - new label data
+     */
+    @Override
+    @Transactional
+    public void update(@NotNull Integer id, @NotNull LabelDTO labelDTO) {
+        //todo: update!
+    }
 
     /**
-     * Returns label by id
+     * Delete label.
      *
-     * @return album
+     * @param id - label id
      */
-    @Transactional(readOnly = true)
-    public LabelDTO getLabel(@NotNull Integer id) {
-        return labelMapper.toDTO(labelRepository.getOne(id));
+    @Override
+    @Transactional
+    public void delete(@NotNull Integer id) {
+        //todo: delete!
     }
 
 

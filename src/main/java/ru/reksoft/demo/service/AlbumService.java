@@ -16,7 +16,7 @@ import ru.reksoft.demo.service.generic.AbstractService;
 import javax.validation.constraints.NotNull;
 
 @Service
-public class AlbumService extends AbstractService {
+public class AlbumService extends AbstractService<AlbumDTO> {
 
     private AlbumRepository albumRepository;
 
@@ -33,17 +33,28 @@ public class AlbumService extends AbstractService {
     }
 
     /**
-     * Returns page with searched albums
+     * Returns page with searched albums.
      *
      * @param searcherDTO - searcher for album
      * @return album page
      */
     @Transactional(readOnly = true)
-    public PageDTO<AlbumShortDTO> getAlbumList(@NotNull StringSearcherDTO searcherDTO) {
+    public PageDTO<AlbumShortDTO> getList(@NotNull StringSearcherDTO searcherDTO) {
         AlbumSearcher searcher = new AlbumSearcher(searcherDTO);
         return new PageDTO<>(albumRepository.findAll(searcher, searcher.getPageRequest()).map(albumMapper::toShortDTO));
     }
 
+    /**
+     * Returns album by id.
+     *
+     * @param id - album id
+     * @return album
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public AlbumDTO get(@NotNull Integer id) {
+        return albumMapper.toDTO(albumRepository.getOne(id));
+    }
 
     /**
      * Save album.
@@ -52,12 +63,13 @@ public class AlbumService extends AbstractService {
      * All compositions will be created.
      * All genres must exist.
      *
-     * @param dto - album
+     * @param albumDTO - album
      * @return saved entity id
      */
+    @Override
     @Transactional
-    public Integer createAlbum(@NotNull AlbumDTO dto) {
-        AlbumEntity entity = albumMapper.toEntity(dto);
+    public Integer create(@NotNull AlbumDTO albumDTO) {
+        AlbumEntity entity = albumMapper.toEntity(albumDTO);
         for (CompositionEntity composition: entity.getCompositions()) {
             composition.setAlbum(entity);
         }
@@ -65,15 +77,27 @@ public class AlbumService extends AbstractService {
         return albumRepository.save(entity).getId();
     }
 
+    /**
+     * Update album.
+     *
+     * @param id - album id
+     * @param albumDTO - new album data
+     */
+    @Override
+    @Transactional
+    public void update(@NotNull Integer id, @NotNull AlbumDTO albumDTO) {
+        //todo: update!
+    }
 
     /**
-     * Returns album by id
+     * Delete album.
      *
-     * @return album
+     * @param id - album id
      */
-    @Transactional(readOnly = true)
-    public AlbumDTO getAlbum(@NotNull Integer id) {
-        return albumMapper.toDTO(albumRepository.getOne(id));
+    @Override
+    @Transactional
+    public void delete(@NotNull Integer id) {
+        //todo: delete!
     }
 
 

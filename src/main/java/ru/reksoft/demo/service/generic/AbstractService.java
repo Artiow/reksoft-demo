@@ -3,6 +3,8 @@ package ru.reksoft.demo.service.generic;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import ru.reksoft.demo.domain.generic.DomainObject;
+import ru.reksoft.demo.dto.generic.DataTransferObject;
 import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDividerDTO;
 
@@ -11,10 +13,20 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
+import javax.validation.constraints.NotNull;
 
-public abstract class AbstractService {
+public abstract class AbstractService<T extends DataTransferObject> {
 
-    public static class StringSearcher<T> extends PageDivider implements Specification<T> {
+    public abstract T get(Integer id);
+
+    public abstract Integer create(T t);
+
+    public abstract void update(Integer id, T t);
+
+    public abstract void delete(Integer id);
+
+
+    public static class StringSearcher<T extends DomainObject> extends PageDivider implements Specification<T> {
 
         private String searchString;
         private SingularAttribute<? super T, String> attribute;

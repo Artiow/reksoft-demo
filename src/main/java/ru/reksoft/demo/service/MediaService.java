@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
-public class MediaService extends AbstractService {
+public class MediaService extends AbstractService<MediaDTO> {
 
     private MediaRepository mediaRepository;
 
@@ -40,20 +40,19 @@ public class MediaService extends AbstractService {
 
 
     /**
-     * Returns page with filtered media
+     * Returns page with filtered media.
      *
      * @param filterDTO - filter for media
      * @return media page
      */
     @Transactional(readOnly = true)
-    public PageDTO<MediaShortDTO> getMediaList(@NotNull MediaFilterDTO filterDTO) {
+    public PageDTO<MediaShortDTO> getListByFilter(@NotNull MediaFilterDTO filterDTO) {
         MediaFilter filter = new MediaFilter(filterDTO);
         return new PageDTO<>(mediaRepository.findAll(filter, filter.getPageRequest()).map(mediaMapper::toShortDTO));
     }
 
-
     /**
-     * Returns page with media by one of attribute (album, label, singer) id
+     * Returns page with media by one of attribute (album, label, singer) id.
      *
      * @param attributeType - attribute type
      * @param attributeId - attribute id
@@ -61,7 +60,7 @@ public class MediaService extends AbstractService {
      * @return media page
      */
     @Transactional(readOnly = true)
-    public PageDTO<MediaShortDTO> getMediaListByAttribute(@NotNull MediaSearchType attributeType, @NotNull Integer attributeId, @NotNull PageDividerDTO pageDivider) {
+    public PageDTO<MediaShortDTO> getListByAttribute(@NotNull MediaSearchType attributeType, @NotNull Integer attributeId, @NotNull PageDividerDTO pageDivider) {
         Pageable request = new PageDivider(pageDivider).getPageRequest();
         Page<MediaEntity> page = null;
         switch (attributeType) {
@@ -79,17 +78,17 @@ public class MediaService extends AbstractService {
         return new PageDTO<>(page.map(mediaMapper::toShortDTO));
     }
 
-
     /**
-     * Returns media by id
+     * Returns media by id.
      *
+     * @param id - media id
      * @return media
      */
+    @Override
     @Transactional(readOnly = true)
-    public MediaDTO getMedia(@NotNull Integer id) {
+    public MediaDTO get(@NotNull Integer id) {
         return mediaMapper.toDTO(mediaRepository.getOne(id));
     }
-
 
     /**
      * Save media.
@@ -98,9 +97,33 @@ public class MediaService extends AbstractService {
      * @param dto - media
      * @return saved entity id
      */
+    @Override
     @Transactional
-    public Integer createMedia(@NotNull MediaDTO dto) {
+    public Integer create(@NotNull MediaDTO dto) {
         return mediaRepository.save(mediaMapper.toEntity(dto)).getId();
+    }
+
+    /**
+     * Update media.
+     *
+     * @param id - media id
+     * @param mediaDTO - new media data
+     */
+    @Override
+    @Transactional
+    public void update(@NotNull Integer id, @NotNull MediaDTO mediaDTO) {
+        //todo: update!
+    }
+
+    /**
+     * Delete media.
+     *
+     * @param id - media id
+     */
+    @Override
+    @Transactional
+    public void delete(@NotNull Integer id) {
+        //todo: delete!
     }
 
 

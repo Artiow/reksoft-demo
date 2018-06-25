@@ -31,8 +31,19 @@ public class LabelController {
      * @return page with labels
      */
     @PostMapping("/list")
-    public PageDTO<LabelDTO> getLabelList(@RequestBody StringSearcherDTO searcher) {
-        return labelService.getLabelList(searcher);
+    public PageDTO<LabelDTO> getList(@RequestBody StringSearcherDTO searcher) {
+        return labelService.getList(searcher);
+    }
+
+    /**
+     * Returns label by id with full information.
+     *
+     * @param id - label id
+     * @return label
+     */
+    @GetMapping("/{id}")
+    public LabelDTO get(@PathVariable int id) {
+        return labelService.get(id);
     }
 
     /**
@@ -41,22 +52,10 @@ public class LabelController {
      * @param labelDTO - sent label
      */
     @PostMapping("/create")
-    public void createLabel(@RequestBody @Validated(LabelDTO.CreateCheck.class) LabelDTO labelDTO, HttpServletRequest request, HttpServletResponse response) {
-        String id = labelService.createLabel(labelDTO).toString();
+    public void create(@RequestBody @Validated(LabelDTO.CreateCheck.class) LabelDTO labelDTO, HttpServletRequest request, HttpServletResponse response) {
+        String id = labelService.create(labelDTO).toString();
 
-        response.setHeader("id", id);
-        response.setHeader("location", ResourceLocationBuilder.build(request.getRequestURL(), id));
+        response.setHeader("location", ResourceLocationBuilder.build(request.getRequestURI(), id));
         response.setStatus(HttpServletResponse.SC_CREATED);
-    }
-
-    /**
-     * Returns label by id with full information
-     *
-     * @param id - label id
-     * @return label
-     */
-    @GetMapping("/{id}")
-    public LabelDTO getLabel(@PathVariable int id) {
-        return labelService.getLabel(id);
     }
 }

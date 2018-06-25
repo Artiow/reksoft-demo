@@ -15,7 +15,7 @@ import ru.reksoft.demo.service.generic.AbstractService;
 import javax.validation.constraints.NotNull;
 
 @Service
-public class SingerService extends AbstractService {
+public class SingerService extends AbstractService<SingerDTO> {
 
     private SingerRepository singerRepository;
 
@@ -33,38 +33,62 @@ public class SingerService extends AbstractService {
 
 
     /**
-     * Returns page with searched singers
+     * Returns page with searched singers.
      *
      * @param searcherDTO - searcher for singer
      * @return singer page
      */
     @Transactional(readOnly = true)
-    public PageDTO<SingerDTO> getSingerList(@NotNull StringSearcherDTO searcherDTO) {
+    public PageDTO<SingerDTO> getList(@NotNull StringSearcherDTO searcherDTO) {
         SingerSearcher searcher = new SingerSearcher(searcherDTO);
         return new PageDTO<>(singerRepository.findAll(searcher, searcher.getPageRequest()).map(singerMapper::toDTO));
     }
 
+    /**
+     * Returns singer.
+     *
+     * @param id - singer id
+     * @return found singer
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public SingerDTO get(@NotNull Integer id) {
+        return singerMapper.toDTO(singerRepository.getOne(id));
+    }
 
     /**
      * Save singer.
      *
-     * @param dto - singer
+     * @param singerDTO - singer
      * @return saved entity id
      */
+    @Override
     @Transactional
-    public Integer createSinger(@NotNull SingerDTO dto) {
-        return singerRepository.save(singerMapper.toEntity(dto)).getId();
+    public Integer create(@NotNull SingerDTO singerDTO) {
+        return singerRepository.save(singerMapper.toEntity(singerDTO)).getId();
     }
 
+    /**
+     * Update singer.
+     *
+     * @param id - singer id
+     * @param singerDTO - new singer data
+     */
+    @Override
+    @Transactional
+    public void update(@NotNull Integer id, @NotNull SingerDTO singerDTO) {
+        //todo: update!
+    }
 
     /**
-     * Returns label by id
+     * Delete label.
      *
-     * @return album
+     * @param id - label id
      */
-    @Transactional(readOnly = true)
-    public SingerDTO getSinger(@NotNull Integer id) {
-        return singerMapper.toDTO(singerRepository.getOne(id));
+    @Override
+    @Transactional
+    public void delete(@NotNull Integer id) {
+        //todo: delete!
     }
 
 

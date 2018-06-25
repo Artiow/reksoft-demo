@@ -65,6 +65,7 @@ public class SingerController {
      * Update singer by id.
      *
      * @param id - singer id
+     * @param singerDTO - singer data
      */
     @PutMapping("/{id}")
     public void update(@PathVariable int id, @RequestBody @Validated(SingerDTO.FieldCheck.class) SingerDTO singerDTO, HttpServletResponse response)

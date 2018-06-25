@@ -65,7 +65,6 @@ public class MediaController {
         return mediaService.get(id);
     }
 
-
     /**
      * Returns created media id and location.
      *
@@ -77,5 +76,32 @@ public class MediaController {
     {
         response.setHeader("location", ResourceLocationBuilder.build(request, mediaService.create(mediaDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);
+    }
+
+    /**
+     * Update media by id.
+     *
+     * @param id - media id
+     * @param mediaDTO - media data
+     */
+    @PutMapping("/{id}")
+    public void update(@PathVariable int id, @RequestBody @Validated(AlbumDTO.FieldCheck.class) MediaDTO mediaDTO, HttpServletResponse response)
+            throws ResourceNotFoundException
+    {
+        mediaService.update(id, mediaDTO);
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+    }
+
+    /**
+     * Delete media by id.
+     *
+     * @param id - media id
+     */
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable int id, HttpServletResponse response)
+            throws ResourceNotFoundException
+    {
+        mediaService.delete(id);
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 }

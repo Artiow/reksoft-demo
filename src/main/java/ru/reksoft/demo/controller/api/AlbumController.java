@@ -61,4 +61,31 @@ public class AlbumController {
         response.setHeader("location", ResourceLocationBuilder.build(request, albumService.create(albumDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);
     }
+
+    /**
+     * Update album by id.
+     *
+     * @param id - album id
+     * @param albumDTO - album data
+     */
+    @PutMapping("/{id}")
+    public void update(@PathVariable int id, @RequestBody @Validated(AlbumDTO.FieldCheck.class) AlbumDTO albumDTO, HttpServletResponse response)
+            throws ResourceNotFoundException
+    {
+        albumService.update(id, albumDTO);
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+    }
+
+    /**
+     * Delete album by id.
+     *
+     * @param id - album id
+     */
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable int id, HttpServletResponse response)
+            throws ResourceNotFoundException
+    {
+        albumService.delete(id);
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+    }
 }

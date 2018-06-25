@@ -65,6 +65,7 @@ public class LabelController {
      * Update label by id.
      *
      * @param id - label id
+     * @param labelDTO - label data
      */
     @PutMapping("/{id}")
     public void update(@PathVariable int id, @RequestBody @Validated(LabelDTO.FieldCheck.class) LabelDTO labelDTO, HttpServletResponse response)

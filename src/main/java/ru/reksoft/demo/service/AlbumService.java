@@ -76,6 +76,8 @@ public class AlbumService extends AbstractService<AlbumDTO> {
     @Override
     @Transactional
     public Integer create(@NotNull AlbumDTO albumDTO) throws ResourceCannotCreateException {
+        //todo: create check!
+
         AlbumEntity entity = albumMapper.toEntity(albumDTO);
         for (CompositionEntity composition: entity.getCompositions()) {
             composition.setAlbum(entity);

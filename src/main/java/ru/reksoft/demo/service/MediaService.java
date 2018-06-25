@@ -107,6 +107,8 @@ public class MediaService extends AbstractService<MediaDTO> {
     @Override
     @Transactional
     public Integer create(@NotNull MediaDTO dto) throws ResourceCannotCreateException {
+        //todo: create check!
+
         return mediaRepository.save(mediaMapper.toEntity(dto)).getId();
     }
 

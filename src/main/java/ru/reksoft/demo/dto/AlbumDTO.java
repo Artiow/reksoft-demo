@@ -1,10 +1,10 @@
 package ru.reksoft.demo.dto;
 
 import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
+import ru.reksoft.demo.dto.validation.annotations.ReleaseYear;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
-import java.time.LocalDate;
 import java.util.*;
 
 public class AlbumDTO extends AbstractIdentifiedDTO {
@@ -21,7 +21,8 @@ public class AlbumDTO extends AbstractIdentifiedDTO {
     private String description;
 
     @NotNull(groups = FieldCheck.class)
-    private LocalDate releaseYear;
+    @ReleaseYear(groups = FieldCheck.class)
+    private Integer releaseYear;
 
     @Valid
     @NotNull(groups = FieldCheck.class)
@@ -74,11 +75,11 @@ public class AlbumDTO extends AbstractIdentifiedDTO {
         return this;
     }
 
-    public LocalDate getReleaseYear() {
+    public Integer getReleaseYear() {
         return releaseYear;
     }
 
-    public AlbumDTO setReleaseYear(LocalDate releaseYear) {
+    public AlbumDTO setReleaseYear(Integer releaseYear) {
         this.releaseYear = releaseYear;
         return this;
     }

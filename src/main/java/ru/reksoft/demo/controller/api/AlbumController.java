@@ -54,8 +54,10 @@ public class AlbumController {
      *
      * @param albumDTO - sent album
      */
-    @PostMapping("/create")
-    public void create(@RequestBody @Validated(AlbumDTO.CreateCheck.class) AlbumDTO albumDTO, HttpServletRequest request, HttpServletResponse response) throws CannotCreateException {
+    @PostMapping
+    public void create(@RequestBody @Validated(AlbumDTO.CreateCheck.class) AlbumDTO albumDTO, HttpServletRequest request, HttpServletResponse response)
+            throws CannotCreateException
+    {
         response.setHeader("location", ResourceLocationBuilder.build(request, albumService.create(albumDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);
     }

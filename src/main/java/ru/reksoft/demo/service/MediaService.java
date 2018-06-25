@@ -130,11 +130,11 @@ public class MediaService extends AbstractService<MediaDTO> {
     @Override
     @Transactional
     public void delete(@NotNull Integer id) throws NotFoundException {
-        try {
-            mediaRepository.deleteById(id);
-        } catch (EntityNotFoundException e) {
+        if (!mediaRepository.existsById(id)) {
             throw new NotFoundException(String.format("Media with id %d does not exist!", id));
         }
+
+        mediaRepository.deleteById(id);
     }
 
 

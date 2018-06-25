@@ -95,11 +95,11 @@ public class SingerService extends AbstractService<SingerDTO> {
     @Override
     @Transactional
     public void delete(@NotNull Integer id) throws NotFoundException {
-        try {
-            singerRepository.deleteById(id);
-        } catch (EntityNotFoundException e) {
+        if (!singerRepository.existsById(id)) {
             throw new NotFoundException(String.format("Singer with id %d does not exist!", id));
         }
+
+        singerRepository.deleteById(id);
     }
 
 

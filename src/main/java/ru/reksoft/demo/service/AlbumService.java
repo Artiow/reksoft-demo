@@ -104,11 +104,11 @@ public class AlbumService extends AbstractService<AlbumDTO> {
     @Override
     @Transactional
     public void delete(@NotNull Integer id) throws NotFoundException {
-        try {
-            albumRepository.deleteById(id);
-        } catch (EntityNotFoundException e) {
+        if (!albumRepository.existsById(id)) {
             throw new NotFoundException(String.format("Album with id %d does not exist!", id));
         }
+
+        albumRepository.deleteById(id);
     }
 
 

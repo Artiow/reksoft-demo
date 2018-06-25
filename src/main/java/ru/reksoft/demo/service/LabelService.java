@@ -95,11 +95,11 @@ public class LabelService extends AbstractService<LabelDTO> {
     @Override
     @Transactional
     public void delete(@NotNull Integer id) throws NotFoundException {
-        try {
-            labelRepository.deleteById(id);
-        } catch(EntityNotFoundException e){
+        if (!labelRepository.existsById(id)) {
             throw new NotFoundException(String.format("Label with id %d does not exist!", id));
         }
+
+        labelRepository.deleteById(id);
     }
 
 

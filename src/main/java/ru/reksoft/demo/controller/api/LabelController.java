@@ -54,7 +54,9 @@ public class LabelController {
      * @param labelDTO - sent label
      */
     @PostMapping
-    public void create(@RequestBody @Validated(LabelDTO.CreateCheck.class) LabelDTO labelDTO, HttpServletRequest request, HttpServletResponse response) throws CannotCreateException {
+    public void create(@RequestBody @Validated(LabelDTO.CreateCheck.class) LabelDTO labelDTO, HttpServletRequest request, HttpServletResponse response)
+            throws CannotCreateException
+    {
         response.setHeader("location", ResourceLocationBuilder.build(request, labelService.create(labelDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);
     }
@@ -65,8 +67,11 @@ public class LabelController {
      * @param id - label id
      */
     @PutMapping("/{id}")
-    public void update(@PathVariable int id, @RequestBody @Validated(LabelDTO.UpdateCheck.class) LabelDTO labelDTO) throws NotFoundException {
+    public void update(@PathVariable int id, @RequestBody @Validated(LabelDTO.UpdateCheck.class) LabelDTO labelDTO, HttpServletResponse response)
+            throws NotFoundException
+    {
         labelService.update(id, labelDTO);
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
     /**
@@ -75,7 +80,10 @@ public class LabelController {
      * @param id - label id
      */
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id) throws NotFoundException {
+    public void delete(@PathVariable int id, HttpServletResponse response)
+            throws NotFoundException
+    {
         labelService.delete(id);
+        response.setStatus(HttpServletResponse.SC_ACCEPTED);
     }
 }

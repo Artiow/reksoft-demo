@@ -23,7 +23,7 @@ public class AdviseController {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDTO handleThrowable(Throwable ex) {
         UUID uuid = UUID.randomUUID();
-        logger.error("Unexpected Internal Server Error. UUID: {}", uuid);
+        logger.error("Unexpected Internal Server Error. UUID: {}", uuid, ex);
         return new ErrorDTO(uuid, ex.getClass().getName(), "Unexpected Internal Server Error. Please contact the administrator.");
     }
 

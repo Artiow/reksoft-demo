@@ -21,6 +21,7 @@ public class ValidateErrorDTO extends ErrorDTO {
         }
     }
 
+
     public List<String> getErrors() {
         return errors;
     }

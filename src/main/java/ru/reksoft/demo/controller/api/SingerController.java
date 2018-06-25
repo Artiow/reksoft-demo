@@ -1,5 +1,7 @@
 package ru.reksoft.demo.controller.api;
 
+import javassist.NotFoundException;
+import javassist.tools.reflect.CannotCreateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +44,7 @@ public class SingerController {
      * @return singer
      */
     @GetMapping("/{id}")
-    public SingerDTO get(@PathVariable int id) {
+    public SingerDTO get(@PathVariable int id) throws NotFoundException {
         return singerService.get(id);
     }
 
@@ -51,11 +53,29 @@ public class SingerController {
      *
      * @param singerDTO - sent singer
      */
-    @PostMapping("/create")
-    public void create(@RequestBody @Validated(SingerDTO.CreateCheck.class) SingerDTO singerDTO, HttpServletRequest request, HttpServletResponse response) {
-        String id = singerService.create(singerDTO).toString();
-
-        response.setHeader("location", ResourceLocationBuilder.build(request.getRequestURI(), id));
+    @PostMapping
+    public void create(@RequestBody @Validated(SingerDTO.CreateCheck.class) SingerDTO singerDTO, HttpServletRequest request, HttpServletResponse response) throws CannotCreateException {
+        response.setHeader("location", ResourceLocationBuilder.build(request, singerService.create(singerDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);
+    }
+
+    /**
+     * Update singer by id.
+     *
+     * @param id - singer id
+     */
+    @PutMapping("/{id}")
+    public void update(@PathVariable int id, @RequestBody @Validated(SingerDTO.UpdateCheck.class) SingerDTO singerDTO) throws NotFoundException {
+        singerService.update(id, singerDTO);
+    }
+
+    /**
+     * Delete singer by id.
+     *
+     * @param id - singer id
+     */
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable int id) throws NotFoundException {
+        singerService.delete(id);
     }
 }

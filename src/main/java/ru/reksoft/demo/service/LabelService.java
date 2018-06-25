@@ -1,5 +1,7 @@
 package ru.reksoft.demo.service;
 
+import javassist.NotFoundException;
+import javassist.tools.reflect.CannotCreateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +14,7 @@ import ru.reksoft.demo.mapper.LabelMapper;
 import ru.reksoft.demo.repository.LabelRepository;
 import ru.reksoft.demo.service.generic.AbstractService;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
 
 @Service
@@ -52,8 +55,12 @@ public class LabelService extends AbstractService<LabelDTO> {
      */
     @Override
     @Transactional(readOnly = true)
-    public LabelDTO get(@NotNull Integer id) {
-        return labelMapper.toDTO(labelRepository.getOne(id));
+    public LabelDTO get(@NotNull Integer id) throws NotFoundException {
+        try {
+            return labelMapper.toDTO(labelRepository.getOne(id));
+        } catch (EntityNotFoundException e) {
+            throw new NotFoundException(String.format("Label with id %d does not exist!", id));
+        }
     }
 
     /**
@@ -64,7 +71,7 @@ public class LabelService extends AbstractService<LabelDTO> {
      */
     @Override
     @Transactional
-    public Integer create(@NotNull LabelDTO labelDTO) {
+    public Integer create(@NotNull LabelDTO labelDTO) throws CannotCreateException {
         return labelRepository.save(labelMapper.toEntity(labelDTO)).getId();
     }
 
@@ -76,7 +83,7 @@ public class LabelService extends AbstractService<LabelDTO> {
      */
     @Override
     @Transactional
-    public void update(@NotNull Integer id, @NotNull LabelDTO labelDTO) {
+    public void update(@NotNull Integer id, @NotNull LabelDTO labelDTO) throws NotFoundException {
         //todo: update!
     }
 
@@ -87,8 +94,12 @@ public class LabelService extends AbstractService<LabelDTO> {
      */
     @Override
     @Transactional
-    public void delete(@NotNull Integer id) {
-        //todo: delete!
+    public void delete(@NotNull Integer id) throws NotFoundException {
+        try {
+            labelRepository.deleteById(id);
+        } catch(EntityNotFoundException e){
+            throw new NotFoundException(String.format("Label with id %d does not exist!", id));
+        }
     }
 
 

@@ -1,5 +1,7 @@
 package ru.reksoft.demo.service;
 
+import javassist.NotFoundException;
+import javassist.tools.reflect.CannotCreateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +14,7 @@ import ru.reksoft.demo.mapper.SingerMapper;
 import ru.reksoft.demo.repository.SingerRepository;
 import ru.reksoft.demo.service.generic.AbstractService;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
 
 @Service
@@ -52,8 +55,12 @@ public class SingerService extends AbstractService<SingerDTO> {
      */
     @Override
     @Transactional(readOnly = true)
-    public SingerDTO get(@NotNull Integer id) {
-        return singerMapper.toDTO(singerRepository.getOne(id));
+    public SingerDTO get(@NotNull Integer id) throws NotFoundException {
+        try {
+            return singerMapper.toDTO(singerRepository.getOne(id));
+        } catch (EntityNotFoundException e) {
+            throw new NotFoundException(String.format("Singer with id %d does not exist!", id));
+        }
     }
 
     /**
@@ -64,7 +71,7 @@ public class SingerService extends AbstractService<SingerDTO> {
      */
     @Override
     @Transactional
-    public Integer create(@NotNull SingerDTO singerDTO) {
+    public Integer create(@NotNull SingerDTO singerDTO) throws CannotCreateException {
         return singerRepository.save(singerMapper.toEntity(singerDTO)).getId();
     }
 
@@ -76,7 +83,7 @@ public class SingerService extends AbstractService<SingerDTO> {
      */
     @Override
     @Transactional
-    public void update(@NotNull Integer id, @NotNull SingerDTO singerDTO) {
+    public void update(@NotNull Integer id, @NotNull SingerDTO singerDTO) throws NotFoundException {
         //todo: update!
     }
 
@@ -87,8 +94,12 @@ public class SingerService extends AbstractService<SingerDTO> {
      */
     @Override
     @Transactional
-    public void delete(@NotNull Integer id) {
-        //todo: delete!
+    public void delete(@NotNull Integer id) throws NotFoundException {
+        try {
+            singerRepository.deleteById(id);
+        } catch (EntityNotFoundException e) {
+            throw new NotFoundException(String.format("Singer with id %d does not exist!", id));
+        }
     }
 
 

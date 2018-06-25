@@ -1,5 +1,7 @@
 package ru.reksoft.demo.service;
 
+import javassist.NotFoundException;
+import javassist.tools.reflect.CannotCreateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +18,7 @@ import ru.reksoft.demo.repository.MediaRepository;
 import ru.reksoft.demo.service.generic.AbstractService;
 import ru.reksoft.demo.util.MediaSearchType;
 
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -86,8 +89,12 @@ public class MediaService extends AbstractService<MediaDTO> {
      */
     @Override
     @Transactional(readOnly = true)
-    public MediaDTO get(@NotNull Integer id) {
-        return mediaMapper.toDTO(mediaRepository.getOne(id));
+    public MediaDTO get(@NotNull Integer id) throws NotFoundException {
+        try {
+            return mediaMapper.toDTO(mediaRepository.getOne(id));
+        } catch (EntityNotFoundException e) {
+            throw new NotFoundException(String.format("Media with id %d does not exist!", id));
+        }
     }
 
     /**
@@ -99,7 +106,7 @@ public class MediaService extends AbstractService<MediaDTO> {
      */
     @Override
     @Transactional
-    public Integer create(@NotNull MediaDTO dto) {
+    public Integer create(@NotNull MediaDTO dto) throws CannotCreateException {
         return mediaRepository.save(mediaMapper.toEntity(dto)).getId();
     }
 
@@ -111,7 +118,7 @@ public class MediaService extends AbstractService<MediaDTO> {
      */
     @Override
     @Transactional
-    public void update(@NotNull Integer id, @NotNull MediaDTO mediaDTO) {
+    public void update(@NotNull Integer id, @NotNull MediaDTO mediaDTO) throws NotFoundException {
         //todo: update!
     }
 
@@ -122,8 +129,12 @@ public class MediaService extends AbstractService<MediaDTO> {
      */
     @Override
     @Transactional
-    public void delete(@NotNull Integer id) {
-        //todo: delete!
+    public void delete(@NotNull Integer id) throws NotFoundException {
+        try {
+            mediaRepository.deleteById(id);
+        } catch (EntityNotFoundException e) {
+            throw new NotFoundException(String.format("Media with id %d does not exist!", id));
+        }
     }
 
 

@@ -1,5 +1,7 @@
 package ru.reksoft.demo.controller.api;
 
+import javassist.NotFoundException;
+import javassist.tools.reflect.CannotCreateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -59,7 +61,7 @@ public class MediaController {
      * @return media
      */
     @GetMapping("/{id}")
-    public MediaDTO get(@PathVariable int id) {
+    public MediaDTO get(@PathVariable int id) throws NotFoundException {
         return mediaService.get(id);
     }
 
@@ -70,10 +72,8 @@ public class MediaController {
      * @param mediaDTO - sent media
      */
     @PostMapping("/create")
-    public void create(@RequestBody @Validated(MediaDTO.CreateCheck.class) MediaDTO mediaDTO, HttpServletRequest request, HttpServletResponse response) {
-        String id = mediaService.create(mediaDTO).toString();
-
-        response.setHeader("location", ResourceLocationBuilder.build(request.getRequestURI(), id));
+    public void create(@RequestBody @Validated(MediaDTO.CreateCheck.class) MediaDTO mediaDTO, HttpServletRequest request, HttpServletResponse response) throws CannotCreateException {
+        response.setHeader("location", ResourceLocationBuilder.build(request, mediaService.create(mediaDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);
     }
 }

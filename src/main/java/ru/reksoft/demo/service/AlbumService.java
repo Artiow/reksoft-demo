@@ -1,5 +1,7 @@
 package ru.reksoft.demo.service;
 
+import javassist.NotFoundException;
+import javassist.tools.reflect.CannotCreateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +15,7 @@ import ru.reksoft.demo.mapper.AlbumMapper;
 import ru.reksoft.demo.repository.*;
 import ru.reksoft.demo.service.generic.AbstractService;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
 
 @Service
@@ -52,8 +55,12 @@ public class AlbumService extends AbstractService<AlbumDTO> {
      */
     @Override
     @Transactional(readOnly = true)
-    public AlbumDTO get(@NotNull Integer id) {
-        return albumMapper.toDTO(albumRepository.getOne(id));
+    public AlbumDTO get(@NotNull Integer id) throws NotFoundException {
+        try {
+            return albumMapper.toDTO(albumRepository.getOne(id));
+        } catch (EntityNotFoundException e) {
+            throw new NotFoundException(String.format("Album with id %d does not exist!", id));
+        }
     }
 
     /**
@@ -68,7 +75,7 @@ public class AlbumService extends AbstractService<AlbumDTO> {
      */
     @Override
     @Transactional
-    public Integer create(@NotNull AlbumDTO albumDTO) {
+    public Integer create(@NotNull AlbumDTO albumDTO) throws CannotCreateException {
         AlbumEntity entity = albumMapper.toEntity(albumDTO);
         for (CompositionEntity composition: entity.getCompositions()) {
             composition.setAlbum(entity);
@@ -85,7 +92,7 @@ public class AlbumService extends AbstractService<AlbumDTO> {
      */
     @Override
     @Transactional
-    public void update(@NotNull Integer id, @NotNull AlbumDTO albumDTO) {
+    public void update(@NotNull Integer id, @NotNull AlbumDTO albumDTO) throws NotFoundException {
         //todo: update!
     }
 
@@ -96,8 +103,12 @@ public class AlbumService extends AbstractService<AlbumDTO> {
      */
     @Override
     @Transactional
-    public void delete(@NotNull Integer id) {
-        //todo: delete!
+    public void delete(@NotNull Integer id) throws NotFoundException {
+        try {
+            albumRepository.deleteById(id);
+        } catch (EntityNotFoundException e) {
+            throw new NotFoundException(String.format("Album with id %d does not exist!", id));
+        }
     }
 
 

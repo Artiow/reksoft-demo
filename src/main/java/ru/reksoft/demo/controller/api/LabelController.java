@@ -1,5 +1,7 @@
 package ru.reksoft.demo.controller.api;
 
+import javassist.NotFoundException;
+import javassist.tools.reflect.CannotCreateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +44,7 @@ public class LabelController {
      * @return label
      */
     @GetMapping("/{id}")
-    public LabelDTO get(@PathVariable int id) {
+    public LabelDTO get(@PathVariable int id) throws NotFoundException {
         return labelService.get(id);
     }
 
@@ -51,11 +53,29 @@ public class LabelController {
      *
      * @param labelDTO - sent label
      */
-    @PostMapping("/create")
-    public void create(@RequestBody @Validated(LabelDTO.CreateCheck.class) LabelDTO labelDTO, HttpServletRequest request, HttpServletResponse response) {
-        String id = labelService.create(labelDTO).toString();
-
-        response.setHeader("location", ResourceLocationBuilder.build(request.getRequestURI(), id));
+    @PostMapping
+    public void create(@RequestBody @Validated(LabelDTO.CreateCheck.class) LabelDTO labelDTO, HttpServletRequest request, HttpServletResponse response) throws CannotCreateException {
+        response.setHeader("location", ResourceLocationBuilder.build(request, labelService.create(labelDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);
+    }
+
+    /**
+     * Update label by id.
+     *
+     * @param id - label id
+     */
+    @PutMapping("/{id}")
+    public void update(@PathVariable int id, @RequestBody @Validated(LabelDTO.UpdateCheck.class) LabelDTO labelDTO) throws NotFoundException {
+        labelService.update(id, labelDTO);
+    }
+
+    /**
+     * Delete label by id.
+     *
+     * @param id - label id
+     */
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable int id) throws NotFoundException {
+        labelService.delete(id);
     }
 }

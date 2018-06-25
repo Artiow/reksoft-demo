@@ -1,5 +1,7 @@
 package ru.reksoft.demo.controller.api;
 
+import javassist.NotFoundException;
+import javassist.tools.reflect.CannotCreateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -20,31 +22,48 @@ public class AdviseController {
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDTO handleThrowable(Throwable ex) {
-        UUID errorUUID = UUID.randomUUID();
-        logger.error("Unexpected Internal Server Error. UUID: {}", errorUUID, ex);
+        UUID uuid = UUID.randomUUID();
+        logger.error("Unexpected Internal Server Error. UUID: {}", uuid);
+        return new ErrorDTO(uuid, ex.getClass().getName(), "Unexpected Internal Server Error. Please contact the administrator.");
+    }
 
-        return new ErrorDTO(
-                errorUUID, ex.getClass().getName(),
-                "Unexpected Internal Server Error. Please contact the administrator."
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ValidateErrorDTO handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        BindingResult result = ex.getBindingResult();
+        return new ValidateErrorDTO(
+                warnUUID("Sent Argument Not Valid"), ex.getClass().getName(),
+                result.getObjectName(), result.getAllErrors()
         );
+    }
+
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorDTO handleNotFoundException(NotFoundException ex) {
+        return warnDTO(ex, "Requested Resource Not Found");
+    }
+
+    @ExceptionHandler(CannotCreateException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorDTO handleCannotCreateException(CannotCreateException ex) {
+        return warnDTO(ex, "Sent Resource Cannot Create");
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDTO handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        UUID errorUUID = UUID.randomUUID();
-        logger.warn("Sent HTTP Message Not Readable. UUID: {}", errorUUID);
-
-        return new ErrorDTO(errorUUID, ex.getClass().getName(), ex.getMessage());
+        return warnDTO(ex, "Sent HTTP Message Not Readable");
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ValidateErrorDTO handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        UUID errorUUID = UUID.randomUUID();
-        logger.warn("Sent Argument Not Valid. UUID: {}", errorUUID);
+    private ErrorDTO warnDTO(Throwable ex, String logMessage) {
+        return new ErrorDTO(warnUUID(logMessage), ex.getClass().getName(), ex.getMessage());
+    }
 
-        BindingResult result = ex.getBindingResult();
-        return new ValidateErrorDTO(errorUUID, ex.getClass().getName(), result.getObjectName(), result.getAllErrors());
+    private UUID warnUUID(String logMessage) {
+        UUID uuid = UUID.randomUUID();
+        logger.warn(logMessage + ". UUID: {}", uuid);
+        return uuid;
     }
 }

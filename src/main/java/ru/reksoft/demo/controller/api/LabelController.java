@@ -84,6 +84,6 @@ public class LabelController {
             throws ResourceNotFoundException
     {
         labelService.delete(id);
-        response.setStatus(HttpServletResponse.SC_ACCEPTED);
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 }

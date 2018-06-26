@@ -1,6 +1,7 @@
 package ru.reksoft.demo.dto;
 
 import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
+import ru.reksoft.demo.dto.validation.annotations.PositionSequence;
 import ru.reksoft.demo.dto.validation.annotations.ReleaseYear;
 
 import javax.validation.Valid;
@@ -43,6 +44,7 @@ public class AlbumDTO extends AbstractIdentifiedDTO {
     @Valid
     @NotNull(groups = FieldCheck.class)
     @NotEmpty(groups = FieldCheck.class)
+    @PositionSequence(groups = FieldCheck.class)
     private List<CompositionDTO> compositions;
 
 

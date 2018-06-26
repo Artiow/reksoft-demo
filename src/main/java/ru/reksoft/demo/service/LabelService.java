@@ -72,7 +72,7 @@ public class LabelService extends AbstractService<LabelDTO> {
     @Override
     @Transactional
     public Integer create(@NotNull LabelDTO labelDTO) throws ResourceCannotCreateException {
-        if (labelRepository.findByName(labelDTO.getName()) != null) {
+        if (labelRepository.existsByName(labelDTO.getName())) {
             throw new ResourceCannotCreateException(String.format("Label with name \'%s\' already exist!", labelDTO.getName()));
         }
 

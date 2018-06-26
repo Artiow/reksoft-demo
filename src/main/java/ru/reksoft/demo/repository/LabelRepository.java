@@ -6,5 +6,5 @@ import ru.reksoft.demo.domain.LabelEntity;
 
 public interface LabelRepository extends JpaRepository<LabelEntity, Integer>, JpaSpecificationExecutor<LabelEntity> {
 
-    LabelEntity findByName(String name);
+    boolean existsByName(String name);
 }

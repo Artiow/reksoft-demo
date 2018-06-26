@@ -21,9 +21,21 @@ import javax.validation.constraints.NotNull;
 @Service
 public class AlbumService extends AbstractService<AlbumDTO> {
 
+    private LabelRepository labelRepository;
+    private SingerRepository singerRepository;
     private AlbumRepository albumRepository;
 
     private AlbumMapper albumMapper;
+
+    @Autowired
+    public void setLabelRepository(LabelRepository labelRepository) {
+        this.labelRepository = labelRepository;
+    }
+
+    @Autowired
+    public void setSingerRepository(SingerRepository singerRepository) {
+        this.singerRepository = singerRepository;
+    }
 
     @Autowired
     public void setAlbumRepository(AlbumRepository albumRepository) {
@@ -76,7 +88,17 @@ public class AlbumService extends AbstractService<AlbumDTO> {
     @Override
     @Transactional
     public Integer create(@NotNull AlbumDTO albumDTO) throws ResourceCannotCreateException {
-        //todo: create check!
+        if (!labelRepository.existsById(albumDTO.getLabel().getId())) {
+            throw new ResourceCannotCreateException(String.format("Label with id %d does not exist!", albumDTO.getLabel().getId()));
+
+        } else if (!singerRepository.existsById(albumDTO.getSinger().getId())) {
+            throw new ResourceCannotCreateException(String.format("Singer with id %d does not exist!", albumDTO.getSinger().getId()));
+
+        } else if (albumRepository.existsByNameAndSingerId(albumDTO.getName(), albumDTO.getSinger().getId())) {
+            throw new ResourceCannotCreateException(String.format(
+                    "Album with name \'%s\' already exist with the singer with id %d!", albumDTO.getName(), albumDTO.getSinger().getId()
+            ));
+        }
 
         AlbumEntity entity = albumMapper.toEntity(albumDTO);
         for (CompositionEntity composition: entity.getCompositions()) {
@@ -95,7 +117,11 @@ public class AlbumService extends AbstractService<AlbumDTO> {
     @Override
     @Transactional
     public void update(@NotNull Integer id, @NotNull AlbumDTO albumDTO) throws ResourceNotFoundException {
-        //todo: update!
+        try {
+            albumRepository.save(albumMapper.merge(albumRepository.getOne(id), albumMapper.toEntity(albumDTO)));
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(String.format("Album with id %d does not exist!", id));
+        }
     }
 
     /**

@@ -24,4 +24,25 @@ public interface AlbumMapper extends AbstractEntityMapper<AlbumEntity, AlbumDTO>
 
     @Mapping(target = "id", ignore = true)
     CompositionEntity toEntity(CompositionDTO dto);
+
+    default AlbumEntity merge(AlbumEntity acceptor, AlbumEntity donor) {
+        acceptor.setName(donor.getName());
+        acceptor.setDescription(donor.getDescription());
+        acceptor.setReleaseYear(donor.getReleaseYear());
+
+        acceptor.setPicture(donor.getPicture());
+        acceptor.setLabel(donor.getLabel());
+        acceptor.setSinger(donor.getSinger());
+
+//        todo: composition refresh!
+//        acceptor.getCompositions().clear();
+//        for (CompositionEntity composition: donor.getCompositions()) {
+//            composition.setAlbum(acceptor);
+//            acceptor.getCompositions().add(composition);
+//        }
+
+        acceptor.setGenres(donor.getGenres());
+
+        return acceptor;
+    }
 }

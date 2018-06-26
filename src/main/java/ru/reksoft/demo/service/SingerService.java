@@ -1,7 +1,6 @@
 package ru.reksoft.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.domain.SingerEntity;
@@ -73,8 +72,8 @@ public class SingerService extends AbstractService<SingerDTO> {
     @Override
     @Transactional
     public Integer create(@NotNull SingerDTO singerDTO) throws ResourceCannotCreateException {
-        if (singerRepository.findByName(singerDTO.getName()) != null) {
-            throw new ResourceCannotCreateException(String.format("Label with name \'%s\' already exist!", singerDTO.getName()));
+        if (singerRepository.existsByName(singerDTO.getName())) {
+            throw new ResourceCannotCreateException(String.format("Singer with name \'%s\' already exist!", singerDTO.getName()));
         }
 
         return singerRepository.save(singerMapper.toEntity(singerDTO)).getId();

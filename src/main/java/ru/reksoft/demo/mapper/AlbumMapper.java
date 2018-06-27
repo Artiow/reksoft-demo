@@ -10,6 +10,8 @@ import ru.reksoft.demo.dto.AlbumShortDTO;
 import ru.reksoft.demo.dto.CompositionDTO;
 import ru.reksoft.demo.mapper.manual.JavaTimeMapper;
 
+import java.util.Collection;
+
 @Mapper(uses = JavaTimeMapper.class, componentModel = "spring")
 public interface AlbumMapper extends AbstractEntityMapper<AlbumEntity, AlbumDTO> {
 
@@ -34,12 +36,14 @@ public interface AlbumMapper extends AbstractEntityMapper<AlbumEntity, AlbumDTO>
         acceptor.setLabel(donor.getLabel());
         acceptor.setSinger(donor.getSinger());
 
-//        todo: composition refresh!
-//        acceptor.getCompositions().clear();
-//        for (CompositionEntity composition: donor.getCompositions()) {
-//            composition.setAlbum(acceptor);
-//            acceptor.getCompositions().add(composition);
-//        }
+        Collection<CompositionEntity> compositions = acceptor.getCompositions();
+        if (!compositions.isEmpty()) {
+            compositions.clear();
+        }
+        for (CompositionEntity composition: donor.getCompositions()) {
+            composition.setAlbum(acceptor);
+            compositions.add(composition);
+        }
 
         acceptor.setGenres(donor.getGenres());
 

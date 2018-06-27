@@ -118,7 +118,11 @@ public class AlbumService extends AbstractService<AlbumDTO> {
     @Transactional
     public void update(@NotNull Integer id, @NotNull AlbumDTO albumDTO) throws ResourceNotFoundException {
         try {
-            albumRepository.save(albumMapper.merge(albumRepository.getOne(id), albumMapper.toEntity(albumDTO)));
+            AlbumEntity albumEntity = albumRepository.getOne(id);
+            albumEntity.getCompositions().clear();
+            albumRepository.flush();
+
+            albumRepository.save(albumMapper.merge(albumEntity, albumMapper.toEntity(albumDTO)));
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(String.format("Album with id %d does not exist!", id));
         }

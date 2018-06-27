@@ -16,7 +16,7 @@ public class ValidateErrorDTO extends ErrorDTO {
         this.errors = new ArrayList<>(allErrors.size());
         for (ObjectError error: allErrors) {
             this.errors.add(
-                    ((DefaultMessageSourceResolvable) error.getArguments()[0]).getCodes()[0] + " " + error.getDefaultMessage()
+                    ((DefaultMessageSourceResolvable) error.getArguments()[0]).getCodes()[0] + ' ' + error.getDefaultMessage()
             );
         }
     }

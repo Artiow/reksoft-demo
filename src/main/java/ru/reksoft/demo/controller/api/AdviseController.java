@@ -2,11 +2,13 @@ package ru.reksoft.demo.controller.api;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import ru.reksoft.demo.config.Messages;
 import ru.reksoft.demo.dto.handling.ErrorDTO;
 import ru.reksoft.demo.dto.handling.ValidateErrorDTO;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
@@ -18,6 +20,14 @@ import java.util.UUID;
 public class AdviseController {
 
     private static Logger logger = LoggerFactory.getLogger(AdviseController.class);
+
+    private Messages messages;
+
+    @Autowired
+    public void setMessages(Messages messages) {
+        this.messages = messages;
+    }
+
 
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

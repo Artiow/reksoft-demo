@@ -3,17 +3,21 @@ package ru.reksoft.demo.controller.api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.config.Messages;
 import ru.reksoft.demo.dto.handling.ErrorDTO;
-import ru.reksoft.demo.dto.handling.ValidateErrorDTO;
+import ru.reksoft.demo.dto.handling.ErrorListDTO;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestControllerAdvice
@@ -34,18 +38,24 @@ public class AdviseController {
     public ErrorDTO handleThrowable(Throwable ex) {
         UUID uuid = UUID.randomUUID();
         logger.error("Unexpected Internal Server Error. UUID: {}", uuid, ex);
-        return new ErrorDTO(uuid, ex.getClass().getName(), "Unexpected Internal Server Error. Please contact the administrator.");
+
+        return new ErrorDTO(uuid, ex.getClass().getName(), messages.get("internal-server-error.message"));
     }
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ValidateErrorDTO handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        BindingResult result = ex.getBindingResult();
-        return new ValidateErrorDTO(
-                warnUUID("Sent Argument Not Valid"), ex.getClass().getName(),
-                result.getObjectName(), result.getAllErrors()
-        );
+    public ErrorListDTO handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        BindingResult bindingResult = ex.getBindingResult();
+        List<ObjectError> allErrors = bindingResult.getAllErrors();
+
+        String message = String.format(messages.get("validation-error.message.title"), bindingResult.getObjectName());
+        List<String> errors = new ArrayList<>(allErrors.size());
+        for (ObjectError error: allErrors) {
+            errors.add(((DefaultMessageSourceResolvable) error.getArguments()[0]).getCodes()[0] + ' ' + error.getDefaultMessage());
+        }
+
+        return new ErrorListDTO(warnUUID("Sent Argument Not Valid"), ex.getClass().getName(), message, errors);
     }
 
 

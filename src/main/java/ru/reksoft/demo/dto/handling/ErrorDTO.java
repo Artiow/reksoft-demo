@@ -8,6 +8,7 @@ public class ErrorDTO {
     private final String exception;
     private final String message;
 
+
     public ErrorDTO(UUID uuid, String exception, String message) {
         this.uuid = uuid;
         this.exception = exception;

@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PositionSequence {
 
-    String message() default "должно соблюдать последовательность позиций";
+    String message() default "{reksoft.demo.validation.constraints.PositionSequence.message}";
 
     Class<?>[] groups() default {};
 

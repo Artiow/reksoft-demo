@@ -18,7 +18,7 @@ public class ApplicationConfig implements WebMvcConfigurer {
     /**
      * Swagger config.
      *
-     * @return docket bean
+     * @return Docket bean
      */
     @Bean
     public Docket api() {

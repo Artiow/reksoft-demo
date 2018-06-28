@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ReleaseYear {
 
-    String message() default "должно быть больше 0 и не превышать текущий год";
+    String message() default "{reksoft.demo.validation.constraints.ReleaseYear.message}";
 
     Class<?>[] groups() default {};
 

@@ -10,7 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import ru.reksoft.demo.config.Messages;
+import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.dto.handling.ErrorDTO;
 import ru.reksoft.demo.dto.handling.ErrorListDTO;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
@@ -23,12 +23,12 @@ import java.util.UUID;
 @RestControllerAdvice
 public class AdviseController {
 
-    private static Logger logger = LoggerFactory.getLogger(AdviseController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AdviseController.class);
 
-    private Messages messages;
+    private final MessagesConfig messages;
 
     @Autowired
-    public void setMessages(Messages messages) {
+    public AdviseController(MessagesConfig messages) {
         this.messages = messages;
     }
 
@@ -39,7 +39,7 @@ public class AdviseController {
         UUID uuid = UUID.randomUUID();
         logger.error("Unexpected Internal Server Error. UUID: {}", uuid, ex);
 
-        return new ErrorDTO(uuid, ex.getClass().getName(), messages.get("internal-server-error.message"));
+        return new ErrorDTO(uuid, ex.getClass().getName(), messages.get("reksoft.demo.validation.Throwable.message"));
     }
 
 
@@ -49,7 +49,9 @@ public class AdviseController {
         BindingResult bindingResult = ex.getBindingResult();
         List<ObjectError> allErrors = bindingResult.getAllErrors();
 
-        String message = String.format(messages.get("validation-error.message.title"), bindingResult.getObjectName());
+        String message = String.format(
+                messages.get("reksoft.demo.validation.MethodArgumentNotValidException.message"), bindingResult.getObjectName()
+        );
         List<String> errors = new ArrayList<>(allErrors.size());
         for (ObjectError error: allErrors) {
             errors.add(((DefaultMessageSourceResolvable) error.getArguments()[0]).getCodes()[0] + ' ' + error.getDefaultMessage());

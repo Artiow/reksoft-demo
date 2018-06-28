@@ -12,13 +12,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.dto.handling.ErrorDTO;
-import ru.reksoft.demo.dto.handling.ErrorListDTO;
+import ru.reksoft.demo.dto.handling.ErrorMapDTO;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RestControllerAdvice
 public class AdviseController {
@@ -39,25 +37,25 @@ public class AdviseController {
         UUID uuid = UUID.randomUUID();
         logger.error("Unexpected Internal Server Error. UUID: {}", uuid, ex);
 
-        return new ErrorDTO(uuid, ex.getClass().getName(), messages.get("reksoft.demo.validation.Throwable.message"));
+        return new ErrorDTO(uuid, ex.getClass().getName(), messages.get("reksoft.demo.handle.Throwable.message"));
     }
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorListDTO handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public ErrorMapDTO handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
-        List<ObjectError> allErrors = bindingResult.getAllErrors();
-
         String message = String.format(
-                messages.get("reksoft.demo.validation.MethodArgumentNotValidException.message"), bindingResult.getObjectName()
+                messages.get("reksoft.demo.handle.MethodArgumentNotValidException.message"), bindingResult.getObjectName()
         );
-        List<String> errors = new ArrayList<>(allErrors.size());
+
+        List<ObjectError> allErrors = bindingResult.getAllErrors();
+        Map<String, String> errors = new HashMap<>(allErrors.size());
         for (ObjectError error: allErrors) {
-            errors.add(((DefaultMessageSourceResolvable) error.getArguments()[0]).getCodes()[0] + ' ' + error.getDefaultMessage());
+            errors.put(((DefaultMessageSourceResolvable) error.getArguments()[0]).getCodes()[0], error.getDefaultMessage());
         }
 
-        return new ErrorListDTO(warnUUID("Sent Argument Not Valid"), ex.getClass().getName(), message, errors);
+        return new ErrorMapDTO(warnUUID("Sent Argument Not Valid"), ex.getClass().getName(), message, errors);
     }
 
 
@@ -78,6 +76,7 @@ public class AdviseController {
     public ErrorDTO handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         return warnDTO(ex, "Sent HTTP Message Not Readable");
     }
+
 
     private ErrorDTO warnDTO(Throwable ex, String logMessage) {
         return new ErrorDTO(warnUUID(logMessage), ex.getClass().getName(), ex.getMessage());

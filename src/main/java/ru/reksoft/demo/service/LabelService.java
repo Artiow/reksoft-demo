@@ -3,6 +3,7 @@ package ru.reksoft.demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.domain.LabelEntity;
 import ru.reksoft.demo.domain.LabelEntity_;
 import ru.reksoft.demo.dto.LabelDTO;
@@ -20,9 +21,16 @@ import javax.validation.constraints.NotNull;
 @Service
 public class LabelService extends AbstractService<LabelDTO> {
 
+    private MessagesConfig messages;
+
     private LabelRepository labelRepository;
 
     private LabelMapper labelMapper;
+
+    @Autowired
+    public void setMessages(MessagesConfig messages) {
+        this.messages = messages;
+    }
 
     @Autowired
     public void setLabelRepository(LabelRepository labelRepository) {
@@ -59,7 +67,7 @@ public class LabelService extends AbstractService<LabelDTO> {
         try {
             return labelMapper.toDTO(labelRepository.getOne(id));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(String.format("Label with id %d does not exist!", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Label.existById.message", id));
         }
     }
 
@@ -73,7 +81,7 @@ public class LabelService extends AbstractService<LabelDTO> {
     @Transactional
     public Integer create(@NotNull LabelDTO labelDTO) throws ResourceCannotCreateException {
         if (labelRepository.existsByName(labelDTO.getName())) {
-            throw new ResourceCannotCreateException(String.format("Label with name \'%s\' already exist!", labelDTO.getName()));
+            throw new ResourceCannotCreateException(messages.getAndFormat("reksoft.demo.Label.existByName.message", labelDTO.getName()));
         }
 
         return labelRepository.save(labelMapper.toEntity(labelDTO)).getId();
@@ -91,7 +99,7 @@ public class LabelService extends AbstractService<LabelDTO> {
         try {
             labelRepository.save(labelMapper.merge(labelRepository.getOne(id), labelMapper.toEntity(labelDTO)));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(String.format("Label with id %d does not exist!", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Label.existById.message", id));
         }
     }
 
@@ -104,7 +112,7 @@ public class LabelService extends AbstractService<LabelDTO> {
     @Transactional
     public void delete(@NotNull Integer id) throws ResourceNotFoundException {
         if (!labelRepository.existsById(id)) {
-            throw new ResourceNotFoundException(String.format("Label with id %d does not exist!", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Label.existById.message", id));
         }
 
         labelRepository.deleteById(id);

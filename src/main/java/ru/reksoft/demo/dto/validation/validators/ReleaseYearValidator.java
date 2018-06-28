@@ -10,6 +10,10 @@ public class ReleaseYearValidator implements ConstraintValidator<ReleaseYear, In
 
     @Override
     public boolean isValid(Integer field, ConstraintValidatorContext cxt) {
-        return (field != null) && (field > 0) && (field <= LocalDateTime.now().getYear());
+        if (field == null) {
+            return true;
+        }
+
+        return (field > 0) && (field <= LocalDateTime.now().getYear());
     }
 }

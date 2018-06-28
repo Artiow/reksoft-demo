@@ -3,6 +3,7 @@ package ru.reksoft.demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.domain.AlbumEntity;
 import ru.reksoft.demo.domain.AlbumEntity_;
 import ru.reksoft.demo.domain.CompositionEntity;
@@ -21,11 +22,18 @@ import javax.validation.constraints.NotNull;
 @Service
 public class AlbumService extends AbstractService<AlbumDTO> {
 
+    private MessagesConfig messages;
+
     private LabelRepository labelRepository;
     private SingerRepository singerRepository;
     private AlbumRepository albumRepository;
 
     private AlbumMapper albumMapper;
+
+    @Autowired
+    public void setMessages(MessagesConfig messages) {
+        this.messages = messages;
+    }
 
     @Autowired
     public void setLabelRepository(LabelRepository labelRepository) {
@@ -71,7 +79,7 @@ public class AlbumService extends AbstractService<AlbumDTO> {
         try {
             return albumMapper.toDTO(albumRepository.getOne(id));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(String.format("Album with id %d does not exist!", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Album.existById.message", id));
         }
     }
 
@@ -93,16 +101,16 @@ public class AlbumService extends AbstractService<AlbumDTO> {
         String albumName = albumDTO.getName();
 
         if (!labelRepository.existsById(labelId)) {
-            throw new ResourceCannotCreateException(String.format(
-                    "Label with id %d does not exist!", labelId
+            throw new ResourceCannotCreateException(messages.getAndFormat(
+                    "reksoft.demo.Label.existById.message", labelId
             ));
         } else if (!singerRepository.existsById(singerId)) {
-            throw new ResourceCannotCreateException(String.format(
-                    "Singer with id %d does not exist!", singerId
+            throw new ResourceCannotCreateException(messages.getAndFormat(
+                    "reksoft.demo.Singer.existById.message", singerId
             ));
         } else if (albumRepository.existsByNameAndSingerId(albumName, singerId)) {
-            throw new ResourceCannotCreateException(String.format(
-                    "Album with name \'%s\' already exist with the singer with id %d!", albumName, singerId
+            throw new ResourceCannotCreateException(messages.getAndFormat(
+                    "reksoft.demo.Album.existByNameAndSingerId.message", albumName, singerId
             ));
         }
 
@@ -130,7 +138,7 @@ public class AlbumService extends AbstractService<AlbumDTO> {
 
             albumRepository.save(albumMapper.merge(albumEntity, albumMapper.toEntity(albumDTO)));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(String.format("Album with id %d does not exist!", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Album.existById.message", id));
         }
     }
 
@@ -143,7 +151,7 @@ public class AlbumService extends AbstractService<AlbumDTO> {
     @Transactional
     public void delete(@NotNull Integer id) throws ResourceNotFoundException {
         if (!albumRepository.existsById(id)) {
-            throw new ResourceNotFoundException(String.format("Album with id %d does not exist!", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Album.existById.message", id));
         }
 
         albumRepository.deleteById(id);

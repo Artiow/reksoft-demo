@@ -44,7 +44,7 @@ public class JavaTimeMapper {
         try {
             return new Timestamp(new SimpleDateFormat("yyyy").parse(String.format("%04d", date)).getTime());
         } catch (ParseException e) {
-            throw new IllegalArgumentException("Could not parse date: " + date);
+            throw new RuntimeException(e);
         }
     }
 

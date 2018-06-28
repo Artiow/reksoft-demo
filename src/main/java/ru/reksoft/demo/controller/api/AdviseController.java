@@ -45,11 +45,9 @@ public class AdviseController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorMapDTO handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
-        String message = String.format(
-                messages.get("reksoft.demo.handle.MethodArgumentNotValidException.message"), bindingResult.getObjectName()
-        );
-
         List<ObjectError> allErrors = bindingResult.getAllErrors();
+
+        String message = messages.getAndFormat("reksoft.demo.handle.MethodArgumentNotValidException.message", bindingResult.getObjectName());
         Map<String, String> errors = new HashMap<>(allErrors.size());
         for (ObjectError error: allErrors) {
             errors.put(((DefaultMessageSourceResolvable) error.getArguments()[0]).getCodes()[0], error.getDefaultMessage());
@@ -58,6 +56,12 @@ public class AdviseController {
         return new ErrorMapDTO(warnUUID("Sent Argument Not Valid"), ex.getClass().getName(), message, errors);
     }
 
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorDTO handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        return warnDTO(ex, "Sent HTTP Message Not Readable");
+    }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -69,12 +73,6 @@ public class AdviseController {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorDTO handleCannotCreateException(ResourceCannotCreateException ex) {
         return warnDTO(ex, "Sent Resource Cannot Create");
-    }
-
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorDTO handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        return warnDTO(ex, "Sent HTTP Message Not Readable");
     }
 
 

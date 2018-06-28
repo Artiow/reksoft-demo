@@ -9,6 +9,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.annotation.PostConstruct;
+import javax.validation.constraints.NotNull;
 import java.util.Locale;
 
 @Configuration
@@ -44,11 +45,15 @@ public class MessagesConfig {
     }
 
 
-    public String get(String msg) {
+    public String get(@NotNull String msg) {
         try {
             return accessor.getMessage(msg);
         } catch (NoSuchMessageException e) {
             return '{' + msg + '}';
         }
+    }
+
+    public String getAndFormat(@NotNull String msg, Object... args) {
+        return String.format(get(msg), args);
     }
 }

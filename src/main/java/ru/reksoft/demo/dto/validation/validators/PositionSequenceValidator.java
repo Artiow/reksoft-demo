@@ -11,10 +11,14 @@ public class PositionSequenceValidator implements ConstraintValidator<PositionSe
 
     @Override
     public boolean isValid(List<CompositionDTO> compositions, ConstraintValidatorContext constraintValidatorContext) {
+        if ((compositions == null) || (compositions.size() == 0)) {
+            return true;
+        }
+
         try {
             int[] seqCheck = new int[compositions.size()];
             for (CompositionDTO composition : compositions) if ((++seqCheck[composition.getPosition() - 1]) > 1) return false;
-        } catch (IndexOutOfBoundsException | NullPointerException e) {
+        } catch (IndexOutOfBoundsException e) {
             return false;
         }
 

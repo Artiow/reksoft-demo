@@ -3,6 +3,7 @@ package ru.reksoft.demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.domain.SingerEntity;
 import ru.reksoft.demo.domain.SingerEntity_;
 import ru.reksoft.demo.dto.SingerDTO;
@@ -20,9 +21,16 @@ import javax.validation.constraints.NotNull;
 @Service
 public class SingerService extends AbstractService<SingerDTO> {
 
+    private MessagesConfig messages;
+
     private SingerRepository singerRepository;
 
     private SingerMapper singerMapper;
+
+    @Autowired
+    public void setMessages(MessagesConfig messages) {
+        this.messages = messages;
+    }
     
     @Autowired
     public void setSingerRepository(SingerRepository singerRepository) {
@@ -59,7 +67,7 @@ public class SingerService extends AbstractService<SingerDTO> {
         try {
             return singerMapper.toDTO(singerRepository.getOne(id));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(String.format("Singer with id %d does not exist!", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Singer.existById.message", id));
         }
     }
 
@@ -73,7 +81,7 @@ public class SingerService extends AbstractService<SingerDTO> {
     @Transactional
     public Integer create(@NotNull SingerDTO singerDTO) throws ResourceCannotCreateException {
         if (singerRepository.existsByName(singerDTO.getName())) {
-            throw new ResourceCannotCreateException(String.format("Singer with name \'%s\' already exist!", singerDTO.getName()));
+            throw new ResourceCannotCreateException(messages.getAndFormat("reksoft.demo.Singer.existByName.message", singerDTO.getName()));
         }
 
         return singerRepository.save(singerMapper.toEntity(singerDTO)).getId();
@@ -91,7 +99,7 @@ public class SingerService extends AbstractService<SingerDTO> {
         try {
             singerRepository.save(singerMapper.merge(singerRepository.getOne(id), singerMapper.toEntity(singerDTO)));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(String.format("Singer with id %d does not exist!", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Singer.existById.message", id));
         }
     }
 
@@ -104,7 +112,7 @@ public class SingerService extends AbstractService<SingerDTO> {
     @Transactional
     public void delete(@NotNull Integer id) throws ResourceNotFoundException {
         if (!singerRepository.existsById(id)) {
-            throw new ResourceNotFoundException(String.format("Singer with id %d does not exist!", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Singer.existById.message", id));
         }
 
         singerRepository.deleteById(id);

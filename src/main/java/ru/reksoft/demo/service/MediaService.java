@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.domain.*;
 import ru.reksoft.demo.dto.*;
 import ru.reksoft.demo.dto.pagination.filters.MediaFilterDTO;
@@ -29,11 +30,18 @@ import java.util.Collection;
 @Service
 public class MediaService extends AbstractService<MediaDTO> {
 
+    private MessagesConfig messages;
+
     private AlbumRepository albumRepository;
     private MediaTypeRepository mediaTypeRepository;
     private MediaRepository mediaRepository;
 
     private MediaMapper mediaMapper;
+
+    @Autowired
+    public void setMessages(MessagesConfig messages) {
+        this.messages = messages;
+    }
 
     @Autowired
     public void setAlbumRepository(AlbumRepository albumRepository) {
@@ -107,7 +115,7 @@ public class MediaService extends AbstractService<MediaDTO> {
         try {
             return mediaMapper.toDTO(mediaRepository.getOne(id));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(String.format("Media with id %d does not exist!", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Media.existById.message", id));
         }
     }
 
@@ -125,16 +133,16 @@ public class MediaService extends AbstractService<MediaDTO> {
         Integer albumId = mediaDTO.getAlbum().getId();
 
         if (!albumRepository.existsById(albumId)) {
-            throw new ResourceCannotCreateException(String.format(
-                    "Album with id %d does not exist!", albumId
+            throw new ResourceCannotCreateException(messages.getAndFormat(
+                    "reksoft.demo.Album.existById.message", albumId
             ));
         } else if (!mediaTypeRepository.existsById(typeId)) {
-            throw new ResourceCannotCreateException(String.format(
-                    "Singer with id %d does not exist!", typeId
+            throw new ResourceCannotCreateException(messages.getAndFormat(
+                    "reksoft.demo.MediaType.existById.message", typeId
             ));
         } else if (mediaRepository.existsByAlbumIdAndTypeId(albumId, typeId)) {
-            throw new ResourceCannotCreateException(String.format(
-                    "Media with album with id \'%d\' already exist with the type with id %d!", albumId, typeId
+            throw new ResourceCannotCreateException(messages.getAndFormat(
+                    "reksoft.demo.Media.existByIdAndMediaTypeId.message", albumId, typeId
             ));
         }
 
@@ -153,7 +161,7 @@ public class MediaService extends AbstractService<MediaDTO> {
         try {
             mediaRepository.save(mediaMapper.merge(mediaRepository.getOne(id), mediaMapper.toEntity(mediaDTO)));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(String.format("Media with id %d does not exist!", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Media.existById.message", id));
         }
     }
 
@@ -166,7 +174,7 @@ public class MediaService extends AbstractService<MediaDTO> {
     @Transactional
     public void delete(@NotNull Integer id) throws ResourceNotFoundException {
         if (!mediaRepository.existsById(id)) {
-            throw new ResourceNotFoundException(String.format("Media with id %d does not exist!", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Media.existById.message", id));
         }
 
         mediaRepository.deleteById(id);

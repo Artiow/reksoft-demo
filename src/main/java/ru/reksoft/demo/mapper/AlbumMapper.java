@@ -3,16 +3,13 @@ package ru.reksoft.demo.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import ru.reksoft.demo.domain.AlbumEntity;
-import ru.reksoft.demo.domain.CompositionEntity;
-import ru.reksoft.demo.dto.AlbumDTO;
-import ru.reksoft.demo.dto.AlbumShortDTO;
-import ru.reksoft.demo.dto.CompositionDTO;
+import ru.reksoft.demo.domain.*;
+import ru.reksoft.demo.dto.*;
 import ru.reksoft.demo.mapper.manual.JavaTimeMapper;
 
 import java.util.Collection;
 
-@Mapper(uses = JavaTimeMapper.class, componentModel = "spring")
+@Mapper(uses = { JavaTimeMapper.class, CompositionMapper.class }, componentModel = "spring")
 public interface AlbumMapper extends AbstractEntityMapper<AlbumEntity, AlbumDTO> {
 
     @Mappings({
@@ -24,8 +21,26 @@ public interface AlbumMapper extends AbstractEntityMapper<AlbumEntity, AlbumDTO>
     @Mapping(target = "id", ignore = true)
     AlbumEntity toEntity(AlbumDTO dto);
 
-    @Mapping(target = "id", ignore = true)
-    CompositionEntity toEntity(CompositionDTO dto);
+    @Mapping(target = "name", ignore = true)
+    LabelEntity toEntity(LabelDTO dto);
+
+    @Mapping(target = "name", ignore = true)
+    SingerEntity toEntity(SingerDTO dto);
+
+    @Mappings({
+            @Mapping(target = "url", ignore = true),
+            @Mapping(target = "name", ignore = true),
+            @Mapping(target = "width", ignore = true),
+            @Mapping(target = "height", ignore = true),
+            @Mapping(target = "uploaded", ignore = true)
+    })
+    PictureEntity toEntity(PictureDTO dto);
+
+    @Mappings({
+            @Mapping(target = "code", ignore = true),
+            @Mapping(target = "name", ignore = true)
+    })
+    GenreEntity toEntity(GenreDTO dto);
 
     default AlbumEntity merge(AlbumEntity acceptor, AlbumEntity donor) {
         acceptor.setName(donor.getName());
@@ -35,6 +50,8 @@ public interface AlbumMapper extends AbstractEntityMapper<AlbumEntity, AlbumDTO>
         acceptor.setPicture(donor.getPicture());
         acceptor.setLabel(donor.getLabel());
         acceptor.setSinger(donor.getSinger());
+
+        acceptor.setMedia(donor.getMedia());
 
         Collection<CompositionEntity> compositions = acceptor.getCompositions();
         if (!compositions.isEmpty()) {

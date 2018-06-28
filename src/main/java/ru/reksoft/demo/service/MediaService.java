@@ -12,7 +12,9 @@ import ru.reksoft.demo.dto.pagination.filters.MediaFilterDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.dto.pagination.PageDividerDTO;
 import ru.reksoft.demo.mapper.MediaMapper;
+import ru.reksoft.demo.repository.AlbumRepository;
 import ru.reksoft.demo.repository.MediaRepository;
+import ru.reksoft.demo.repository.MediaTypeRepository;
 import ru.reksoft.demo.service.generic.AbstractService;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
@@ -27,9 +29,21 @@ import java.util.Collection;
 @Service
 public class MediaService extends AbstractService<MediaDTO> {
 
+    private AlbumRepository albumRepository;
+    private MediaTypeRepository mediaTypeRepository;
     private MediaRepository mediaRepository;
 
     private MediaMapper mediaMapper;
+
+    @Autowired
+    public void setAlbumRepository(AlbumRepository albumRepository) {
+        this.albumRepository = albumRepository;
+    }
+
+    @Autowired
+    public void setMediaTypeRepository(MediaTypeRepository mediaTypeRepository) {
+        this.mediaTypeRepository = mediaTypeRepository;
+    }
 
     @Autowired
     public void setMediaRepository(MediaRepository mediaRepository) {
@@ -101,15 +115,30 @@ public class MediaService extends AbstractService<MediaDTO> {
      * Save media.
      * Media type and album must exist.
      *
-     * @param dto - media
+     * @param mediaDTO - media
      * @return saved entity id
      */
     @Override
     @Transactional
-    public Integer create(@NotNull MediaDTO dto) throws ResourceCannotCreateException {
-        //todo: create check!
+    public Integer create(@NotNull MediaDTO mediaDTO) throws ResourceCannotCreateException {
+        Integer typeId = mediaDTO.getType().getId();
+        Integer albumId = mediaDTO.getAlbum().getId();
 
-        return mediaRepository.save(mediaMapper.toEntity(dto)).getId();
+        if (!albumRepository.existsById(albumId)) {
+            throw new ResourceCannotCreateException(String.format(
+                    "Album with id %d does not exist!", albumId
+            ));
+        } else if (!mediaTypeRepository.existsById(typeId)) {
+            throw new ResourceCannotCreateException(String.format(
+                    "Singer with id %d does not exist!", typeId
+            ));
+        } else if (mediaRepository.existsByAlbumIdAndTypeId(albumId, typeId)) {
+            throw new ResourceCannotCreateException(String.format(
+                    "Media with album with id \'%d\' already exist with the type with id %d!", albumId, typeId
+            ));
+        }
+
+        return mediaRepository.save(mediaMapper.toEntity(mediaDTO)).getId();
     }
 
     /**
@@ -121,7 +150,11 @@ public class MediaService extends AbstractService<MediaDTO> {
     @Override
     @Transactional
     public void update(@NotNull Integer id, @NotNull MediaDTO mediaDTO) throws ResourceNotFoundException {
-        //todo: update!
+        try {
+            mediaRepository.save(mediaMapper.merge(mediaRepository.getOne(id), mediaMapper.toEntity(mediaDTO)));
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(String.format("Media with id %d does not exist!", id));
+        }
     }
 
     /**

@@ -88,15 +88,21 @@ public class AlbumService extends AbstractService<AlbumDTO> {
     @Override
     @Transactional
     public Integer create(@NotNull AlbumDTO albumDTO) throws ResourceCannotCreateException {
-        if (!labelRepository.existsById(albumDTO.getLabel().getId())) {
-            throw new ResourceCannotCreateException(String.format("Label with id %d does not exist!", albumDTO.getLabel().getId()));
+        Integer labelId = albumDTO.getLabel().getId();
+        Integer singerId = albumDTO.getSinger().getId();
+        String albumName = albumDTO.getName();
 
-        } else if (!singerRepository.existsById(albumDTO.getSinger().getId())) {
-            throw new ResourceCannotCreateException(String.format("Singer with id %d does not exist!", albumDTO.getSinger().getId()));
-
-        } else if (albumRepository.existsByNameAndSingerId(albumDTO.getName(), albumDTO.getSinger().getId())) {
+        if (!labelRepository.existsById(labelId)) {
             throw new ResourceCannotCreateException(String.format(
-                    "Album with name \'%s\' already exist with the singer with id %d!", albumDTO.getName(), albumDTO.getSinger().getId()
+                    "Label with id %d does not exist!", labelId
+            ));
+        } else if (!singerRepository.existsById(singerId)) {
+            throw new ResourceCannotCreateException(String.format(
+                    "Singer with id %d does not exist!", singerId
+            ));
+        } else if (albumRepository.existsByNameAndSingerId(albumName, singerId)) {
+            throw new ResourceCannotCreateException(String.format(
+                    "Album with name \'%s\' already exist with the singer with id %d!", albumName, singerId
             ));
         }
 

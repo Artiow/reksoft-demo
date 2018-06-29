@@ -3,22 +3,34 @@ package ru.reksoft.demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.domain.LabelEntity;
 import ru.reksoft.demo.domain.LabelEntity_;
 import ru.reksoft.demo.dto.LabelDTO;
-import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
+import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.mapper.LabelMapper;
 import ru.reksoft.demo.repository.LabelRepository;
+import ru.reksoft.demo.service.generic.AbstractService;
+import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
+import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
 
 @Service
-public class LabelService extends AbstractService {
+public class LabelService extends AbstractService<LabelDTO> {
+
+    private MessagesConfig messages;
 
     private LabelRepository labelRepository;
 
     private LabelMapper labelMapper;
+
+    @Autowired
+    public void setMessages(MessagesConfig messages) {
+        this.messages = messages;
+    }
 
     @Autowired
     public void setLabelRepository(LabelRepository labelRepository) {
@@ -32,33 +44,78 @@ public class LabelService extends AbstractService {
 
 
     /**
-     * Returns page with searched labels
+     * Returns page with searched labels.
      *
      * @param searcherDTO - searcher for label
      * @return label page
      */
     @Transactional(readOnly = true)
-    public PageDTO<LabelDTO> getLabelList(@NotNull StringSearcherDTO searcherDTO) {
+    public PageDTO<LabelDTO> getList(@NotNull StringSearcherDTO searcherDTO) {
         LabelSearcher searcher = new LabelSearcher(searcherDTO);
         return new PageDTO<>(labelRepository.findAll(searcher, searcher.getPageRequest()).map(labelMapper::toDTO));
     }
 
+    /**
+     * Returns label.
+     *
+     * @param id - label id
+     * @return found label
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public LabelDTO get(@NotNull Integer id) throws ResourceNotFoundException {
+        try {
+            return labelMapper.toDTO(labelRepository.getOne(id));
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Label.existById.message", id));
+        }
+    }
 
     /**
      * Save label.
-     * Returns an existing one if it finds by name.
      *
-     * @param dto - label
-     * @return saved entity
+     * @param labelDTO - label
+     * @return saved entity id
      */
+    @Override
     @Transactional
-    public LabelDTO saveLabel(@NotNull LabelDTO dto) {
-        LabelEntity entity = labelRepository.findByName(dto.getName());
-        if (entity == null) {
-            entity = labelRepository.save(labelMapper.toEntity(dto));
+    public Integer create(@NotNull LabelDTO labelDTO) throws ResourceCannotCreateException {
+        if (labelRepository.existsByName(labelDTO.getName())) {
+            throw new ResourceCannotCreateException(messages.getAndFormat("reksoft.demo.Label.existByName.message", labelDTO.getName()));
         }
 
-        return labelMapper.toDTO(entity);
+        return labelRepository.save(labelMapper.toEntity(labelDTO)).getId();
+    }
+
+    /**
+     * Update label.
+     *
+     * @param id       - label id
+     * @param labelDTO - new label data
+     */
+    @Override
+    @Transactional
+    public void update(@NotNull Integer id, @NotNull LabelDTO labelDTO) throws ResourceNotFoundException {
+        try {
+            labelRepository.save(labelMapper.merge(labelRepository.getOne(id), labelMapper.toEntity(labelDTO)));
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Label.existById.message", id));
+        }
+    }
+
+    /**
+     * Delete label.
+     *
+     * @param id - label id
+     */
+    @Override
+    @Transactional
+    public void delete(@NotNull Integer id) throws ResourceNotFoundException {
+        if (!labelRepository.existsById(id)) {
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Label.existById.message", id));
+        }
+
+        labelRepository.deleteById(id);
     }
 
 

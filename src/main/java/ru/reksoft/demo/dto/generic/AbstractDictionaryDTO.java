@@ -1,26 +1,12 @@
 package ru.reksoft.demo.dto.generic;
 
-public abstract class AbstractDictionaryDTO extends AbstractIdentifiedDTO {
+public abstract class AbstractDictionaryDTO<T extends AbstractDictionaryDTO> extends AbstractIdentifiedDTO {
 
-    private String code;
-    private String name;
+    public abstract String getCode();
 
+    public abstract T setCode(String code);
 
-    public String getCode() {
-        return code;
-    }
+    public abstract String getName();
 
-    public AbstractDictionaryDTO setCode(String code) {
-        this.code = code;
-        return this;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public AbstractDictionaryDTO setName(String name) {
-        this.name = name;
-        return this;
-    }
+    public abstract T setName(String name);
 }

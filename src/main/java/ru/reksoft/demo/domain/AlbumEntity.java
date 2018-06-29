@@ -5,7 +5,6 @@ import ru.reksoft.demo.domain.generic.AbstractIdentifiedEntity;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.Set;
 
 @Entity
 @Table(name = "album")
@@ -23,16 +22,6 @@ public class AlbumEntity extends AbstractIdentifiedEntity {
     @Column(name = "release_year", nullable = false)
     private Timestamp releaseYear;
 
-    @OneToOne
-    @JoinColumn(name = "picture_id", referencedColumnName = "id")
-    private PictureEntity picture;
-
-    @OneToMany(mappedBy = "album")
-    private Collection<MediaEntity> media;
-
-    @OneToMany(mappedBy = "album", cascade = CascadeType.PERSIST)
-    private Collection<CompositionEntity> compositions;
-
     @ManyToOne
     @JoinColumn(name = "label_id", referencedColumnName = "id", nullable = false)
     private LabelEntity label;
@@ -40,6 +29,17 @@ public class AlbumEntity extends AbstractIdentifiedEntity {
     @ManyToOne
     @JoinColumn(name = "singer_id", referencedColumnName = "id", nullable = false)
     private SingerEntity singer;
+
+    @OneToOne
+    @JoinColumn(name = "picture_id", referencedColumnName = "id")
+    private PictureEntity picture;
+
+    @OneToMany(mappedBy = "album")
+    private Collection<MediaEntity> media;
+
+    @OrderBy("position")
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<CompositionEntity> compositions;
 
     @ManyToMany
     @JoinTable(
@@ -74,6 +74,22 @@ public class AlbumEntity extends AbstractIdentifiedEntity {
         this.releaseYear = releaseYear;
     }
 
+    public LabelEntity getLabel() {
+        return label;
+    }
+
+    public void setLabel(LabelEntity label) {
+        this.label = label;
+    }
+
+    public SingerEntity getSinger() {
+        return singer;
+    }
+
+    public void setSinger(SingerEntity singer) {
+        this.singer = singer;
+    }
+
     public PictureEntity getPicture() {
         return picture;
     }
@@ -96,22 +112,6 @@ public class AlbumEntity extends AbstractIdentifiedEntity {
 
     public void setCompositions(Collection<CompositionEntity> compositions) {
         this.compositions = compositions;
-    }
-
-    public LabelEntity getLabel() {
-        return label;
-    }
-
-    public void setLabel(LabelEntity label) {
-        this.label = label;
-    }
-
-    public SingerEntity getSinger() {
-        return singer;
-    }
-
-    public void setSinger(SingerEntity singer) {
-        this.singer = singer;
     }
 
     public Collection<GenreEntity> getGenres() {

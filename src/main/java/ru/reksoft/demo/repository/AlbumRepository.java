@@ -6,4 +6,5 @@ import ru.reksoft.demo.domain.AlbumEntity;
 
 public interface AlbumRepository extends JpaRepository<AlbumEntity, Integer>, JpaSpecificationExecutor<AlbumEntity> {
 
+    boolean existsByNameAndSingerId(String albumName, Integer singerId);
 }

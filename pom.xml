@@ -55,6 +55,7 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- SPRING BOOT -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -102,6 +103,18 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- HIBERNATE VALIDATOR -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>6.0.10.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator-annotation-processor</artifactId>
+            <version>6.0.10.Final</version>
+        </dependency>
+
          <!-- MAPSTRUCT -->
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -114,7 +127,6 @@
             <version>${org.mapstruct.version}</version>
             <optional>true</optional>
         </dependency>
-
 
         <!-- SWAGGER -->
         <dependency>
@@ -130,6 +142,7 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- TESTING -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -198,5 +211,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

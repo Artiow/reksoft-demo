@@ -1,10 +1,12 @@
-package ru.reksoft.demo.service;
+package ru.reksoft.demo.service.generic;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
+import ru.reksoft.demo.domain.generic.DomainObject;
+import ru.reksoft.demo.dto.generic.DataTransferObject;
 import ru.reksoft.demo.dto.pagination.PageDividerDTO;
+import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -12,9 +14,18 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 
-public abstract class AbstractService {
+public abstract class AbstractService<T extends DataTransferObject> {
 
-    public static class StringSearcher<T> extends PageDivider implements Specification<T> {
+    public abstract T get(Integer id) throws ResourceNotFoundException;
+
+    public abstract Integer create(T t) throws ResourceCannotCreateException;
+
+    public abstract void update(Integer id, T t) throws ResourceNotFoundException;
+
+    public abstract void delete(Integer id) throws ResourceNotFoundException;
+
+
+    public static class StringSearcher<T extends DomainObject> extends PageDivider implements Specification<T> {
 
         private String searchString;
         private SingularAttribute<? super T, String> attribute;

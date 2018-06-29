@@ -1,16 +1,8 @@
 package ru.reksoft.demo.dto.generic;
 
-public abstract class AbstractIdentifiedDTO implements DataTransferObject {
+public abstract class AbstractIdentifiedDTO<T extends AbstractIdentifiedDTO> implements DataTransferObject {
 
-    private Integer id;
+    public abstract Integer getId();
 
-
-    public Integer getId() {
-        return id;
-    }
-
-    public AbstractIdentifiedDTO setId(Integer id) {
-        this.id = id;
-        return this;
-    }
+    public abstract T setId(Integer id);
 }

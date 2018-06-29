@@ -2,7 +2,14 @@ package ru.reksoft.demo.dto;
 
 import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 public class UserDTO extends AbstractIdentifiedDTO {
+
+    @NotNull(groups = IdCheck.class)
+    @Min(value = 1, groups = IdCheck.class)
+    private Integer id;
 
     private String login;
     private String password;
@@ -15,10 +22,16 @@ public class UserDTO extends AbstractIdentifiedDTO {
     private UserRoleDTO role;
 
 
-    public UserDTO setId(Integer id) {
-        return (UserDTO) super.setId(id);
+    @Override
+    public Integer getId() {
+        return id;
     }
 
+    @Override
+    public UserDTO setId(Integer id) {
+        this.id = id;
+        return this;
+    }
 
     public String getLogin() {
         return login;
@@ -90,5 +103,14 @@ public class UserDTO extends AbstractIdentifiedDTO {
     public UserDTO setRole(UserRoleDTO role) {
         this.role = role;
         return this;
+    }
+
+
+    public interface IdCheck {
+
+    }
+
+    public interface FieldCheck {
+
     }
 }

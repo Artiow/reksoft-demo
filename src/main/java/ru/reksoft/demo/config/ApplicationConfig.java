@@ -16,15 +16,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class ApplicationConfig implements WebMvcConfigurer {
 
     /**
-     * Swagger config
+     * Swagger config.
      *
-     * @return docket bean
+     * @return Docket bean
      */
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .useDefaultResponseMessages(false)
-
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("ru.reksoft.demo.controller"))
                 .paths(PathSelectors.any())
@@ -32,7 +30,7 @@ public class ApplicationConfig implements WebMvcConfigurer {
     }
 
     /**
-     * Suffix pattern matching disabling
+     * Suffix pattern matching disabling.
      */
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
@@ -40,7 +38,7 @@ public class ApplicationConfig implements WebMvcConfigurer {
     }
 
     /**
-     * Resource handlers config
+     * Resource handlers config.
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

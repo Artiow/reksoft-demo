@@ -8,6 +8,8 @@ import ru.reksoft.demo.domain.MediaEntity;
 
 public interface MediaRepository extends JpaRepository<MediaEntity, Integer>, JpaSpecificationExecutor<MediaEntity> {
 
+    boolean existsByAlbumIdAndTypeId(Integer albumId, Integer typeId);
+
     Page<MediaEntity> findByAlbumSingerId(Integer id, Pageable pageable);
 
     Page<MediaEntity> findByAlbumLabelId(Integer id, Pageable pageable);

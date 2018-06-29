@@ -6,26 +6,53 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.domain.*;
-import ru.reksoft.demo.dto.*;
-import ru.reksoft.demo.dto.pagination.filters.MediaFilterDTO;
+import ru.reksoft.demo.dto.MediaDTO;
+import ru.reksoft.demo.dto.MediaShortDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.dto.pagination.PageDividerDTO;
+import ru.reksoft.demo.dto.pagination.filters.MediaFilterDTO;
 import ru.reksoft.demo.mapper.MediaMapper;
+import ru.reksoft.demo.repository.AlbumRepository;
 import ru.reksoft.demo.repository.MediaRepository;
+import ru.reksoft.demo.repository.MediaTypeRepository;
+import ru.reksoft.demo.service.generic.AbstractService;
+import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
+import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 import ru.reksoft.demo.util.MediaSearchType;
 
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
-public class MediaService extends AbstractService {
+public class MediaService extends AbstractService<MediaDTO> {
 
+    private MessagesConfig messages;
+
+    private AlbumRepository albumRepository;
+    private MediaTypeRepository mediaTypeRepository;
     private MediaRepository mediaRepository;
 
     private MediaMapper mediaMapper;
+
+    @Autowired
+    public void setMessages(MessagesConfig messages) {
+        this.messages = messages;
+    }
+
+    @Autowired
+    public void setAlbumRepository(AlbumRepository albumRepository) {
+        this.albumRepository = albumRepository;
+    }
+
+    @Autowired
+    public void setMediaTypeRepository(MediaTypeRepository mediaTypeRepository) {
+        this.mediaTypeRepository = mediaTypeRepository;
+    }
 
     @Autowired
     public void setMediaRepository(MediaRepository mediaRepository) {
@@ -39,28 +66,27 @@ public class MediaService extends AbstractService {
 
 
     /**
-     * Returns page with filtered media
+     * Returns page with filtered media.
      *
      * @param filterDTO - filter for media
      * @return media page
      */
     @Transactional(readOnly = true)
-    public PageDTO<MediaShortDTO> getMediaList(@NotNull MediaFilterDTO filterDTO) {
+    public PageDTO<MediaShortDTO> getListByFilter(@NotNull MediaFilterDTO filterDTO) {
         MediaFilter filter = new MediaFilter(filterDTO);
         return new PageDTO<>(mediaRepository.findAll(filter, filter.getPageRequest()).map(mediaMapper::toShortDTO));
     }
 
-
     /**
-     * Returns page with media by one of attribute (album, label, singer) id
+     * Returns page with media by one of attribute (album, label, singer) id.
      *
      * @param attributeType - attribute type
-     * @param attributeId - attribute id
-     * @param pageDivider - page divider
+     * @param attributeId   - attribute id
+     * @param pageDivider   - page divider
      * @return media page
      */
     @Transactional(readOnly = true)
-    public PageDTO<MediaShortDTO> getMediaListByAttribute(@NotNull MediaSearchType attributeType, @NotNull Integer attributeId, @NotNull PageDividerDTO pageDivider) {
+    public PageDTO<MediaShortDTO> getListByAttribute(@NotNull MediaSearchType attributeType, @NotNull Integer attributeId, @NotNull PageDividerDTO pageDivider) {
         Pageable request = new PageDivider(pageDivider).getPageRequest();
         Page<MediaEntity> page = null;
         switch (attributeType) {
@@ -78,15 +104,81 @@ public class MediaService extends AbstractService {
         return new PageDTO<>(page.map(mediaMapper::toShortDTO));
     }
 
-
     /**
-     * Returns media by id
+     * Returns media by id.
      *
+     * @param id - media id
      * @return media
      */
+    @Override
     @Transactional(readOnly = true)
-    public MediaDTO getMedia(@NotNull Integer id) {
-        return mediaMapper.toDTO(mediaRepository.getOne(id));
+    public MediaDTO get(@NotNull Integer id) throws ResourceNotFoundException {
+        try {
+            return mediaMapper.toDTO(mediaRepository.getOne(id));
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Media.existById.message", id));
+        }
+    }
+
+    /**
+     * Save media.
+     * Media type and album must exist.
+     *
+     * @param mediaDTO - media
+     * @return saved entity id
+     */
+    @Override
+    @Transactional
+    public Integer create(@NotNull MediaDTO mediaDTO) throws ResourceCannotCreateException {
+        Integer typeId = mediaDTO.getType().getId();
+        Integer albumId = mediaDTO.getAlbum().getId();
+
+        if (!albumRepository.existsById(albumId)) {
+            throw new ResourceCannotCreateException(messages.getAndFormat(
+                    "reksoft.demo.Album.existById.message", albumId
+            ));
+        } else if (!mediaTypeRepository.existsById(typeId)) {
+            throw new ResourceCannotCreateException(messages.getAndFormat(
+                    "reksoft.demo.MediaType.existById.message", typeId
+            ));
+        } else if (mediaRepository.existsByAlbumIdAndTypeId(albumId, typeId)) {
+            throw new ResourceCannotCreateException(messages.getAndFormat(
+                    "reksoft.demo.Media.existByIdAndMediaTypeId.message", albumId, typeId
+            ));
+        }
+
+        return mediaRepository.save(mediaMapper.toEntity(mediaDTO)).getId();
+    }
+
+    /**
+     * Update media.
+     *
+     * @param id       - media id
+     * @param mediaDTO - new media data
+     */
+    @Override
+    @Transactional
+    public void update(@NotNull Integer id, @NotNull MediaDTO mediaDTO) throws ResourceNotFoundException {
+        try {
+            mediaRepository.save(mediaMapper.merge(mediaRepository.getOne(id), mediaMapper.toEntity(mediaDTO)));
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Media.existById.message", id));
+        }
+    }
+
+    /**
+     * Delete media.
+     *
+     * @param id - media id
+     */
+    @Override
+    @Transactional
+    public void delete(@NotNull Integer id) throws ResourceNotFoundException {
+        if (!mediaRepository.existsById(id)) {
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Media.existById.message", id));
+        }
+
+        mediaRepository.deleteById(id);
     }
 
 
@@ -166,7 +258,7 @@ public class MediaService extends AbstractService {
             }
 
             Collection<Predicate> occurrences = new ArrayList<>();
-            for (String searchWord: searchWords) {
+            for (String searchWord : searchWords) {
                 String[] words = new String[]{(searchWord + " %"), ("% " + searchWord + " %"), ("% " + searchWord)};
 
                 Collection<Predicate> occurrence = new ArrayList<>();

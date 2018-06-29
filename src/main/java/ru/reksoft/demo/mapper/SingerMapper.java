@@ -11,4 +11,11 @@ public interface SingerMapper extends AbstractEntityMapper<SingerEntity, SingerD
 
     @Mapping(target = "id", ignore = true)
     SingerEntity toEntity(SingerDTO dto);
+
+    default SingerEntity merge(SingerEntity acceptor, SingerEntity donor) {
+        acceptor.setName(donor.getName());
+        acceptor.setAlbums(donor.getAlbums());
+
+        return acceptor;
+    }
 }

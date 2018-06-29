@@ -1,28 +1,63 @@
 package ru.reksoft.demo.dto;
 
 import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
+import ru.reksoft.demo.dto.validation.annotations.PositionSequence;
+import ru.reksoft.demo.dto.validation.annotations.ReleaseYear;
 
-import java.time.LocalDate;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.util.*;
 
 public class AlbumDTO extends AbstractIdentifiedDTO {
 
-    private String name;
-    private String description;
-    private LocalDate releaseYear;
+    @NotNull(groups = IdCheck.class)
+    @Min(value = 1, groups = IdCheck.class)
+    private Integer id;
 
+    @NotNull(groups = FieldCheck.class)
+    @Size(min = 1, max = 45, groups = FieldCheck.class)
+    private String name;
+
+    @Size(min = 1, max = 255, groups = FieldCheck.class)
+    private String description;
+
+    @NotNull(groups = FieldCheck.class)
+    @ReleaseYear(groups = FieldCheck.class)
+    private Integer releaseYear;
+
+    @Valid
+    @NotNull(groups = FieldCheck.class)
     private LabelDTO label;
+
+    @Valid
+    @NotNull(groups = FieldCheck.class)
     private SingerDTO singer;
+
+    @Valid
     private PictureDTO picture;
 
-    private PriorityQueue<GenreDTO> genres;
-    private PriorityQueue<CompositionDTO> compositions;
+    @Valid
+    @NotNull(groups = FieldCheck.class)
+    @NotEmpty(groups = FieldCheck.class)
+    private List<GenreDTO> genres;
+
+    @Valid
+    @NotNull(groups = FieldCheck.class)
+    @NotEmpty(groups = FieldCheck.class)
+    @PositionSequence(groups = FieldCheck.class)
+    private List<CompositionDTO> compositions;
 
 
-    public AlbumDTO setId(Integer id) {
-        return (AlbumDTO) super.setId(id);
+    @Override
+    public Integer getId() {
+        return id;
     }
 
+    @Override
+    public AlbumDTO setId(Integer id) {
+        this.id = id;
+        return this;
+    }
 
     public String getName() {
         return name;
@@ -42,11 +77,11 @@ public class AlbumDTO extends AbstractIdentifiedDTO {
         return this;
     }
 
-    public LocalDate getReleaseYear() {
+    public Integer getReleaseYear() {
         return releaseYear;
     }
 
-    public AlbumDTO setReleaseYear(LocalDate releaseYear) {
+    public AlbumDTO setReleaseYear(Integer releaseYear) {
         this.releaseYear = releaseYear;
         return this;
     }
@@ -78,21 +113,31 @@ public class AlbumDTO extends AbstractIdentifiedDTO {
         return this;
     }
 
-    public PriorityQueue<GenreDTO> getGenres() {
+    public List<GenreDTO> getGenres() {
         return genres;
     }
 
-    public AlbumDTO setGenres(PriorityQueue<GenreDTO> genres) {
+    public AlbumDTO setGenres(List<GenreDTO> genres) {
         this.genres = genres;
         return this;
     }
 
-    public PriorityQueue<CompositionDTO> getCompositions() {
+    public List<CompositionDTO> getCompositions() {
         return compositions;
     }
 
-    public AlbumDTO setCompositions(PriorityQueue<CompositionDTO> compositions) {
+    public AlbumDTO setCompositions(List<CompositionDTO> compositions) {
         this.compositions = compositions;
         return this;
+    }
+
+
+    public interface IdCheck {
+
+    }
+
+    public interface FieldCheck extends
+            LabelDTO.IdCheck, SingerDTO.IdCheck, PictureDTO.IdCheck, GenreDTO.IdCheck, CompositionDTO.FieldCheck {
+
     }
 }

@@ -2,18 +2,39 @@ package ru.reksoft.demo.dto;
 
 import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 public class MediaDTO extends AbstractIdentifiedDTO {
 
+    @NotNull(groups = IdCheck.class)
+    @Min(value = 1, groups = IdCheck.class)
+    private Integer id;
+
+    @NotNull(groups = FieldCheck.class)
+    @Min(value = 0, groups = FieldCheck.class)
     private Integer price;
 
+    @Valid
+    @NotNull(groups = FieldCheck.class)
     private MediaTypeDTO type;
+
+    @Valid
+    @NotNull(groups = FieldCheck.class)
     private AlbumDTO album;
 
 
-    public MediaDTO setId(Integer id) {
-        return (MediaDTO) super.setId(id);
+    @Override
+    public Integer getId() {
+        return id;
     }
 
+    @Override
+    public MediaDTO setId(Integer id) {
+        this.id = id;
+        return this;
+    }
 
     public Integer getPrice() {
         return price;
@@ -40,5 +61,15 @@ public class MediaDTO extends AbstractIdentifiedDTO {
     public MediaDTO setAlbum(AlbumDTO album) {
         this.album = album;
         return this;
+    }
+
+
+    public interface IdCheck {
+
+    }
+
+    public interface FieldCheck extends
+            MediaTypeDTO.IdCheck, AlbumDTO.IdCheck {
+
     }
 }

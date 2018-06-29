@@ -6,5 +6,5 @@ import ru.reksoft.demo.domain.SingerEntity;
 
 public interface SingerRepository extends JpaRepository<SingerEntity, Integer>, JpaSpecificationExecutor<SingerEntity> {
 
-    SingerEntity findByName(String name);
+    boolean existsByName(String name);
 }

@@ -2,23 +2,62 @@ package ru.reksoft.demo.dto;
 
 import ru.reksoft.demo.dto.generic.AbstractDictionaryDTO;
 
-public class GenreDTO extends AbstractDictionaryDTO implements Comparable<GenreDTO> {
+import javax.validation.constraints.*;
 
-    public GenreDTO setId(Integer id) {
-        return (GenreDTO) super.setId(id);
-    }
+public class GenreDTO extends AbstractDictionaryDTO {
 
-    public GenreDTO setCode(String code) {
-        return (GenreDTO) super.setCode(code);
-    }
+    @NotNull(groups = IdCheck.class)
+    @Min(value = 1, groups = IdCheck.class)
+    private Integer id;
 
-    public GenreDTO setName(String name) {
-        return (GenreDTO) super.setName(name);
-    }
+    @NotNull(groups = FieldCheck.class)
+    @Size(min = 1, max = 45, groups = FieldCheck.class)
+    private String code;
+
+    @NotNull(groups = FieldCheck.class)
+    @Size(min = 1, max = 45, groups = FieldCheck.class)
+    private String name;
 
 
     @Override
-    public int compareTo(GenreDTO o) {
-        return getCode().compareTo(o.getCode());
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public GenreDTO setId(Integer id) {
+        this.id = id;
+        return this;
+    }
+
+    @Override
+    public String getCode() {
+        return code;
+    }
+
+    @Override
+    public GenreDTO setCode(String code) {
+        this.code = code;
+        return this;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public GenreDTO setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+
+    public interface IdCheck {
+
+    }
+
+    public interface FieldCheck {
+
     }
 }

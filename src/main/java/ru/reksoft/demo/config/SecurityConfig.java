@@ -25,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * Differentiation of rights configuration
+     * Differentiation of rights configuration.
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -34,7 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .disable()
 
                 .authorizeRequests()
-                    .anyRequest().permitAll();
+                    .anyRequest()
+                        .permitAll();
     }
 
     @Bean

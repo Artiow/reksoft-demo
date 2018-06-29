@@ -32,7 +32,7 @@ public class PictureController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Resource> get(@PathVariable("id") Integer id, HttpServletRequest request)
+    public ResponseEntity<Resource> get(@PathVariable int id, HttpServletRequest request)
             throws ResourceNotFoundException, FileNotFoundException {
         Resource resource = pictureService.get(id);
         MediaType contentType;
@@ -54,5 +54,19 @@ public class PictureController {
     public ResponseEntity<Void> create(@RequestParam("picture") MultipartFile picture, HttpServletRequest request)
             throws ResourceCannotCreateException {
         return ResponseEntity.created(ResourceLocationBuilder.buildURI(request, pictureService.create(picture))).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable int id, @RequestParam("picture") MultipartFile picture)
+            throws ResourceNotFoundException, ResourceCannotCreateException {
+        pictureService.update(id, picture);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable int id)
+            throws ResourceNotFoundException {
+        pictureService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

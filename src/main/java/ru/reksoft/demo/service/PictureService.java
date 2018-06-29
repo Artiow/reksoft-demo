@@ -78,11 +78,12 @@ public class PictureService {
     @Transactional
     public Integer create(MultipartFile picture) throws ResourceCannotCreateException {
         String name = picture.getOriginalFilename();
+        PictureEntity pictureEntity = new PictureEntity();
+
         if (pictureRepository.existsByName(name)) {
             throw new ResourceCannotCreateException(messages.getAndFormat("reksoft.demo.Picture.existByName.message", name));
         }
 
-        PictureEntity pictureEntity = new PictureEntity();
         pictureEntity.setName(name);
         pictureEntity.setSize(picture.getSize());
         pictureEntity.setUploaded(Timestamp.valueOf(LocalDateTime.now()));
@@ -96,12 +97,54 @@ public class PictureService {
     }
 
     @Transactional
-    public void update(Integer id, MultipartFile picture) throws ResourceNotFoundException {
+    public void update(Integer id, MultipartFile picture) throws ResourceNotFoundException, ResourceCannotCreateException {
+        String name = picture.getOriginalFilename();
+        PictureEntity pictureEntity;
 
+        try {
+            pictureEntity = pictureRepository.getOne(id);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Picture.existById.message", id));
+        }
+
+        String oldName = pictureEntity.getName();
+
+        pictureEntity.setName(name);
+        pictureEntity.setSize(picture.getSize());
+        pictureEntity.setUploaded(Timestamp.valueOf(LocalDateTime.now()));
+
+        try {
+            Files.copy(picture.getInputStream(), this.fileStorageLocation.resolve(name), StandardCopyOption.REPLACE_EXISTING);
+            pictureRepository.save(pictureEntity);
+        } catch (IOException e) {
+            throw new ResourceCannotCreateException(messages.getAndFormat("reksoft.demo.Picture.couldNotStore.message", name), e);
+        }
+
+        if (!oldName.equals(pictureEntity.getName())) {
+            try {
+                Files.delete(this.fileStorageLocation.resolve(oldName));
+            } catch (IOException ignored) {
+
+            }
+        }
     }
 
     @Transactional
     public void delete(Integer id) throws ResourceNotFoundException {
+        String name;
 
+        try {
+            name = pictureRepository.getOne(id).getName();
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Picture.existById.message", id));
+        }
+
+        try {
+            Files.delete(this.fileStorageLocation.resolve(name));
+        } catch (IOException ignored) {
+
+        } finally {
+            pictureRepository.deleteById(id);
+        }
     }
 }

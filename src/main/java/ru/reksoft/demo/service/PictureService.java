@@ -89,8 +89,9 @@ public class PictureService {
         pictureEntity.setUploaded(Timestamp.valueOf(LocalDateTime.now()));
 
         try {
+            Integer newId = pictureRepository.save(pictureEntity).getId();
             Files.copy(picture.getInputStream(), this.fileStorageLocation.resolve(name), StandardCopyOption.REPLACE_EXISTING);
-            return pictureRepository.save(pictureEntity).getId();
+            return newId;
         } catch (IOException e) {
             throw new ResourceCannotCreateException(messages.getAndFormat("reksoft.demo.Picture.couldNotStore.message", name), e);
         }

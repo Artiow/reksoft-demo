@@ -90,9 +90,9 @@ create table demo.picture
     constraint picture_pk
     primary key,
 
-  name     varchar(45)  not null,
-  size     bigint       not null,
-  uploaded timestamp    not null
+  name     varchar(255)  not null,
+  size     bigint        not null,
+  uploaded timestamp     not null
 );
 
 create unique index picture_name_uindex

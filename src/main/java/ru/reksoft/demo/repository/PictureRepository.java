@@ -6,4 +6,5 @@ import ru.reksoft.demo.domain.PictureEntity;
 
 public interface PictureRepository extends JpaRepository<PictureEntity, Integer>, JpaSpecificationExecutor<PictureEntity> {
 
+    boolean existsByName(String name);
 }

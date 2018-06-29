@@ -91,8 +91,7 @@ create table demo.picture
     primary key,
 
   name     varchar(45)  not null,
-  width    integer      not null,
-  height   integer      not null,
+  size     bigint       not null,
   uploaded timestamp    not null
 );
 

@@ -29,8 +29,7 @@ public interface AlbumMapper extends AbstractEntityMapper<AlbumEntity, AlbumDTO>
 
     @Mappings({
             @Mapping(target = "name", ignore = true),
-            @Mapping(target = "width", ignore = true),
-            @Mapping(target = "height", ignore = true),
+            @Mapping(target = "size", ignore = true),
             @Mapping(target = "uploaded", ignore = true)
     })
     PictureEntity toEntity(PictureDTO dto);

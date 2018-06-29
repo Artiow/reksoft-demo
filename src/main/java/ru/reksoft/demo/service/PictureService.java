@@ -6,7 +6,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import ru.reksoft.demo.config.MessagesConfig;
+import ru.reksoft.demo.domain.PictureEntity;
 import ru.reksoft.demo.dto.generic.DataTransferObject;
 import ru.reksoft.demo.repository.PictureRepository;
 import ru.reksoft.demo.service.generic.FileNotFoundException;
@@ -20,6 +22,9 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Service
 public class PictureService {
@@ -72,12 +77,27 @@ public class PictureService {
     }
 
     @Transactional
-    public Integer create(DataTransferObject dataTransferObject) throws ResourceCannotCreateException {
-        return null;
+    public Integer create(MultipartFile picture) throws ResourceCannotCreateException {
+        String name = picture.getOriginalFilename();
+        if (pictureRepository.existsByName(name)) {
+            throw new ResourceCannotCreateException(messages.getAndFormat("reksoft.demo.Picture.existByName.message", name));
+        }
+
+        PictureEntity pictureEntity = new PictureEntity();
+        pictureEntity.setName(name);
+        pictureEntity.setSize(picture.getSize());
+        pictureEntity.setUploaded(Timestamp.valueOf(LocalDateTime.now()));
+
+        try {
+            Files.copy(picture.getInputStream(), this.fileStorageLocation.resolve(name), StandardCopyOption.REPLACE_EXISTING);
+            return pictureRepository.save(pictureEntity).getId();
+        } catch (IOException e) {
+            throw new ResourceCannotCreateException(messages.getAndFormat("reksoft.demo.Picture.couldNotStore.message", name), e);
+        }
     }
 
     @Transactional
-    public void update(Integer id, DataTransferObject dataTransferObject) throws ResourceNotFoundException {
+    public void update(Integer id, MultipartFile picture) throws ResourceNotFoundException {
 
     }
 

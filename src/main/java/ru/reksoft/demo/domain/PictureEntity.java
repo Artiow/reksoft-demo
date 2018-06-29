@@ -14,12 +14,8 @@ public class PictureEntity extends AbstractIdentifiedEntity {
     private String name;
 
     @Basic
-    @Column(name = "width", nullable = false)
-    private Integer width;
-
-    @Basic
-    @Column(name = "height", nullable = false)
-    private Integer height;
+    @Column(name = "size", nullable = false)
+    private Long size;
 
     @Basic
     @Column(name = "uploaded", nullable = false)
@@ -34,20 +30,12 @@ public class PictureEntity extends AbstractIdentifiedEntity {
         this.name = name;
     }
 
-    public Integer getWidth() {
-        return width;
+    public Long getSize() {
+        return size;
     }
 
-    public void setWidth(Integer width) {
-        this.width = width;
-    }
-
-    public Integer getHeight() {
-        return height;
-    }
-
-    public void setHeight(Integer height) {
-        this.height = height;
+    public void setSize(Long size) {
+        this.size = size;
     }
 
     public Timestamp getUploaded() {

@@ -90,15 +90,11 @@ create table demo.picture
     constraint picture_pk
     primary key,
 
-  url      varchar(255) not null,
   name     varchar(45)  not null,
   width    integer      not null,
   height   integer      not null,
   uploaded timestamp    not null
 );
-
-create unique index picture_url_uindex
-  on demo.picture (url);
 
 create unique index picture_name_uindex
   on demo.picture (name);

@@ -10,10 +10,6 @@ import java.sql.Timestamp;
 public class PictureEntity extends AbstractIdentifiedEntity {
 
     @Basic
-    @Column(name = "url", nullable = false)
-    private String url;
-
-    @Basic
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -29,14 +25,6 @@ public class PictureEntity extends AbstractIdentifiedEntity {
     @Column(name = "uploaded", nullable = false)
     private Timestamp uploaded;
 
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
 
     public String getName() {
         return name;

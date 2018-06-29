@@ -28,7 +28,6 @@ public interface AlbumMapper extends AbstractEntityMapper<AlbumEntity, AlbumDTO>
     SingerEntity toEntity(SingerDTO dto);
 
     @Mappings({
-            @Mapping(target = "url", ignore = true),
             @Mapping(target = "name", ignore = true),
             @Mapping(target = "width", ignore = true),
             @Mapping(target = "height", ignore = true),

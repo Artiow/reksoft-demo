@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.dto.handling.ErrorDTO;
 import ru.reksoft.demo.dto.handling.ErrorMapDTO;
+import ru.reksoft.demo.service.generic.FileNotFoundException;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 
@@ -34,10 +35,13 @@ public class AdviseController {
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDTO handleThrowable(Throwable ex) {
-        UUID uuid = UUID.randomUUID();
-        logger.error("Unexpected Internal Server Error. UUID: {}", uuid, ex);
+        return errorDTO(ex, "Unexpected Internal Server Error.");
+    }
 
-        return new ErrorDTO(uuid, ex.getClass().getName(), messages.get("reksoft.demo.handle.Throwable.message"));
+    @ExceptionHandler(FileNotFoundException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorDTO handleFileNotFoundException(FileNotFoundException ex) {
+        return errorDTO(ex, "Requested File Not Found.");
     }
 
 
@@ -75,6 +79,16 @@ public class AdviseController {
         return warnDTO(ex, "Sent Resource Cannot Create");
     }
 
+
+    private ErrorDTO errorDTO(Throwable ex, String logMessage) {
+        return new ErrorDTO(errorUUID(ex, logMessage), ex.getClass().getName(), ex.getMessage());
+    }
+
+    private UUID errorUUID(Throwable ex, String logMessage) {
+        UUID uuid = UUID.randomUUID();
+        logger.error(logMessage + ". UUID: {}", uuid, ex);
+        return uuid;
+    }
 
     private ErrorDTO warnDTO(Throwable ex, String logMessage) {
         return new ErrorDTO(warnUUID(logMessage), ex.getClass().getName(), ex.getMessage());

@@ -1,6 +1,7 @@
 package ru.reksoft.demo.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.SingerDTO;
@@ -57,7 +58,7 @@ public class SingerController {
     public void create(@RequestBody @Validated(SingerDTO.FieldCheck.class) SingerDTO singerDTO, HttpServletRequest request, HttpServletResponse response)
             throws ResourceCannotCreateException
     {
-        response.setHeader("location", ResourceLocationBuilder.build(request, singerService.create(singerDTO)));
+        response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(request, singerService.create(singerDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);
     }
 

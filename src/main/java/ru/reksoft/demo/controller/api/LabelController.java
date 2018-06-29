@@ -1,6 +1,7 @@
 package ru.reksoft.demo.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.LabelDTO;
@@ -57,7 +58,7 @@ public class LabelController {
     public void create(@RequestBody @Validated(LabelDTO.FieldCheck.class) LabelDTO labelDTO, HttpServletRequest request, HttpServletResponse response)
             throws ResourceCannotCreateException
     {
-        response.setHeader("location", ResourceLocationBuilder.build(request, labelService.create(labelDTO)));
+        response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(request, labelService.create(labelDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);
     }
 

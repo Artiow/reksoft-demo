@@ -25,7 +25,7 @@ public class JavaTimeMapper {
             return null;
         }
 
-        return Timestamp.valueOf(LocalDateTime.of(LocalDate.of(1,1,1), localTime));
+        return Timestamp.valueOf(LocalDateTime.of(LocalDate.of(1, 1, 1), localTime));
     }
 
     public Integer toDate(Timestamp timestamp) {

@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.domain.PictureEntity;
-import ru.reksoft.demo.dto.generic.DataTransferObject;
 import ru.reksoft.demo.repository.PictureRepository;
 import ru.reksoft.demo.service.generic.FileNotFoundException;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
@@ -69,7 +68,7 @@ public class PictureService {
             } else {
                 throw new FileNotFoundException(messages.getAndFormat("reksoft.demo.Picture.existByFile.message", id));
             }
-        }  catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Picture.existById.message", id));
         } catch (MalformedURLException e) {
             throw new FileNotFoundException(messages.getAndFormat("reksoft.demo.Picture.existByFile.message", id), e);

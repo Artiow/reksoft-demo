@@ -6,8 +6,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.AlbumDTO;
 import ru.reksoft.demo.dto.AlbumShortDTO;
-import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
+import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.service.AlbumService;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("api/album")
+@RequestMapping("${api-path.album}")
 public class AlbumController {
 
     private AlbumService albumService;
@@ -57,8 +57,7 @@ public class AlbumController {
      */
     @PostMapping
     public void create(@RequestBody @Validated(AlbumDTO.FieldCheck.class) AlbumDTO albumDTO, HttpServletRequest request, HttpServletResponse response)
-            throws ResourceCannotCreateException
-    {
+            throws ResourceCannotCreateException {
         response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(request, albumService.create(albumDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);
     }
@@ -66,13 +65,12 @@ public class AlbumController {
     /**
      * Update album by id.
      *
-     * @param id - album id
+     * @param id       - album id
      * @param albumDTO - album data
      */
     @PutMapping("/{id}")
     public void update(@PathVariable int id, @RequestBody @Validated(AlbumDTO.FieldCheck.class) AlbumDTO albumDTO, HttpServletResponse response)
-            throws ResourceNotFoundException
-    {
+            throws ResourceNotFoundException {
         albumService.update(id, albumDTO);
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
@@ -84,8 +82,7 @@ public class AlbumController {
      */
     @DeleteMapping("/{id}")
     public void delete(@PathVariable int id, HttpServletResponse response)
-            throws ResourceNotFoundException
-    {
+            throws ResourceNotFoundException {
         albumService.delete(id);
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }

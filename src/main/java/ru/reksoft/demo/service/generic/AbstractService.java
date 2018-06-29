@@ -5,8 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import ru.reksoft.demo.domain.generic.DomainObject;
 import ru.reksoft.demo.dto.generic.DataTransferObject;
-import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDividerDTO;
+import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;

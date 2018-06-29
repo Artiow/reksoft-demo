@@ -5,8 +5,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.LabelDTO;
-import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
+import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.service.LabelService;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("api/label")
+@RequestMapping("${api-path.label}")
 public class LabelController {
 
     private LabelService labelService;
@@ -56,8 +56,7 @@ public class LabelController {
      */
     @PostMapping
     public void create(@RequestBody @Validated(LabelDTO.FieldCheck.class) LabelDTO labelDTO, HttpServletRequest request, HttpServletResponse response)
-            throws ResourceCannotCreateException
-    {
+            throws ResourceCannotCreateException {
         response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(request, labelService.create(labelDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);
     }
@@ -65,13 +64,12 @@ public class LabelController {
     /**
      * Update label by id.
      *
-     * @param id - label id
+     * @param id       - label id
      * @param labelDTO - label data
      */
     @PutMapping("/{id}")
     public void update(@PathVariable int id, @RequestBody @Validated(LabelDTO.FieldCheck.class) LabelDTO labelDTO, HttpServletResponse response)
-            throws ResourceNotFoundException
-    {
+            throws ResourceNotFoundException {
         labelService.update(id, labelDTO);
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
@@ -83,8 +81,7 @@ public class LabelController {
      */
     @DeleteMapping("/{id}")
     public void delete(@PathVariable int id, HttpServletResponse response)
-            throws ResourceNotFoundException
-    {
+            throws ResourceNotFoundException {
         labelService.delete(id);
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }

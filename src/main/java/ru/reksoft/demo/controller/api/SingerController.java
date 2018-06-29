@@ -5,8 +5,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.SingerDTO;
-import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
+import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.service.SingerService;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("api/singer")
+@RequestMapping("${api-path.singer}")
 public class SingerController {
 
     private SingerService singerService;
@@ -56,8 +56,7 @@ public class SingerController {
      */
     @PostMapping
     public void create(@RequestBody @Validated(SingerDTO.FieldCheck.class) SingerDTO singerDTO, HttpServletRequest request, HttpServletResponse response)
-            throws ResourceCannotCreateException
-    {
+            throws ResourceCannotCreateException {
         response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(request, singerService.create(singerDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);
     }
@@ -65,13 +64,12 @@ public class SingerController {
     /**
      * Update singer by id.
      *
-     * @param id - singer id
+     * @param id        - singer id
      * @param singerDTO - singer data
      */
     @PutMapping("/{id}")
     public void update(@PathVariable int id, @RequestBody @Validated(SingerDTO.FieldCheck.class) SingerDTO singerDTO, HttpServletResponse response)
-            throws ResourceNotFoundException
-    {
+            throws ResourceNotFoundException {
         singerService.update(id, singerDTO);
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
@@ -83,8 +81,7 @@ public class SingerController {
      */
     @DeleteMapping("/{id}")
     public void delete(@PathVariable int id, HttpServletResponse response)
-            throws ResourceNotFoundException
-    {
+            throws ResourceNotFoundException {
         singerService.delete(id);
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }

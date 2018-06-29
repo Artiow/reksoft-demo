@@ -7,8 +7,8 @@ import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.domain.LabelEntity;
 import ru.reksoft.demo.domain.LabelEntity_;
 import ru.reksoft.demo.dto.LabelDTO;
-import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
+import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.mapper.LabelMapper;
 import ru.reksoft.demo.repository.LabelRepository;
 import ru.reksoft.demo.service.generic.AbstractService;
@@ -90,7 +90,7 @@ public class LabelService extends AbstractService<LabelDTO> {
     /**
      * Update label.
      *
-     * @param id - label id
+     * @param id       - label id
      * @param labelDTO - new label data
      */
     @Override

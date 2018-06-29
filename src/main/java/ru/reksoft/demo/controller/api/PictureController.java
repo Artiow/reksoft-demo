@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("api/picture")
+@RequestMapping("${api-path.picture}")
 public class PictureController {
 
     private static final Logger logger = LoggerFactory.getLogger(PictureController.class);
@@ -33,8 +33,7 @@ public class PictureController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Resource> get(@PathVariable("id") Integer id, HttpServletRequest request)
-            throws ResourceNotFoundException, FileNotFoundException
-    {
+            throws ResourceNotFoundException, FileNotFoundException {
         Resource resource = pictureService.get(id);
         MediaType contentType;
 
@@ -53,8 +52,7 @@ public class PictureController {
 
     @PostMapping
     public ResponseEntity<Void> create(@RequestParam("picture") MultipartFile picture, HttpServletRequest request)
-            throws ResourceCannotCreateException
-    {
+            throws ResourceCannotCreateException {
         return ResponseEntity.created(ResourceLocationBuilder.buildURI(request, pictureService.create(picture))).build();
     }
 }

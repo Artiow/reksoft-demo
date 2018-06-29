@@ -4,6 +4,7 @@ import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.net.URI;
 import java.time.LocalDateTime;
 
 public class PictureDTO extends AbstractIdentifiedDTO {
@@ -12,10 +13,9 @@ public class PictureDTO extends AbstractIdentifiedDTO {
     @Min(value = 1, groups = IdCheck.class)
     private Integer id;
 
-    private String url;
+    private URI uri;
     private String name;
-    private Integer width;
-    private Integer height;
+    private Long size;
     private LocalDateTime uploaded;
 
 
@@ -30,12 +30,12 @@ public class PictureDTO extends AbstractIdentifiedDTO {
         return this;
     }
 
-    public String getUrl() {
-        return url;
+    public URI getUri() {
+        return uri;
     }
 
-    public PictureDTO setUrl(String url) {
-        this.url = url;
+    public PictureDTO setUri(URI uri) {
+        this.uri = uri;
         return this;
     }
 
@@ -48,21 +48,12 @@ public class PictureDTO extends AbstractIdentifiedDTO {
         return this;
     }
 
-    public Integer getWidth() {
-        return width;
+    public Long getSize() {
+        return size;
     }
 
-    public PictureDTO setWidth(Integer width) {
-        this.width = width;
-        return this;
-    }
-
-    public Integer getHeight() {
-        return height;
-    }
-
-    public PictureDTO setHeight(Integer height) {
-        this.height = height;
+    public PictureDTO setSize(Long size) {
+        this.size = size;
         return this;
     }
 

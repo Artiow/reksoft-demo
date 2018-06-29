@@ -9,7 +9,9 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.dto.handling.ErrorDTO;
 import ru.reksoft.demo.dto.handling.ErrorMapDTO;
@@ -17,7 +19,10 @@ import ru.reksoft.demo.service.generic.FileNotFoundException;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @RestControllerAdvice
 public class AdviseController {
@@ -53,7 +58,7 @@ public class AdviseController {
 
         String message = messages.getAndFormat("reksoft.demo.handle.MethodArgumentNotValidException.message", bindingResult.getObjectName());
         Map<String, String> errors = new HashMap<>(allErrors.size());
-        for (ObjectError error: allErrors) {
+        for (ObjectError error : allErrors) {
             errors.put(((DefaultMessageSourceResolvable) error.getArguments()[0]).getCodes()[0], error.getDefaultMessage());
         }
 

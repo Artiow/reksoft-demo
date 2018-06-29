@@ -15,8 +15,8 @@ public enum MediaSearchType {
     }
 
     public static MediaSearchType fromValue(String value) {
-        for(MediaSearchType v : values()) {
-            if(v.value.equalsIgnoreCase(value)) {
+        for (MediaSearchType v : values()) {
+            if (v.value.equalsIgnoreCase(value)) {
                 return v;
             }
         }

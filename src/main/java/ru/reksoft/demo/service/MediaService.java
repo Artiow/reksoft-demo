@@ -8,10 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.domain.*;
-import ru.reksoft.demo.dto.*;
-import ru.reksoft.demo.dto.pagination.filters.MediaFilterDTO;
+import ru.reksoft.demo.dto.MediaDTO;
+import ru.reksoft.demo.dto.MediaShortDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.dto.pagination.PageDividerDTO;
+import ru.reksoft.demo.dto.pagination.filters.MediaFilterDTO;
 import ru.reksoft.demo.mapper.MediaMapper;
 import ru.reksoft.demo.repository.AlbumRepository;
 import ru.reksoft.demo.repository.MediaRepository;
@@ -80,8 +81,8 @@ public class MediaService extends AbstractService<MediaDTO> {
      * Returns page with media by one of attribute (album, label, singer) id.
      *
      * @param attributeType - attribute type
-     * @param attributeId - attribute id
-     * @param pageDivider - page divider
+     * @param attributeId   - attribute id
+     * @param pageDivider   - page divider
      * @return media page
      */
     @Transactional(readOnly = true)
@@ -152,7 +153,7 @@ public class MediaService extends AbstractService<MediaDTO> {
     /**
      * Update media.
      *
-     * @param id - media id
+     * @param id       - media id
      * @param mediaDTO - new media data
      */
     @Override
@@ -257,7 +258,7 @@ public class MediaService extends AbstractService<MediaDTO> {
             }
 
             Collection<Predicate> occurrences = new ArrayList<>();
-            for (String searchWord: searchWords) {
+            for (String searchWord : searchWords) {
                 String[] words = new String[]{(searchWord + " %"), ("% " + searchWord + " %"), ("% " + searchWord)};
 
                 Collection<Predicate> occurrence = new ArrayList<>();

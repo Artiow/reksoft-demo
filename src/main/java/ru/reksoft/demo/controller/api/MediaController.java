@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.reksoft.demo.dto.*;
-import ru.reksoft.demo.dto.pagination.filters.MediaFilterDTO;
+import ru.reksoft.demo.dto.AlbumDTO;
+import ru.reksoft.demo.dto.MediaDTO;
+import ru.reksoft.demo.dto.MediaShortDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.dto.pagination.PageDividerDTO;
+import ru.reksoft.demo.dto.pagination.filters.MediaFilterDTO;
 import ru.reksoft.demo.service.MediaService;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
@@ -18,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("api/media")
+@RequestMapping("${api-path.media}")
 public class MediaController {
 
     private MediaService mediaService;
@@ -44,7 +46,7 @@ public class MediaController {
      * Returns list of media with pagination by one of attribute (album, label, singer) id.
      *
      * @param attributeType - attribute search type (byAlbum, byLabel, bySinger)
-     * @param attributeId - attribute id
+     * @param attributeId   - attribute id
      * @return page with media
      */
     @PostMapping("/byAttribute")
@@ -73,8 +75,7 @@ public class MediaController {
      */
     @PostMapping
     public void create(@RequestBody @Validated(MediaDTO.FieldCheck.class) MediaDTO mediaDTO, HttpServletRequest request, HttpServletResponse response)
-            throws ResourceCannotCreateException
-    {
+            throws ResourceCannotCreateException {
         response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(request, mediaService.create(mediaDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);
     }
@@ -82,13 +83,12 @@ public class MediaController {
     /**
      * Update media by id.
      *
-     * @param id - media id
+     * @param id       - media id
      * @param mediaDTO - media data
      */
     @PutMapping("/{id}")
     public void update(@PathVariable int id, @RequestBody @Validated(AlbumDTO.FieldCheck.class) MediaDTO mediaDTO, HttpServletResponse response)
-            throws ResourceNotFoundException
-    {
+            throws ResourceNotFoundException {
         mediaService.update(id, mediaDTO);
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
@@ -100,8 +100,7 @@ public class MediaController {
      */
     @DeleteMapping("/{id}")
     public void delete(@PathVariable int id, HttpServletResponse response)
-            throws ResourceNotFoundException
-    {
+            throws ResourceNotFoundException {
         mediaService.delete(id);
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }

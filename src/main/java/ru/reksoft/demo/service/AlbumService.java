@@ -7,11 +7,14 @@ import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.domain.AlbumEntity;
 import ru.reksoft.demo.domain.AlbumEntity_;
 import ru.reksoft.demo.domain.CompositionEntity;
-import ru.reksoft.demo.dto.*;
-import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
+import ru.reksoft.demo.dto.AlbumDTO;
+import ru.reksoft.demo.dto.AlbumShortDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
+import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.mapper.AlbumMapper;
-import ru.reksoft.demo.repository.*;
+import ru.reksoft.demo.repository.AlbumRepository;
+import ru.reksoft.demo.repository.LabelRepository;
+import ru.reksoft.demo.repository.SingerRepository;
 import ru.reksoft.demo.service.generic.AbstractService;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
@@ -85,7 +88,6 @@ public class AlbumService extends AbstractService<AlbumDTO> {
 
     /**
      * Save album.
-     *
      * Label and singer must exist.
      * All compositions will be created.
      * All genres must exist.
@@ -115,7 +117,7 @@ public class AlbumService extends AbstractService<AlbumDTO> {
         }
 
         AlbumEntity entity = albumMapper.toEntity(albumDTO);
-        for (CompositionEntity composition: entity.getCompositions()) {
+        for (CompositionEntity composition : entity.getCompositions()) {
             composition.setAlbum(entity);
         }
 
@@ -125,7 +127,7 @@ public class AlbumService extends AbstractService<AlbumDTO> {
     /**
      * Update album.
      *
-     * @param id - album id
+     * @param id       - album id
      * @param albumDTO - new album data
      */
     @Override

@@ -2,12 +2,15 @@ package ru.reksoft.demo.dto;
 
 import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
 
+import java.net.URI;
+
 public class AlbumShortDTO extends AbstractIdentifiedDTO {
 
     private Integer id;
     private String name;
     private String label;
     private String singer;
+    private URI pictureUri;
 
 
     @Override
@@ -45,6 +48,15 @@ public class AlbumShortDTO extends AbstractIdentifiedDTO {
 
     public AlbumShortDTO setSinger(String singer) {
         this.singer = singer;
+        return this;
+    }
+
+    public URI getPictureUri() {
+        return pictureUri;
+    }
+
+    public AlbumShortDTO setPictureUri(URI pictureUri) {
+        this.pictureUri = pictureUri;
         return this;
     }
 }

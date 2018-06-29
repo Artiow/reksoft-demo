@@ -6,17 +6,22 @@ import org.mapstruct.Mappings;
 import ru.reksoft.demo.domain.*;
 import ru.reksoft.demo.dto.*;
 import ru.reksoft.demo.mapper.manual.JavaTimeMapper;
+import ru.reksoft.demo.mapper.manual.PictureURIMapper;
 
 import java.util.Collection;
 
-@Mapper(uses = { JavaTimeMapper.class, CompositionMapper.class }, componentModel = "spring")
+@Mapper(uses = { JavaTimeMapper.class, PictureURIMapper.class, CompositionMapper.class }, componentModel = "spring")
 public interface AlbumMapper extends AbstractEntityMapper<AlbumEntity, AlbumDTO> {
 
     @Mappings({
-            @Mapping(source = "label.name", target = "label"),
-            @Mapping(source = "singer.name", target = "singer")
+            @Mapping(target = "label", source = "label.name"),
+            @Mapping(target = "singer", source = "singer.name"),
+            @Mapping(target = "pictureUri", source = "picture.id")
     })
     AlbumShortDTO toShortDTO(AlbumEntity entity);
+
+    @Mapping(target = "picture.uri", source = "picture.id")
+    AlbumDTO toDTO(AlbumEntity entity);
 
     @Mapping(target = "id", ignore = true)
     AlbumEntity toEntity(AlbumDTO dto);

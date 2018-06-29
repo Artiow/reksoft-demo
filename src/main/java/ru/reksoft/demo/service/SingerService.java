@@ -7,8 +7,8 @@ import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.domain.SingerEntity;
 import ru.reksoft.demo.domain.SingerEntity_;
 import ru.reksoft.demo.dto.SingerDTO;
-import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
+import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.mapper.SingerMapper;
 import ru.reksoft.demo.repository.SingerRepository;
 import ru.reksoft.demo.service.generic.AbstractService;
@@ -31,12 +31,12 @@ public class SingerService extends AbstractService<SingerDTO> {
     public void setMessages(MessagesConfig messages) {
         this.messages = messages;
     }
-    
+
     @Autowired
     public void setSingerRepository(SingerRepository singerRepository) {
         this.singerRepository = singerRepository;
     }
-    
+
     @Autowired
     public void setSingerMapper(SingerMapper singerMapper) {
         this.singerMapper = singerMapper;
@@ -90,7 +90,7 @@ public class SingerService extends AbstractService<SingerDTO> {
     /**
      * Update singer.
      *
-     * @param id - singer id
+     * @param id        - singer id
      * @param singerDTO - new singer data
      */
     @Override

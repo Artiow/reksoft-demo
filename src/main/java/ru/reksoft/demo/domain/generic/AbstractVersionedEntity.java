@@ -5,7 +5,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
 @MappedSuperclass
-public class AbstractVersionedEntity extends AbstractIdentifiedEntity {
+public abstract class AbstractVersionedEntity extends AbstractIdentifiedEntity {
 
     @Version
     @Column(name = "version")

@@ -5,18 +5,19 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import ru.reksoft.demo.domain.*;
 import ru.reksoft.demo.dto.*;
+import ru.reksoft.demo.mapper.generic.AbstractVersionedMapper;
 import ru.reksoft.demo.mapper.manual.JavaTimeMapper;
 import ru.reksoft.demo.mapper.manual.PictureURIMapper;
 
 import java.util.Collection;
 
-@Mapper(uses = { JavaTimeMapper.class, PictureURIMapper.class, CompositionMapper.class }, componentModel = "spring")
-public interface AlbumMapper extends AbstractEntityMapper<AlbumEntity, AlbumDTO> {
+@Mapper(uses = {JavaTimeMapper.class, PictureURIMapper.class, CompositionMapper.class}, componentModel = "spring")
+public interface AlbumMapper extends AbstractVersionedMapper<AlbumEntity, AlbumDTO> {
 
     @Mappings({
             @Mapping(target = "label", source = "label.name"),
             @Mapping(target = "singer", source = "singer.name"),
-            @Mapping(target = "pictureUri", source = "picture.id")
+            @Mapping(target = "pictureURI", source = "picture.id")
     })
     AlbumShortDTO toShortDTO(AlbumEntity entity);
 
@@ -45,6 +46,8 @@ public interface AlbumMapper extends AbstractEntityMapper<AlbumEntity, AlbumDTO>
     GenreEntity toEntity(GenreDTO dto);
 
     default AlbumEntity merge(AlbumEntity acceptor, AlbumEntity donor) {
+        AbstractVersionedMapper.super.merge(acceptor, donor);
+
         acceptor.setName(donor.getName());
         acceptor.setDescription(donor.getDescription());
         acceptor.setReleaseYear(donor.getReleaseYear());
@@ -59,7 +62,7 @@ public interface AlbumMapper extends AbstractEntityMapper<AlbumEntity, AlbumDTO>
         if (!compositions.isEmpty()) {
             compositions.clear();
         }
-        for (CompositionEntity composition: donor.getCompositions()) {
+        for (CompositionEntity composition : donor.getCompositions()) {
             composition.setAlbum(acceptor);
             compositions.add(composition);
         }

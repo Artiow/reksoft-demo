@@ -1,18 +1,25 @@
 package ru.reksoft.demo.dto;
 
-import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
+import ru.reksoft.demo.dto.generic.AbstractVersionedDTO;
 import ru.reksoft.demo.dto.validation.annotations.PositionSequence;
 import ru.reksoft.demo.dto.validation.annotations.ReleaseYear;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
-import java.util.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.List;
 
-public class AlbumDTO extends AbstractIdentifiedDTO {
+public class AlbumDTO extends AbstractVersionedDTO {
 
     @NotNull(groups = IdCheck.class)
     @Min(value = 1, groups = IdCheck.class)
     private Integer id;
+
+    @NotNull(groups = FieldCheck.class)
+    @Min(value = 1, groups = FieldCheck.class)
+    private Long version;
 
     @NotNull(groups = FieldCheck.class)
     @Size(min = 1, max = 45, groups = FieldCheck.class)
@@ -56,6 +63,17 @@ public class AlbumDTO extends AbstractIdentifiedDTO {
     @Override
     public AlbumDTO setId(Integer id) {
         this.id = id;
+        return this;
+    }
+
+    @Override
+    public Long getVersion() {
+        return version;
+    }
+
+    @Override
+    public AlbumDTO setVersion(Long version) {
+        this.version = version;
         return this;
     }
 

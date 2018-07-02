@@ -10,19 +10,19 @@ import ru.reksoft.demo.dto.AlbumDTO;
 import ru.reksoft.demo.dto.MediaDTO;
 import ru.reksoft.demo.dto.MediaShortDTO;
 import ru.reksoft.demo.dto.MediaTypeDTO;
+import ru.reksoft.demo.mapper.generic.AbstractVersionedMapper;
 import ru.reksoft.demo.mapper.manual.JavaTimeMapper;
+import ru.reksoft.demo.mapper.manual.PictureURIMapper;
 
-import java.awt.*;
-
-@Mapper(uses = JavaTimeMapper.class, componentModel = "spring")
-public interface MediaMapper extends AbstractEntityMapper<MediaEntity, MediaDTO> {
+@Mapper(uses = {JavaTimeMapper.class, PictureURIMapper.class}, componentModel = "spring")
+public interface MediaMapper extends AbstractVersionedMapper<MediaEntity, MediaDTO> {
 
     @Mappings({
-            @Mapping(source = "type.name", target = "type"),
-            @Mapping(source = "album.name", target = "album"),
-            @Mapping(source = "album.picture", target = "picture"),
-            @Mapping(source = "album.label.name", target = "label"),
-            @Mapping(source = "album.singer.name", target = "singer")
+            @Mapping(target = "type", source = "type.name"),
+            @Mapping(target = "album", source = "album.name"),
+            @Mapping(target = "label", source = "album.label.name"),
+            @Mapping(target = "singer", source = "album.singer.name"),
+            @Mapping(target = "pictureURI", source = "album.picture.id"),
     })
     MediaShortDTO toShortDTO(MediaEntity entity);
 
@@ -49,6 +49,8 @@ public interface MediaMapper extends AbstractEntityMapper<MediaEntity, MediaDTO>
     AlbumEntity toEntity(AlbumDTO dto);
 
     default MediaEntity merge(MediaEntity acceptor, MediaEntity donor) {
+        AbstractVersionedMapper.super.merge(acceptor, donor);
+
         acceptor.setPrice(donor.getPrice());
 
         acceptor.setType(donor.getType());

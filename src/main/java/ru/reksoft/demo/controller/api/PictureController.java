@@ -31,8 +31,18 @@ public class PictureController {
         this.pictureService = pictureService;
     }
 
+
+    /**
+     * Download picture by id.
+     *
+     * @param id      - picture id
+     * @param request - http request
+     * @return picture resource
+     * @throws ResourceNotFoundException - if record not found in database
+     * @throws FileNotFoundException     - iuf file not found on disk
+     */
     @GetMapping("/{id}")
-    public ResponseEntity<Resource> get(@PathVariable int id, HttpServletRequest request)
+    public ResponseEntity<Resource> download(@PathVariable int id, HttpServletRequest request)
             throws ResourceNotFoundException, FileNotFoundException {
         Resource resource = pictureService.get(id);
         MediaType contentType;
@@ -50,19 +60,27 @@ public class PictureController {
                 .body(resource);
     }
 
+    /**
+     * Upload picture and returns new resource URI.
+     *
+     * @param picture - picture file
+     * @param request - http request
+     * @return picture URI
+     * @throws ResourceCannotCreateException - if resource cannot create
+     */
     @PostMapping
-    public ResponseEntity<Void> create(@RequestParam("picture") MultipartFile picture, HttpServletRequest request)
+    public ResponseEntity<Void> upload(@RequestParam("picture") MultipartFile picture, HttpServletRequest request)
             throws ResourceCannotCreateException {
         return ResponseEntity.created(ResourceLocationBuilder.buildURI(request, pictureService.create(picture))).build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable int id, @RequestParam("picture") MultipartFile picture)
-            throws ResourceNotFoundException, ResourceCannotCreateException {
-        pictureService.update(id, picture);
-        return ResponseEntity.noContent().build();
-    }
-
+    /**
+     * Delete picture.
+     *
+     * @param id - picture id
+     * @return no content
+     * @throws ResourceNotFoundException - if record not found in database
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable int id)
             throws ResourceNotFoundException {

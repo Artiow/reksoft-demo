@@ -10,10 +10,6 @@ import java.sql.Timestamp;
 public class PictureEntity extends AbstractIdentifiedEntity {
 
     @Basic
-    @Column(name = "name", nullable = false)
-    private String name;
-
-    @Basic
     @Column(name = "size", nullable = false)
     private Long size;
 
@@ -21,14 +17,6 @@ public class PictureEntity extends AbstractIdentifiedEntity {
     @Column(name = "uploaded", nullable = false)
     private Timestamp uploaded;
 
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public Long getSize() {
         return size;

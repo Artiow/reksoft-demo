@@ -1,6 +1,6 @@
 package ru.reksoft.demo.domain;
 
-import ru.reksoft.demo.domain.generic.AbstractIdentifiedEntity;
+import ru.reksoft.demo.domain.generic.AbstractVersionedEntity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -8,7 +8,7 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "album")
-public class AlbumEntity extends AbstractIdentifiedEntity {
+public class AlbumEntity extends AbstractVersionedEntity {
 
     @Basic
     @Column(name = "name", nullable = false)

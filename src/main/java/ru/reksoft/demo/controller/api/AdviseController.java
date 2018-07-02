@@ -40,13 +40,13 @@ public class AdviseController {
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDTO handleThrowable(Throwable ex) {
-        return errorDTO(ex, "Unexpected Internal Server Error.");
+        return errorDTO(ex, "Unexpected Internal Server Error");
     }
 
     @ExceptionHandler(FileNotFoundException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDTO handleFileNotFoundException(FileNotFoundException ex) {
-        return errorDTO(ex, "Requested File Not Found.");
+        return errorDTO(ex, "Requested File Not Found");
     }
 
 

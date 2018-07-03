@@ -1,6 +1,7 @@
 package ru.reksoft.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.config.MessagesConfig;
@@ -14,8 +15,10 @@ import ru.reksoft.demo.repository.SingerRepository;
 import ru.reksoft.demo.service.generic.AbstractService;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
+import ru.reksoft.demo.service.generic.ResourceOptimisticLockException;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.OptimisticLockException;
 import javax.validation.constraints.NotNull;
 
 @Service
@@ -67,7 +70,7 @@ public class SingerService extends AbstractService<SingerDTO> {
         try {
             return singerMapper.toDTO(singerRepository.getOne(id));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Singer.existById.message", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Singer.notExistById.message", id));
         }
     }
 
@@ -81,7 +84,7 @@ public class SingerService extends AbstractService<SingerDTO> {
     @Transactional
     public Integer create(@NotNull SingerDTO singerDTO) throws ResourceCannotCreateException {
         if (singerRepository.existsByName(singerDTO.getName())) {
-            throw new ResourceCannotCreateException(messages.getAndFormat("reksoft.demo.Singer.existByName.message", singerDTO.getName()));
+            throw new ResourceCannotCreateException(messages.getAndFormat("reksoft.demo.Singer.alreadyExistByName.message", singerDTO.getName()));
         }
 
         return singerRepository.save(singerMapper.toEntity(singerDTO)).getId();
@@ -95,11 +98,16 @@ public class SingerService extends AbstractService<SingerDTO> {
      */
     @Override
     @Transactional
-    public void update(@NotNull Integer id, @NotNull SingerDTO singerDTO) throws ResourceNotFoundException {
+    public void update(@NotNull Integer id, @NotNull SingerDTO singerDTO) throws
+            ResourceNotFoundException,
+            ResourceOptimisticLockException {
+
         try {
-            singerRepository.save(singerMapper.merge(singerRepository.getOne(id), singerMapper.toEntity(singerDTO)));
+            singerRepository.saveAndFlush(singerMapper.merge(singerRepository.getOne(id), singerMapper.toEntity(singerDTO)));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Singer.existById.message", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Singer.notExistById.message", id));
+        } catch (OptimisticLockException | OptimisticLockingFailureException e) {
+            throw new ResourceOptimisticLockException(messages.get("reksoft.demo.Singer.optimisticLock.message"), e);
         }
     }
 
@@ -112,7 +120,7 @@ public class SingerService extends AbstractService<SingerDTO> {
     @Transactional
     public void delete(@NotNull Integer id) throws ResourceNotFoundException {
         if (!singerRepository.existsById(id)) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Singer.existById.message", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Singer.notExistById.message", id));
         }
 
         singerRepository.deleteById(id);

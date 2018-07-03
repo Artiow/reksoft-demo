@@ -54,6 +54,8 @@ public interface MediaMapper extends AbstractVersionedMapper<MediaEntity, MediaD
         acceptor.setPrice(donor.getPrice());
 
         acceptor.setType(donor.getType());
+
+        check(acceptor.getAlbum(), donor.getAlbum());
         acceptor.setAlbum(donor.getAlbum());
 
         acceptor.setBaskets(donor.getBaskets());

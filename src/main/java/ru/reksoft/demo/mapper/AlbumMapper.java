@@ -9,6 +9,7 @@ import ru.reksoft.demo.mapper.generic.AbstractVersionedMapper;
 import ru.reksoft.demo.mapper.manual.JavaTimeMapper;
 import ru.reksoft.demo.mapper.manual.PictureURIMapper;
 
+import javax.persistence.OptimisticLockException;
 import java.util.Collection;
 
 @Mapper(uses = {JavaTimeMapper.class, PictureURIMapper.class, CompositionMapper.class}, componentModel = "spring")
@@ -45,16 +46,20 @@ public interface AlbumMapper extends AbstractVersionedMapper<AlbumEntity, AlbumD
     })
     GenreEntity toEntity(GenreDTO dto);
 
-    default AlbumEntity merge(AlbumEntity acceptor, AlbumEntity donor) {
+    default AlbumEntity merge(AlbumEntity acceptor, AlbumEntity donor) throws OptimisticLockException {
         AbstractVersionedMapper.super.merge(acceptor, donor);
 
         acceptor.setName(donor.getName());
         acceptor.setDescription(donor.getDescription());
         acceptor.setReleaseYear(donor.getReleaseYear());
 
-        acceptor.setPicture(donor.getPicture());
+        check(acceptor.getLabel(), donor.getLabel());
         acceptor.setLabel(donor.getLabel());
+
+        check(acceptor.getSinger(), donor.getSinger());
         acceptor.setSinger(donor.getSinger());
+
+        acceptor.setPicture(donor.getPicture());
 
         acceptor.setMedia(donor.getMedia());
 

@@ -1,6 +1,7 @@
 package ru.reksoft.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.config.MessagesConfig;
@@ -14,8 +15,10 @@ import ru.reksoft.demo.repository.LabelRepository;
 import ru.reksoft.demo.service.generic.AbstractService;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
+import ru.reksoft.demo.service.generic.ResourceOptimisticLockException;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.OptimisticLockException;
 import javax.validation.constraints.NotNull;
 
 @Service
@@ -67,7 +70,7 @@ public class LabelService extends AbstractService<LabelDTO> {
         try {
             return labelMapper.toDTO(labelRepository.getOne(id));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Label.existById.message", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Label.notExistById.message", id));
         }
     }
 
@@ -81,7 +84,7 @@ public class LabelService extends AbstractService<LabelDTO> {
     @Transactional
     public Integer create(@NotNull LabelDTO labelDTO) throws ResourceCannotCreateException {
         if (labelRepository.existsByName(labelDTO.getName())) {
-            throw new ResourceCannotCreateException(messages.getAndFormat("reksoft.demo.Label.existByName.message", labelDTO.getName()));
+            throw new ResourceCannotCreateException(messages.getAndFormat("reksoft.demo.Label.alreadyExistByName.message", labelDTO.getName()));
         }
 
         return labelRepository.save(labelMapper.toEntity(labelDTO)).getId();
@@ -95,11 +98,16 @@ public class LabelService extends AbstractService<LabelDTO> {
      */
     @Override
     @Transactional
-    public void update(@NotNull Integer id, @NotNull LabelDTO labelDTO) throws ResourceNotFoundException {
+    public void update(@NotNull Integer id, @NotNull LabelDTO labelDTO) throws
+            ResourceNotFoundException,
+            ResourceOptimisticLockException {
+
         try {
-            labelRepository.save(labelMapper.merge(labelRepository.getOne(id), labelMapper.toEntity(labelDTO)));
+            labelRepository.saveAndFlush(labelMapper.merge(labelRepository.getOne(id), labelMapper.toEntity(labelDTO)));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Label.existById.message", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Label.notExistById.message", id));
+        } catch (OptimisticLockException | OptimisticLockingFailureException e) {
+            throw new ResourceOptimisticLockException(messages.get("reksoft.demo.Label.optimisticLock.message"), e);
         }
     }
 
@@ -112,7 +120,7 @@ public class LabelService extends AbstractService<LabelDTO> {
     @Transactional
     public void delete(@NotNull Integer id) throws ResourceNotFoundException {
         if (!labelRepository.existsById(id)) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Label.existById.message", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Label.notExistById.message", id));
         }
 
         labelRepository.deleteById(id);

@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.dto.handling.ErrorDTO;
 import ru.reksoft.demo.dto.handling.ErrorMapDTO;
-import ru.reksoft.demo.service.generic.FileNotFoundException;
-import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
-import ru.reksoft.demo.service.generic.ResourceNotFoundException;
+import ru.reksoft.demo.service.generic.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -74,14 +72,26 @@ public class AdviseController {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorDTO handleNotFoundException(ResourceNotFoundException ex) {
+    public ErrorDTO handleResourceNotFoundException(ResourceNotFoundException ex) {
         return warnDTO(ex, "Requested Resource Not Found");
     }
 
     @ExceptionHandler(ResourceCannotCreateException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorDTO handleCannotCreateException(ResourceCannotCreateException ex) {
+    public ErrorDTO handleResourceCannotCreateException(ResourceCannotCreateException ex) {
         return warnDTO(ex, "Sent Resource Cannot Create");
+    }
+
+    @ExceptionHandler(ResourceCannotUpdateException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorDTO handleResourceCannotUpdateException(ResourceCannotUpdateException ex) {
+        return warnDTO(ex, "Sent Resource Cannot Update");
+    }
+
+    @ExceptionHandler(ResourceOptimisticLockException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorDTO handleResourceOptimisticLockException(ResourceOptimisticLockException ex) {
+        return warnDTO(ex, "Sent Resource Data Already Has Been Changed");
     }
 
 

@@ -10,6 +10,7 @@ import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.service.SingerService;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
+import ru.reksoft.demo.service.generic.ResourceOptimisticLockException;
 import ru.reksoft.demo.util.ResourceLocationBuilder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -68,8 +69,10 @@ public class SingerController {
      * @param singerDTO - singer data
      */
     @PutMapping("/{id}")
-    public void update(@PathVariable int id, @RequestBody @Validated(SingerDTO.FieldCheck.class) SingerDTO singerDTO, HttpServletResponse response)
-            throws ResourceNotFoundException {
+    public void update(@PathVariable int id, @RequestBody @Validated(SingerDTO.FieldCheck.class) SingerDTO singerDTO, HttpServletResponse response) throws
+            ResourceNotFoundException,
+            ResourceOptimisticLockException {
+
         singerService.update(id, singerDTO);
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }

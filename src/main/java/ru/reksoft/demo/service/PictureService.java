@@ -30,18 +30,15 @@ import java.time.LocalDateTime;
 @Service
 public class PictureService {
 
-    @Value("${file.prefix}")
-    private String prefix;
-
-    @Value("${file.postfix}")
-    private String postfix;
+    @Value("${file.pattern}")
+    private String pattern;
 
     @Value("${file.location}")
     private String dir;
 
-    private Path fileStorageLocation;
-
     private MessagesConfig messages;
+
+    private Path fileStorageLocation;
 
     private PictureRepository pictureRepository;
 
@@ -142,6 +139,6 @@ public class PictureService {
 
 
     private String getFilename(@NotNull Integer identifier) {
-        return prefix + identifier + postfix;
+        return String.format(pattern, identifier);
     }
 }

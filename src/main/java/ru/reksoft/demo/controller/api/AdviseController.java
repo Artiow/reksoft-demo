@@ -38,13 +38,13 @@ public class AdviseController {
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDTO handleThrowable(Throwable ex) {
-        return errorDTO(ex, "Unexpected Internal Server Error");
+        return errorDTO(ex, "Unexpected Internal Server Error.");
     }
 
     @ExceptionHandler(FileNotFoundException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDTO handleFileNotFoundException(FileNotFoundException ex) {
-        return errorDTO(ex, "Requested File Not Found");
+        return errorDTO(ex, "Requested File Not Found.");
     }
 
 
@@ -60,38 +60,38 @@ public class AdviseController {
             errors.put(((DefaultMessageSourceResolvable) error.getArguments()[0]).getCodes()[0], error.getDefaultMessage());
         }
 
-        return new ErrorMapDTO(warnUUID("Sent Argument Not Valid"), ex.getClass().getName(), message, errors);
+        return new ErrorMapDTO(warnUUID("Sent Argument Not Valid."), ex.getClass().getName(), message, errors);
     }
 
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDTO handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        return warnDTO(ex, "Sent HTTP Message Not Readable");
+        return warnDTO(ex, "Sent HTTP Message Not Readable.");
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorDTO handleResourceNotFoundException(ResourceNotFoundException ex) {
-        return warnDTO(ex, "Requested Resource Not Found");
+        return warnDTO(ex, "Requested Resource Not Found.");
     }
 
     @ExceptionHandler(ResourceCannotCreateException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorDTO handleResourceCannotCreateException(ResourceCannotCreateException ex) {
-        return warnDTO(ex, "Sent Resource Cannot Create");
+        return warnDTO(ex, "Sent Resource Cannot Create.");
     }
 
     @ExceptionHandler(ResourceCannotUpdateException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorDTO handleResourceCannotUpdateException(ResourceCannotUpdateException ex) {
-        return warnDTO(ex, "Sent Resource Cannot Update");
+        return warnDTO(ex, "Sent Resource Cannot Update.");
     }
 
     @ExceptionHandler(ResourceOptimisticLockException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorDTO handleResourceOptimisticLockException(ResourceOptimisticLockException ex) {
-        return warnDTO(ex, "Sent Resource Data Already Has Been Changed");
+        return warnDTO(ex, "Sent Resource Data Already Has Been Changed.");
     }
 
 
@@ -101,7 +101,7 @@ public class AdviseController {
 
     private UUID errorUUID(Throwable ex, String logMessage) {
         UUID uuid = UUID.randomUUID();
-        logger.error(logMessage + ". UUID: {}", uuid, ex);
+        logger.error(logMessage + " UUID: {}", uuid, ex);
         return uuid;
     }
 
@@ -111,7 +111,7 @@ public class AdviseController {
 
     private UUID warnUUID(String logMessage) {
         UUID uuid = UUID.randomUUID();
-        logger.warn(logMessage + ". UUID: {}", uuid);
+        logger.warn(logMessage + " UUID: {}", uuid);
         return uuid;
     }
 }

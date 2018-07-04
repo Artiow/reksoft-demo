@@ -39,7 +39,7 @@ public class MediaController {
      * @param filter - media filter
      * @return page with media
      */
-    @PostMapping("/byFilter")
+    @PostMapping("/list/byFilter")
     public PageDTO<MediaShortDTO> getList(@RequestBody MediaFilterDTO filter) {
         return mediaService.getListByFilter(filter);
     }
@@ -51,7 +51,7 @@ public class MediaController {
      * @param attributeId   - attribute id
      * @return page with media
      */
-    @PostMapping("/byAttribute")
+    @PostMapping("/list/byAttribute")
     public PageDTO<MediaShortDTO> getList(
             @RequestParam("attribute") String attributeType, @RequestParam("id") Integer attributeId,
             @RequestBody PageDividerDTO pageDivider

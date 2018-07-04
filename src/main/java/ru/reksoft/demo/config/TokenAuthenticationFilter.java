@@ -1,5 +1,7 @@
 package ru.reksoft.demo.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,10 +24,16 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
     private static final String BEARER = "Bearer";
 
     /**
+     * Messages container.
+     */
+    private final MessagesConfig messages;
+
+    /**
      * Required authentication request matcher setting.
      */
-    protected TokenAuthenticationFilter(RequestMatcher requestMatcher) {
+    protected TokenAuthenticationFilter(RequestMatcher requestMatcher, MessagesConfig messages) {
         super(requestMatcher);
+        this.messages = messages;
     }
 
 
@@ -35,7 +43,7 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
      * @param request  - http request
      * @param response - http response
      * @return authentication
-     * @throws AuthenticationException - if valid credentials not found in request
+     * @throws AuthenticationException - if valid token not found in request
      */
     @Override
     public Authentication attemptAuthentication(
@@ -47,16 +55,14 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
         final String token;
         final String credentials = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (credentials == null) {
-            // todo: get message?
-            throw new BadCredentialsException("credentials not found in request");
+            throw new BadCredentialsException(messages.get("reksoft.demo.auth.filter.credentialsNotFound.message"));
         } else if (!credentials.startsWith(BEARER)) {
-            // todo: get message?
-            throw new BadCredentialsException("sent credentials not valid");
+            throw new BadCredentialsException(messages.get("reksoft.demo.auth.filter.credentialsNotValid.message"));
         } else {
             token = credentials.substring(BEARER.length());
         }
 
-        // todo: complement to (principal, credentials, authorities)?
+        // todo: parse token and complement to (principal, credentials, authorities)!
         return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(token, token));
     }
 

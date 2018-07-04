@@ -54,7 +54,7 @@ public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticati
 
         final String token = auth.getCredentials().toString();
         return security.authentication(token).orElseThrow(
-                () -> new AuthenticationCredentialsNotFoundException(messages.getAndFormat("cannot find user by token: %s", token)) // todo: get message
+                () -> new AuthenticationCredentialsNotFoundException(messages.get("reksoft.demo.auth.provider.userNotFound.message"))
         );
     }
 }

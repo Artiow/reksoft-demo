@@ -1,36 +1,60 @@
 package ru.reksoft.demo.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import ru.reksoft.demo.controller.api.AdviseController;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final RequestMatcher PROTECTED_URLS =
-            new NegatedRequestMatcher(
-                    new OrRequestMatcher(
-                            new AntPathRequestMatcher("/api/**", "GET"),
-                            new AntPathRequestMatcher("/list/**", "POST")
-                    )
-            );
+    private static final RequestMatcher SWAGGER_URLS = new OrRequestMatcher(
+            new AntPathRequestMatcher("/swagger-resources/**"),
+            new AntPathRequestMatcher("/configuration/**"),
+            new AntPathRequestMatcher("/webjars/**"),
+            new AntPathRequestMatcher("/swagger-ui.html"),
+            new AntPathRequestMatcher("/v2/api-docs")
+    );
+
+    private static final RequestMatcher PUBLIC_URLS = new OrRequestMatcher(
+            new AntPathRequestMatcher("/api/**", "GET"),
+            new AntPathRequestMatcher("/list/**", "POST"),
+            new AntPathRequestMatcher("/list", "POST")
+    );
+
+    private static final RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(
+            new OrRequestMatcher(PUBLIC_URLS, SWAGGER_URLS)
+    );
+
+
+    private final AdviseController adviseController;
 
     private final TokenAuthenticationProvider provider;
 
     @Autowired
-    public SecurityConfig(TokenAuthenticationProvider provider) {
+    public SecurityConfig(TokenAuthenticationProvider provider, AdviseController adviseController) {
         super();
+        this.adviseController = adviseController;
         this.provider = provider;
     }
 
@@ -40,18 +64,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-    /**
-     * Differentiation of rights configuration.
-     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf()
-                .disable()
+                .authenticationProvider(provider)
+                .addFilterBefore(authenticationFilter(), AnonymousAuthenticationFilter.class)
 
-                .authorizeRequests()
-                .anyRequest()
-                .permitAll();
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler()).and()
+
+                .httpBasic().disable()
+                .formLogin().disable()
+                .logout().disable()
+                .csrf().disable();
     }
 
 
@@ -74,17 +99,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * TokenAuthenticationFilter configuration.
      *
-     * @param messages - messages config
      * @return filter bean
      * @throws Exception - if something goes wrong
      */
     @Bean
-    public TokenAuthenticationFilter authenticationFilter(final AuthenticationSuccessHandler successHandler, final MessagesConfig messages)
+    public TokenAuthenticationFilter authenticationFilter()
             throws Exception {
 
-        final TokenAuthenticationFilter filter = new TokenAuthenticationFilter(PROTECTED_URLS, messages);
+        final TokenAuthenticationFilter filter = new TokenAuthenticationFilter(PROTECTED_URLS, adviseController.getMessages());
         filter.setAuthenticationManager(authenticationManager());
-        filter.setAuthenticationSuccessHandler(successHandler);
+        filter.setAuthenticationSuccessHandler(successHandler());
+        filter.setAuthenticationFailureHandler(failureHandler());
 
         return filter;
     }
@@ -102,6 +127,40 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         });
 
         return successHandler;
+    }
+
+    /**
+     * AuthenticationFailureHandler configuration.
+     *
+     * @return failure handler bean
+     */
+    @Bean
+    public AuthenticationFailureHandler failureHandler() {
+        return (request, response, ex) -> {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+            ServletOutputStream out = response.getOutputStream();
+            new ObjectMapper().writeValue(out, adviseController.warnDTO(ex, "Unauthorized Access Attempt."));
+            out.flush();
+        };
+    }
+
+    /**
+     * AccessDeniedHandler configuration.
+     *
+     * @return handler bean
+     */
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return (request, response, ex) -> {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+            ServletOutputStream out = response.getOutputStream();
+            new ObjectMapper().writeValue(out, adviseController.warnDTO(ex, "Forbidden Access Attempt."));
+            out.flush();
+        };
     }
 
     /**

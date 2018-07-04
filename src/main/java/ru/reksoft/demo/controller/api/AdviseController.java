@@ -34,6 +34,10 @@ public class AdviseController {
         this.messages = messages;
     }
 
+    public MessagesConfig getMessages() {
+        return messages;
+    }
+
 
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -95,21 +99,21 @@ public class AdviseController {
     }
 
 
-    private ErrorDTO errorDTO(Throwable ex, String logMessage) {
+    public ErrorDTO errorDTO(Throwable ex, String logMessage) {
         return new ErrorDTO(errorUUID(ex, logMessage), ex.getClass().getName(), ex.getMessage());
     }
 
-    private UUID errorUUID(Throwable ex, String logMessage) {
+    public UUID errorUUID(Throwable ex, String logMessage) {
         UUID uuid = UUID.randomUUID();
         logger.error(logMessage + " UUID: {}", uuid, ex);
         return uuid;
     }
 
-    private ErrorDTO warnDTO(Throwable ex, String logMessage) {
+    public ErrorDTO warnDTO(Throwable ex, String logMessage) {
         return new ErrorDTO(warnUUID(logMessage), ex.getClass().getName(), ex.getMessage());
     }
 
-    private UUID warnUUID(String logMessage) {
+    public UUID warnUUID(String logMessage) {
         UUID uuid = UUID.randomUUID();
         logger.warn(logMessage + " UUID: {}", uuid);
         return uuid;

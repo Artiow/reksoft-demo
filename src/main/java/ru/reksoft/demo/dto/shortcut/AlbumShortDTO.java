@@ -1,4 +1,4 @@
-package ru.reksoft.demo.dto;
+package ru.reksoft.demo.dto.shortcut;
 
 import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
 

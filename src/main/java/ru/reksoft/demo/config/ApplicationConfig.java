@@ -2,7 +2,6 @@ package ru.reksoft.demo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -28,16 +27,6 @@ public class ApplicationConfig implements WebMvcConfigurer {
                 .apis(RequestHandlerSelectors.basePackage("ru.reksoft.demo.controller"))
                 .paths(PathSelectors.any())
                 .build();
-    }
-
-    /**
-     * BCryptPasswordEncoder configuration.
-     *
-     * @return password encoder bean
-     */
-    @Bean
-    public BCryptPasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
 

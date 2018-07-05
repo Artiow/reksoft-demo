@@ -3,7 +3,7 @@ package ru.reksoft.demo.service.security;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -39,7 +39,7 @@ public class SecurityService {
      * @param user - user data
      * @return encoded json
      */
-    public Optional<String> login(UserDetails user) {
+    public Optional<String> login(User user) {
         return Optional.ofNullable(tokenService.generate(mapper.convertValue(user, mapTypeReference)));
     }
 
@@ -49,7 +49,7 @@ public class SecurityService {
      * @param token - encoded json
      * @return user data
      */
-    public Optional<UserDetails> authentication(String token) {
-        return Optional.ofNullable(tokenService.verify(token)).map(map -> mapper.convertValue(map, UserDetails.class));
+    public Optional<User> authentication(String token) {
+        return Optional.ofNullable(tokenService.verify(token)).map(map -> mapper.convertValue(map, User.class));
     }
 }

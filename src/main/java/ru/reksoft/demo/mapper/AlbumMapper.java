@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import ru.reksoft.demo.domain.*;
 import ru.reksoft.demo.dto.*;
+import ru.reksoft.demo.dto.shortcut.AlbumShortDTO;
 import ru.reksoft.demo.mapper.generic.AbstractVersionedMapper;
 import ru.reksoft.demo.mapper.manual.JavaTimeMapper;
 import ru.reksoft.demo.mapper.manual.PictureURIMapper;

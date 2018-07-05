@@ -57,7 +57,7 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
         } else if (!credentials.startsWith(BEARER)) {
             throw new BadCredentialsException(messages.get("reksoft.demo.auth.filter.credentialsNotValid.message"));
         } else {
-            token = credentials.substring(BEARER.length());
+            token = credentials.substring(BEARER.length()).trim();
         }
 
         return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(null, token));

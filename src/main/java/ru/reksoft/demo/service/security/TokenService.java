@@ -1,9 +1,6 @@
 package ru.reksoft.demo.service.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Clock;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.TextCodec;
 import io.jsonwebtoken.impl.compression.GzipCompressionCodec;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,7 +38,7 @@ public class TokenService implements Clock {
      * @param attributes - map of token data
      * @return encoded json
      */
-    public String getToken(final Map<String, Object> attributes) {
+    public String generate(final Map<String, Object> attributes) {
         final Claims claims = Jwts
                 .claims(attributes)
                 .setIssuer(issuer)
@@ -62,12 +59,16 @@ public class TokenService implements Clock {
      * @return map of token data
      */
     public Map<String, Object> verify(final String token) {
-        return Jwts
-                .parser()
-                .requireIssuer(issuer)
-                .setSigningKey(secretKey)
-                .parseClaimsJwt(token)
-                .getBody();
+        try {
+            return Jwts
+                    .parser()
+                    .requireIssuer(issuer)
+                    .setSigningKey(secretKey)
+                    .parseClaimsJwt(token)
+                    .getBody();
+        } catch (JwtException e) {
+            return null;
+        }
     }
 
 

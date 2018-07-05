@@ -35,6 +35,12 @@ public class TokenService implements Clock {
         signatureAlgorithm = SignatureAlgorithm.RS512;
     }
 
+    /**
+     * Returns JWT.
+     *
+     * @param attributes - map of token data
+     * @return encoded json
+     */
     public String getToken(final Map<String, Object> attributes) {
         final Claims claims = Jwts
                 .claims(attributes)
@@ -49,6 +55,12 @@ public class TokenService implements Clock {
                 .compact();
     }
 
+    /**
+     * Returns encoded and parsed JWT.
+     *
+     * @param token - encoded json
+     * @return map of token data
+     */
     public Map<String, Object> verify(final String token) {
         return Jwts
                 .parser()
@@ -57,6 +69,7 @@ public class TokenService implements Clock {
                 .parseClaimsJwt(token)
                 .getBody();
     }
+
 
     @Override
     public Date now() {

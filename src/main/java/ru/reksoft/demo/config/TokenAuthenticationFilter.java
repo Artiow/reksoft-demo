@@ -60,8 +60,7 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
             token = credentials.substring(BEARER.length());
         }
 
-        // todo: parse token and complement to (principal, credentials, authorities)!
-        return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(token, token));
+        return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(null, token));
     }
 
     /**

@@ -2,6 +2,7 @@ package ru.reksoft.demo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -16,7 +17,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class ApplicationConfig implements WebMvcConfigurer {
 
     /**
-     * Swagger config.
+     * Swagger configuration.
      *
      * @return Docket bean
      */
@@ -30,6 +31,17 @@ public class ApplicationConfig implements WebMvcConfigurer {
     }
 
     /**
+     * BCryptPasswordEncoder configuration.
+     *
+     * @return password encoder bean
+     */
+    @Bean
+    public BCryptPasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+
+    /**
      * Suffix pattern matching disabling.
      */
     @Override
@@ -38,7 +50,7 @@ public class ApplicationConfig implements WebMvcConfigurer {
     }
 
     /**
-     * Resource handlers config.
+     * Resource handlers configuration.
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

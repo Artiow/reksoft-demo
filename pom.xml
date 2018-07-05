@@ -32,7 +32,7 @@
         <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
         <io.jsonwebtoken.version>0.9.0</io.jsonwebtoken.version>
         <org.flywaydb.version>5.1.1</org.flywaydb.version>
-        <io.springfox.version>2.8.0</io.springfox.version>
+        <io.springfox.version>2.9.2</io.springfox.version>
     </properties>
 
     <dependencies>

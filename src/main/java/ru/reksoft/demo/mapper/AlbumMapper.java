@@ -8,7 +8,7 @@ import ru.reksoft.demo.dto.*;
 import ru.reksoft.demo.dto.shortcut.AlbumShortDTO;
 import ru.reksoft.demo.mapper.generic.AbstractVersionedMapper;
 import ru.reksoft.demo.mapper.manual.JavaTimeMapper;
-import ru.reksoft.demo.mapper.manual.PictureURIMapper;
+import ru.reksoft.demo.mapper.manual.uri.PictureURIMapper;
 
 import javax.persistence.OptimisticLockException;
 import java.util.Collection;

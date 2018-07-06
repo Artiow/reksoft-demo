@@ -12,7 +12,7 @@ import ru.reksoft.demo.dto.MediaTypeDTO;
 import ru.reksoft.demo.dto.shortcut.MediaShortDTO;
 import ru.reksoft.demo.mapper.generic.AbstractVersionedMapper;
 import ru.reksoft.demo.mapper.manual.JavaTimeMapper;
-import ru.reksoft.demo.mapper.manual.PictureURIMapper;
+import ru.reksoft.demo.mapper.manual.uri.PictureURIMapper;
 
 @Mapper(uses = {JavaTimeMapper.class, PictureURIMapper.class}, componentModel = "spring")
 public interface MediaMapper extends AbstractVersionedMapper<MediaEntity, MediaDTO> {

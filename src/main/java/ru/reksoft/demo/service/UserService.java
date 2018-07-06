@@ -1,5 +1,6 @@
 package ru.reksoft.demo.service;
 
+import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.User;
@@ -47,30 +48,26 @@ public class UserService {
 
 
     @Transactional(readOnly = true)
-    public String login(String login, String password) throws UsernameNotFoundException {
-        UserEntity userEntity;
+    public String login(String login, String password) throws UsernameNotFoundException, JwtException {
+        UserEntity user;
 
         try {
-            userEntity = userRepository.findByLogin(login);
-            checkPassword(password, userEntity.getPassword());
+            user = userRepository.findByLogin(login);
+            if (user == null) {
+                throw new EntityNotFoundException(messages.get("reksoft.demo.auth.service.repository.message"));
+            } else if (!passwordEncoder.matches(password, user.getPassword())) {
+                throw new BadCredentialsException(messages.get("reksoft.demo.auth.service.encoder.message"));
+            }
+
         } catch (EntityNotFoundException | BadCredentialsException e) {
             throw new UsernameNotFoundException(messages.get("reksoft.demo.auth.service.loginError.message"), e);
         }
 
         return securityService.login(
-                (User) User.builder()
-                        .username(userEntity.getLogin())
-                        .password(userEntity.getPassword())
-                        .roles(userEntity.getRole().getCode().toUpperCase())
-                        .build()
-
-        ).orElseThrow(() -> new RuntimeException(messages.get("reksoft.demo.auth.service.tokenError.message")));
-    }
-
-
-    private void checkPassword(String rawPassword, String encodedPassword) throws BadCredentialsException {
-        if (passwordEncoder.matches(rawPassword, encodedPassword)) {
-            throw new BadCredentialsException(messages.get("reksoft.demo.auth.service.encoder.message"));
-        }
+                User.builder()
+                        .username(user.getLogin())
+                        .password(user.getPassword())
+                        .roles(user.getRole().getCode().toUpperCase())
+                        .build());
     }
 }

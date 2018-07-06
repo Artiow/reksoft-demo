@@ -29,7 +29,7 @@ public class TokenService implements Clock {
     private void init() {
         secretKey = TextCodec.BASE64.encode(secretKey);
         compressionCodec = new GzipCompressionCodec();
-        signatureAlgorithm = SignatureAlgorithm.RS512;
+        signatureAlgorithm = SignatureAlgorithm.HS512;
     }
 
     /**
@@ -38,7 +38,7 @@ public class TokenService implements Clock {
      * @param attributes - map of token data
      * @return encoded json
      */
-    public String generate(final Map<String, Object> attributes) {
+    public String generate(final Map<String, Object> attributes) throws JwtException {
         final Claims claims = Jwts
                 .claims(attributes)
                 .setIssuer(issuer)
@@ -58,17 +58,13 @@ public class TokenService implements Clock {
      * @param token - encoded json
      * @return map of token data
      */
-    public Map<String, Object> verify(final String token) {
-        try {
-            return Jwts
-                    .parser()
-                    .requireIssuer(issuer)
-                    .setSigningKey(secretKey)
-                    .parseClaimsJwt(token)
-                    .getBody();
-        } catch (JwtException e) {
-            return null;
-        }
+    public Map<String, Object> verify(final String token) throws JwtException {
+        return Jwts
+                .parser()
+                .requireIssuer(issuer)
+                .setSigningKey(secretKey)
+                .parseClaimsJwt(token)
+                .getBody();
     }
 
 

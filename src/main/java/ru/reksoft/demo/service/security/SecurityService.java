@@ -1,46 +1,36 @@
 package ru.reksoft.demo.service.security;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import java.util.Map;
-import java.util.Optional;
+import ru.reksoft.demo.mapper.manual.security.UserDetailsMapper;
 
 @Service
 public class SecurityService {
 
-    private ObjectMapper mapper;
-
-    private TypeReference<Map<String, Object>> mapTypeReference;
-
     private TokenService tokenService;
+
+    private UserDetailsMapper mapper;
 
     @Autowired
     public void setTokenService(TokenService tokenService) {
         this.tokenService = tokenService;
     }
 
-    @PostConstruct
-    private void init() {
-        mapper = new ObjectMapper();
-        mapTypeReference = new TypeReference<Map<String, Object>>() {
-
-        };
+    @Autowired
+    public void setMapper(UserDetailsMapper mapper) {
+        this.mapper = mapper;
     }
-
 
     /**
      * Returns JWT by UserDetails.
      *
-     * @param user - user data
+     * @param userDetails - user data
      * @return encoded json
      */
-    public Optional<String> login(User user) {
-        return Optional.ofNullable(tokenService.generate(mapper.convertValue(user, mapTypeReference)));
+    public String login(UserDetails userDetails) throws JwtException {
+        return tokenService.generate(mapper.toMap(userDetails));
     }
 
     /**
@@ -49,7 +39,7 @@ public class SecurityService {
      * @param token - encoded json
      * @return user data
      */
-    public Optional<User> authentication(String token) {
-        return Optional.ofNullable(tokenService.verify(token)).map(map -> mapper.convertValue(map, User.class));
+    public UserDetails authentication(String token) throws JwtException {
+        return mapper.toUserDetails(tokenService.verify(token));
     }
 }

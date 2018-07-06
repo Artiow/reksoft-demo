@@ -1,11 +1,13 @@
 package ru.reksoft.demo.controller.api;
 
+import io.jsonwebtoken.JwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -45,6 +47,12 @@ public class AdviseController {
         return errorDTO(ex, "Unexpected Internal Server Error.");
     }
 
+    @ExceptionHandler(JwtException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorDTO handleJwtException(JwtException ex) {
+        return errorDTO(ex, "JWT Read/Write Error.");
+    }
+
     @ExceptionHandler(FileNotFoundException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDTO handleFileNotFoundException(FileNotFoundException ex) {
@@ -78,6 +86,12 @@ public class AdviseController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorDTO handleResourceNotFoundException(ResourceNotFoundException ex) {
         return warnDTO(ex, "Requested Resource Not Found.");
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorDTO handleUsernameNotFoundException(UsernameNotFoundException ex) {
+        return warnDTO(ex, "Requested User Not Found.");
     }
 
     @ExceptionHandler(ResourceCannotCreateException.class)

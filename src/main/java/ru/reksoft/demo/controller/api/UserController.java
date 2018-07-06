@@ -1,6 +1,8 @@
 package ru.reksoft.demo.controller.api;
 
+import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,7 +22,7 @@ public class UserController {
 
 
     @GetMapping
-    public String login(@RequestParam String login, @RequestParam String password) {
+    public String login(@RequestParam String login, @RequestParam String password) throws UsernameNotFoundException, JwtException {
         return userService.login(login, password);
     }
 }

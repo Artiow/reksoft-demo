@@ -1,5 +1,6 @@
 package ru.reksoft.demo.config;
 
+import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,9 +53,10 @@ public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticati
     protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken auth)
             throws AuthenticationException {
 
-        final String token = auth.getCredentials().toString();
-        return security.authentication(token).orElseThrow(
-                () -> new AuthenticationCredentialsNotFoundException(messages.get("reksoft.demo.auth.provider.userNotFound.message"))
-        );
+        try {
+            return security.authentication(auth.getCredentials().toString());
+        } catch (JwtException e) {
+            throw new AuthenticationCredentialsNotFoundException(messages.get("reksoft.demo.auth.provider.couldNotParseToken.message"), e);
+        }
     }
 }

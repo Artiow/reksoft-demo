@@ -2,12 +2,18 @@ package ru.reksoft.demo.controller.api;
 
 import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import ru.reksoft.demo.dto.UserDTO;
+import ru.reksoft.demo.dto.security.TokenDTO;
 import ru.reksoft.demo.service.UserService;
+import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
+import ru.reksoft.demo.util.ResourceLocationBuilder;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("${api-path.user}")
@@ -21,8 +27,15 @@ public class UserController {
     }
 
 
-    @GetMapping
-    public String login(@RequestParam String login, @RequestParam String password) throws UsernameNotFoundException, JwtException {
+    @GetMapping("/login")
+    public TokenDTO login(@RequestParam String login, @RequestParam String password) throws UsernameNotFoundException, JwtException {
         return userService.login(login, password);
+    }
+
+    @PostMapping("/register")
+    public void register(@RequestBody @Validated(UserDTO.FieldCheck.class) UserDTO userDTO, HttpServletRequest request, HttpServletResponse response)
+            throws ResourceCannotCreateException {
+        response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(request, userService.register(userDTO)));
+        response.setStatus(HttpServletResponse.SC_CREATED);
     }
 }

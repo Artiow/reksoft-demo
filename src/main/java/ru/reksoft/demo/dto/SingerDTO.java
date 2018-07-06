@@ -70,7 +70,7 @@ public class SingerDTO extends AbstractVersionedDTO {
 
     }
 
-    public interface FieldCheck {
+    private interface FieldCheck {
 
     }
 }

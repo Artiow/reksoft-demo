@@ -1,8 +1,10 @@
 package ru.reksoft.demo.dto.handling;
 
+import ru.reksoft.demo.dto.generic.DataTransferObject;
+
 import java.util.UUID;
 
-public class ErrorDTO {
+public class ErrorDTO implements DataTransferObject {
 
     private final UUID uuid;
     private final String exception;

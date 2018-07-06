@@ -70,7 +70,7 @@ public class LabelDTO extends AbstractVersionedDTO {
 
     }
 
-    public interface FieldCheck {
+    private interface FieldCheck {
 
     }
 }

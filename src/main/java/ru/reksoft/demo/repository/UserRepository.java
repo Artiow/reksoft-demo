@@ -7,4 +7,6 @@ import ru.reksoft.demo.domain.UserEntity;
 public interface UserRepository extends JpaRepository<UserEntity, Integer>, JpaSpecificationExecutor<UserEntity> {
 
     UserEntity findByLogin(String login);
+
+    boolean existsByLogin(String name);
 }

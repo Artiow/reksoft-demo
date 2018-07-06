@@ -15,6 +15,7 @@ import ru.reksoft.demo.dto.UserDTO;
 import ru.reksoft.demo.dto.security.TokenDTO;
 import ru.reksoft.demo.mapper.UserMapper;
 import ru.reksoft.demo.repository.UserRepository;
+import ru.reksoft.demo.repository.UserRoleRepository;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.security.SecurityService;
 
@@ -34,6 +35,7 @@ public class UserService {
     private SecurityService securityService;
 
     private UserRepository userRepository;
+    private UserRoleRepository userRoleRepository;
 
     private UserMapper userMapper;
 
@@ -58,11 +60,25 @@ public class UserService {
     }
 
     @Autowired
+    public void setUserRoleRepository(UserRoleRepository userRoleRepository) {
+        this.userRoleRepository = userRoleRepository;
+    }
+
+    @Autowired
     public void setUserMapper(UserMapper userMapper) {
         this.userMapper = userMapper;
     }
 
 
+    /**
+     * Login user and returns TokenDTO.
+     *
+     * @param login    - user's login
+     * @param password - users's password
+     * @return token info
+     * @throws UsernameNotFoundException - if user not found
+     * @throws JwtException              - if could not parse jwt
+     */
     @Transactional(readOnly = true)
     public TokenDTO login(@NotNull String login, @NotNull String password) throws UsernameNotFoundException, JwtException {
         UserEntity user;
@@ -93,8 +109,28 @@ public class UserService {
                 );
     }
 
+    /**
+     * Register new user and returns his id.
+     *
+     * @param userDTO - user data
+     * @return user id
+     * @throws ResourceCannotCreateException - if user could not create
+     */
     @Transactional
     public Integer register(@NotNull UserDTO userDTO) throws ResourceCannotCreateException {
-        return 0; // todo: register!
+        Integer roleId = userDTO.getRole().getId();
+        String login = userDTO.getLogin();
+
+        if (!userRoleRepository.existsById(roleId)) {
+            throw new ResourceCannotCreateException(messages.getAndFormat(
+                    "reksoft.demo.UserRole.notExistById.message", roleId
+            ));
+        } else if (userRepository.existsByLogin(login)) {
+            throw new ResourceCannotCreateException(messages.getAndFormat(
+                    "reksoft.demo.User.alreadyExistByLogin.message", login
+            ));
+        }
+
+        return userRepository.save(userMapper.toEntity(userDTO)).getId();
     }
 }

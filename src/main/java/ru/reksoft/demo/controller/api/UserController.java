@@ -27,11 +27,25 @@ public class UserController {
     }
 
 
+    /**
+     * Returns TokenDTO by logged user.
+     *
+     * @param login    - user's login
+     * @param password - user's password
+     * @return token data
+     */
     @GetMapping("/login")
     public TokenDTO login(@RequestParam String login, @RequestParam String password) throws UsernameNotFoundException, JwtException {
         return userService.login(login, password);
     }
 
+    /**
+     * Register new user.
+     *
+     * @param userDTO  - new user data
+     * @param request  - http request
+     * @param response - http response
+     */
     @PostMapping("/register")
     public void register(@RequestBody @Validated(UserDTO.FieldCheck.class) UserDTO userDTO, HttpServletRequest request, HttpServletResponse response)
             throws ResourceCannotCreateException {

@@ -27,6 +27,10 @@ import javax.servlet.http.HttpServletResponse;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final RequestMatcher DEFAULT_URLS = new OrRequestMatcher(
+            new AntPathRequestMatcher("/error")
+    );
+
     private static final RequestMatcher SWAGGER_URLS = new OrRequestMatcher(
             new AntPathRequestMatcher("/swagger-resources/**"),
             new AntPathRequestMatcher("/configuration/**"),
@@ -38,11 +42,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final RequestMatcher PUBLIC_URLS = new OrRequestMatcher(
             new AntPathRequestMatcher("/api/**", "GET"),
             new AntPathRequestMatcher("/list/**", "POST"),
-            new AntPathRequestMatcher("/list", "POST")
+            new AntPathRequestMatcher("/list", "POST"),
+            new AntPathRequestMatcher("/user/register"),
+            new AntPathRequestMatcher("/user/login")
     );
 
     private static final RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(
-            new OrRequestMatcher(PUBLIC_URLS, SWAGGER_URLS)
+            new OrRequestMatcher(PUBLIC_URLS, SWAGGER_URLS, DEFAULT_URLS)
     );
 
 

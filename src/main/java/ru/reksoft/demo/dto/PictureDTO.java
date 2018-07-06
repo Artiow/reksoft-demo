@@ -60,8 +60,4 @@ public class PictureDTO extends AbstractIdentifiedDTO {
     public interface IdCheck {
 
     }
-
-    public interface FieldCheck {
-
-    }
 }

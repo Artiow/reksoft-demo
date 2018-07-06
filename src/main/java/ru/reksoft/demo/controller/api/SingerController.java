@@ -56,7 +56,7 @@ public class SingerController {
      * @param singerDTO - sent singer
      */
     @PostMapping
-    public void create(@RequestBody @Validated(SingerDTO.FieldCheck.class) SingerDTO singerDTO, HttpServletRequest request, HttpServletResponse response)
+    public void create(@RequestBody @Validated(SingerDTO.CreateCheck.class) SingerDTO singerDTO, HttpServletRequest request, HttpServletResponse response)
             throws ResourceCannotCreateException {
         response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(request, singerService.create(singerDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);
@@ -69,7 +69,7 @@ public class SingerController {
      * @param singerDTO - singer data
      */
     @PutMapping("/{id}")
-    public void update(@PathVariable int id, @RequestBody @Validated(SingerDTO.FieldCheck.class) SingerDTO singerDTO, HttpServletResponse response) throws
+    public void update(@PathVariable int id, @RequestBody @Validated(SingerDTO.UpdateCheck.class) SingerDTO singerDTO, HttpServletResponse response) throws
             ResourceNotFoundException,
             ResourceOptimisticLockException {
 

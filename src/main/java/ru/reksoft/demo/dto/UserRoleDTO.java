@@ -73,7 +73,7 @@ public class UserRoleDTO extends AbstractDescriptiveDictionaryDTO {
 
     }
 
-    public interface FieldCheck {
+    private interface FieldCheck {
 
     }
 }

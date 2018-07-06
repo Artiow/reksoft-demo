@@ -109,8 +109,4 @@ public class UserDTO extends AbstractIdentifiedDTO {
     public interface IdCheck {
 
     }
-
-    public interface FieldCheck {
-
-    }
 }

@@ -17,8 +17,8 @@ public class AlbumDTO extends AbstractVersionedDTO {
     @Min(value = 1, groups = IdCheck.class)
     private Integer id;
 
-    @NotNull(groups = FieldCheck.class)
-    @Min(value = 1, groups = FieldCheck.class)
+    @NotNull(groups = VersionCheck.class)
+    @Min(value = 1, groups = VersionCheck.class)
     private Long version;
 
     @NotNull(groups = FieldCheck.class)
@@ -150,11 +150,24 @@ public class AlbumDTO extends AbstractVersionedDTO {
     }
 
 
-    public interface IdCheck {
+    public interface IdCheck extends VersionCheck {
 
     }
 
-    public interface FieldCheck extends
+    public interface CreateCheck extends FieldCheck {
+
+    }
+
+    public interface UpdateCheck extends VersionCheck, FieldCheck {
+
+    }
+
+
+    private interface VersionCheck {
+
+    }
+
+    private interface FieldCheck extends
             LabelDTO.IdCheck, SingerDTO.IdCheck, PictureDTO.IdCheck, GenreDTO.IdCheck, CompositionDTO.FieldCheck {
 
     }

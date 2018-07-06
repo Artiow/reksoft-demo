@@ -58,7 +58,7 @@ public class AlbumController {
      * @param albumDTO - sent album
      */
     @PostMapping
-    public void create(@RequestBody @Validated(AlbumDTO.FieldCheck.class) AlbumDTO albumDTO, HttpServletRequest request, HttpServletResponse response)
+    public void create(@RequestBody @Validated(AlbumDTO.CreateCheck.class) AlbumDTO albumDTO, HttpServletRequest request, HttpServletResponse response)
             throws ResourceCannotCreateException {
         response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(request, albumService.create(albumDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);
@@ -71,7 +71,7 @@ public class AlbumController {
      * @param albumDTO - album data
      */
     @PutMapping("/{id}")
-    public void update(@PathVariable int id, @RequestBody @Validated(AlbumDTO.FieldCheck.class) AlbumDTO albumDTO, HttpServletResponse response) throws
+    public void update(@PathVariable int id, @RequestBody @Validated(AlbumDTO.UpdateCheck.class) AlbumDTO albumDTO, HttpServletResponse response) throws
             ResourceNotFoundException,
             ResourceCannotUpdateException,
             ResourceOptimisticLockException {

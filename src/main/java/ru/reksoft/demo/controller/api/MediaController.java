@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.reksoft.demo.dto.AlbumDTO;
 import ru.reksoft.demo.dto.MediaDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.dto.pagination.PageDividerDTO;
@@ -76,7 +75,7 @@ public class MediaController {
      * @param mediaDTO - sent media
      */
     @PostMapping
-    public void create(@RequestBody @Validated(MediaDTO.FieldCheck.class) MediaDTO mediaDTO, HttpServletRequest request, HttpServletResponse response)
+    public void create(@RequestBody @Validated(MediaDTO.CreateCheck.class) MediaDTO mediaDTO, HttpServletRequest request, HttpServletResponse response)
             throws ResourceCannotCreateException {
         response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(request, mediaService.create(mediaDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);
@@ -89,7 +88,7 @@ public class MediaController {
      * @param mediaDTO - media data
      */
     @PutMapping("/{id}")
-    public void update(@PathVariable int id, @RequestBody @Validated(AlbumDTO.FieldCheck.class) MediaDTO mediaDTO, HttpServletResponse response) throws
+    public void update(@PathVariable int id, @RequestBody @Validated(MediaDTO.UpdateCheck.class) MediaDTO mediaDTO, HttpServletResponse response) throws
             ResourceNotFoundException,
             ResourceCannotUpdateException,
             ResourceOptimisticLockException {

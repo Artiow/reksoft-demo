@@ -12,8 +12,8 @@ public class MediaDTO extends AbstractVersionedDTO {
     @Min(value = 1, groups = IdCheck.class)
     private Integer id;
 
-    @NotNull(groups = FieldCheck.class)
-    @Min(value = 1, groups = FieldCheck.class)
+    @NotNull(groups = VersionCheck.class)
+    @Min(value = 1, groups = VersionCheck.class)
     private Long version;
 
     @NotNull(groups = FieldCheck.class)
@@ -79,7 +79,20 @@ public class MediaDTO extends AbstractVersionedDTO {
     }
 
 
-    public interface IdCheck {
+    public interface IdCheck extends VersionCheck {
+
+    }
+
+    public interface CreateCheck extends FieldCheck {
+
+    }
+
+    public interface UpdateCheck extends VersionCheck, FieldCheck {
+
+    }
+
+
+    private interface VersionCheck {
 
     }
 

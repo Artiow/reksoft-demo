@@ -63,7 +63,7 @@ public class TokenService implements Clock {
                 .parser()
                 .requireIssuer(issuer)
                 .setSigningKey(secretKey)
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody();
     }
 

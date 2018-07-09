@@ -39,17 +39,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             new AntPathRequestMatcher("/v2/api-docs")
     );
 
-    private static final RequestMatcher PUBLIC_URLS = new OrRequestMatcher(
+    private static final RequestMatcher API_URLS = new OrRequestMatcher(
             new AntPathRequestMatcher("/api/**", "GET"),
-            new AntPathRequestMatcher("/list/**", "POST"),
-            new AntPathRequestMatcher("/list", "POST"),
-            new AntPathRequestMatcher("/user/register"),
-            new AntPathRequestMatcher("/user/login")
+            new AntPathRequestMatcher("/api/**/list"),
+            new AntPathRequestMatcher("/api/**/list/**"),
+            new AntPathRequestMatcher("/api/user/register"),
+            new AntPathRequestMatcher("/api/user/login")
     );
 
-    private static final RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(
-            new OrRequestMatcher(PUBLIC_URLS, SWAGGER_URLS, DEFAULT_URLS)
-    );
+    private static final RequestMatcher PUBLIC_URLS = new OrRequestMatcher(API_URLS, SWAGGER_URLS, DEFAULT_URLS);
+
+    private static final RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(PUBLIC_URLS);
 
 
     private final AdviseController adviseController;

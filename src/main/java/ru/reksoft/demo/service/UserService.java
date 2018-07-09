@@ -118,6 +118,7 @@ public class UserService {
      */
     @Transactional
     public Integer register(@NotNull UserDTO userDTO) throws ResourceCannotCreateException {
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         Integer roleId = userDTO.getRole().getId();
         String login = userDTO.getLogin();
 

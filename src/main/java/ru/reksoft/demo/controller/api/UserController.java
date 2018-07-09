@@ -2,6 +2,7 @@ package ru.reksoft.demo.controller.api;
 
 import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.annotation.Validated;
@@ -14,12 +15,14 @@ import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 import ru.reksoft.demo.util.ResourceLocationBuilder;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("${api-path.user}")
 public class UserController {
+
+    @Value("${api-path.user}")
+    private String apiPath;
 
     private UserService userService;
 
@@ -57,13 +60,12 @@ public class UserController {
      * Register new user.
      *
      * @param userDTO  - new user data
-     * @param request  - http request
      * @param response - http response
      */
     @PostMapping("/register")
-    public void register(@RequestBody @Validated(UserDTO.FieldCheck.class) UserDTO userDTO, HttpServletRequest request, HttpServletResponse response)
+    public void register(@RequestBody @Validated(UserDTO.FieldCheck.class) UserDTO userDTO, HttpServletResponse response)
             throws ResourceCannotCreateException {
-        response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(request, userService.register(userDTO)));
+        response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(apiPath, userService.register(userDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);
     }
 }

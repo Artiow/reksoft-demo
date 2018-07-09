@@ -1,12 +1,12 @@
 package ru.reksoft.demo.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
+import ru.reksoft.demo.dto.BasketDTO;
 import ru.reksoft.demo.service.BasketService;
-import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
+import ru.reksoft.demo.service.generic.ResourceCannotUpdateException;
+import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
@@ -21,15 +21,27 @@ public class BasketController {
     }
 
 
-    @GetMapping("/for/{userId}")
-    public void get(@PathVariable int userId) {
-
+    /**
+     * Returns basket for user by authentication.
+     *
+     * @param userId - user id
+     * @return basket
+     * @throws ResourceNotFoundException - if user not found
+     */
+    @GetMapping("/get")
+    public BasketDTO get(@PathVariable int userId) throws ResourceNotFoundException {
+        return basketService.get();
     }
 
-    @PostMapping("/add/{mediaId}")
-    public void add(@PathVariable int mediaId, HttpServletRequest request, HttpServletResponse response)
-            throws ResourceCannotCreateException {
-        response.setHeader(HttpHeaders.LOCATION, null);
-        response.setStatus(HttpServletResponse.SC_CREATED);
+    /**
+     * Add media by media id in basket.
+     *
+     * @param mediaId  - media id
+     * @param response - http response
+     * @throws ResourceCannotUpdateException - if media cannot be added
+     */
+    @PutMapping("/add/{mediaId}")
+    public void add(@PathVariable int mediaId, HttpServletResponse response) throws ResourceCannotUpdateException {
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 }

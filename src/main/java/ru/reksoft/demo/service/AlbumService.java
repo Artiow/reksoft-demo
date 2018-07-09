@@ -65,6 +65,7 @@ public class AlbumService extends AbstractService<AlbumDTO> {
         this.albumMapper = albumMapper;
     }
 
+
     /**
      * Returns page with searched albums.
      *

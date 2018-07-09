@@ -10,6 +10,7 @@ import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.service.LabelService;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
+import ru.reksoft.demo.service.generic.ResourceOptimisticLockException;
 import ru.reksoft.demo.util.ResourceLocationBuilder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,7 +56,7 @@ public class LabelController {
      * @param labelDTO - sent label
      */
     @PostMapping
-    public void create(@RequestBody @Validated(LabelDTO.FieldCheck.class) LabelDTO labelDTO, HttpServletRequest request, HttpServletResponse response)
+    public void create(@RequestBody @Validated(LabelDTO.CreateCheck.class) LabelDTO labelDTO, HttpServletRequest request, HttpServletResponse response)
             throws ResourceCannotCreateException {
         response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(request, labelService.create(labelDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);
@@ -68,8 +69,10 @@ public class LabelController {
      * @param labelDTO - label data
      */
     @PutMapping("/{id}")
-    public void update(@PathVariable int id, @RequestBody @Validated(LabelDTO.FieldCheck.class) LabelDTO labelDTO, HttpServletResponse response)
-            throws ResourceNotFoundException {
+    public void update(@PathVariable int id, @RequestBody @Validated(LabelDTO.UpdateCheck.class) LabelDTO labelDTO, HttpServletResponse response) throws
+            ResourceNotFoundException,
+            ResourceOptimisticLockException {
+
         labelService.update(id, labelDTO);
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }

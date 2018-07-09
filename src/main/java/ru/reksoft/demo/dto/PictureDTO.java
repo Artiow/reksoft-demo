@@ -14,7 +14,6 @@ public class PictureDTO extends AbstractIdentifiedDTO {
     private Integer id;
 
     private URI uri;
-    private String name;
     private Long size;
     private LocalDateTime uploaded;
 
@@ -39,15 +38,6 @@ public class PictureDTO extends AbstractIdentifiedDTO {
         return this;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public PictureDTO setName(String name) {
-        this.name = name;
-        return this;
-    }
-
     public Long getSize() {
         return size;
     }
@@ -68,10 +58,6 @@ public class PictureDTO extends AbstractIdentifiedDTO {
 
 
     public interface IdCheck {
-
-    }
-
-    public interface FieldCheck  {
 
     }
 }

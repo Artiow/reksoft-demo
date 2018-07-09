@@ -5,18 +5,21 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import ru.reksoft.demo.domain.*;
 import ru.reksoft.demo.dto.*;
+import ru.reksoft.demo.dto.shortcut.AlbumShortDTO;
+import ru.reksoft.demo.mapper.generic.AbstractVersionedMapper;
 import ru.reksoft.demo.mapper.manual.JavaTimeMapper;
-import ru.reksoft.demo.mapper.manual.PictureURIMapper;
+import ru.reksoft.demo.mapper.manual.uri.PictureURIMapper;
 
+import javax.persistence.OptimisticLockException;
 import java.util.Collection;
 
-@Mapper(uses = { JavaTimeMapper.class, PictureURIMapper.class, CompositionMapper.class }, componentModel = "spring")
-public interface AlbumMapper extends AbstractEntityMapper<AlbumEntity, AlbumDTO> {
+@Mapper(uses = {JavaTimeMapper.class, PictureURIMapper.class, CompositionMapper.class}, componentModel = "spring")
+public interface AlbumMapper extends AbstractVersionedMapper<AlbumEntity, AlbumDTO> {
 
     @Mappings({
             @Mapping(target = "label", source = "label.name"),
             @Mapping(target = "singer", source = "singer.name"),
-            @Mapping(target = "pictureUri", source = "picture.id")
+            @Mapping(target = "pictureURI", source = "picture.id")
     })
     AlbumShortDTO toShortDTO(AlbumEntity entity);
 
@@ -33,7 +36,6 @@ public interface AlbumMapper extends AbstractEntityMapper<AlbumEntity, AlbumDTO>
     SingerEntity toEntity(SingerDTO dto);
 
     @Mappings({
-            @Mapping(target = "name", ignore = true),
             @Mapping(target = "size", ignore = true),
             @Mapping(target = "uploaded", ignore = true)
     })
@@ -45,14 +47,20 @@ public interface AlbumMapper extends AbstractEntityMapper<AlbumEntity, AlbumDTO>
     })
     GenreEntity toEntity(GenreDTO dto);
 
-    default AlbumEntity merge(AlbumEntity acceptor, AlbumEntity donor) {
+    default AlbumEntity merge(AlbumEntity acceptor, AlbumEntity donor) throws OptimisticLockException {
+        AbstractVersionedMapper.super.merge(acceptor, donor);
+
         acceptor.setName(donor.getName());
         acceptor.setDescription(donor.getDescription());
         acceptor.setReleaseYear(donor.getReleaseYear());
 
-        acceptor.setPicture(donor.getPicture());
+        check(acceptor.getLabel(), donor.getLabel());
         acceptor.setLabel(donor.getLabel());
+
+        check(acceptor.getSinger(), donor.getSinger());
         acceptor.setSinger(donor.getSinger());
+
+        acceptor.setPicture(donor.getPicture());
 
         acceptor.setMedia(donor.getMedia());
 
@@ -60,7 +68,7 @@ public interface AlbumMapper extends AbstractEntityMapper<AlbumEntity, AlbumDTO>
         if (!compositions.isEmpty()) {
             compositions.clear();
         }
-        for (CompositionEntity composition: donor.getCompositions()) {
+        for (CompositionEntity composition : donor.getCompositions()) {
             composition.setAlbum(acceptor);
             compositions.add(composition);
         }

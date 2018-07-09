@@ -17,7 +17,8 @@ public class PositionSequenceValidator implements ConstraintValidator<PositionSe
 
         try {
             int[] seqCheck = new int[compositions.size()];
-            for (CompositionDTO composition : compositions) if ((++seqCheck[composition.getPosition() - 1]) > 1) return false;
+            for (CompositionDTO composition : compositions)
+                if ((++seqCheck[composition.getPosition() - 1]) > 1) return false;
         } catch (IndexOutOfBoundsException e) {
             return false;
         }

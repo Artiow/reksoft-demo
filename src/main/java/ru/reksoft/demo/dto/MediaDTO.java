@@ -1,16 +1,20 @@
 package ru.reksoft.demo.dto;
 
-import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
+import ru.reksoft.demo.dto.generic.AbstractVersionedDTO;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-public class MediaDTO extends AbstractIdentifiedDTO {
+public class MediaDTO extends AbstractVersionedDTO {
 
     @NotNull(groups = IdCheck.class)
     @Min(value = 1, groups = IdCheck.class)
     private Integer id;
+
+    @NotNull(groups = VersionCheck.class)
+    @Min(value = 1, groups = VersionCheck.class)
+    private Long version;
 
     @NotNull(groups = FieldCheck.class)
     @Min(value = 0, groups = FieldCheck.class)
@@ -33,6 +37,17 @@ public class MediaDTO extends AbstractIdentifiedDTO {
     @Override
     public MediaDTO setId(Integer id) {
         this.id = id;
+        return this;
+    }
+
+    @Override
+    public Long getVersion() {
+        return version;
+    }
+
+    @Override
+    public MediaDTO setVersion(Long version) {
+        this.version = version;
         return this;
     }
 
@@ -64,11 +79,24 @@ public class MediaDTO extends AbstractIdentifiedDTO {
     }
 
 
-    public interface IdCheck {
+    public interface IdCheck extends VersionCheck {
 
     }
 
-    public interface FieldCheck extends
+    public interface CreateCheck extends FieldCheck {
+
+    }
+
+    public interface UpdateCheck extends VersionCheck, FieldCheck {
+
+    }
+
+
+    private interface VersionCheck {
+
+    }
+
+    private interface FieldCheck extends
             MediaTypeDTO.IdCheck, AlbumDTO.IdCheck {
 
     }

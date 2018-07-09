@@ -1,4 +1,4 @@
-package ru.reksoft.demo.dto;
+package ru.reksoft.demo.dto.shortcut;
 
 import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
 
@@ -10,7 +10,7 @@ public class AlbumShortDTO extends AbstractIdentifiedDTO {
     private String name;
     private String label;
     private String singer;
-    private URI pictureUri;
+    private URI pictureURI;
 
 
     @Override
@@ -51,12 +51,12 @@ public class AlbumShortDTO extends AbstractIdentifiedDTO {
         return this;
     }
 
-    public URI getPictureUri() {
-        return pictureUri;
+    public URI getPictureURI() {
+        return pictureURI;
     }
 
-    public AlbumShortDTO setPictureUri(URI pictureUri) {
-        this.pictureUri = pictureUri;
+    public AlbumShortDTO setPictureURI(URI pictureURI) {
+        this.pictureURI = pictureURI;
         return this;
     }
 }

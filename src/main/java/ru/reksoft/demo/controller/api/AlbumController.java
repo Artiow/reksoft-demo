@@ -5,12 +5,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.AlbumDTO;
-import ru.reksoft.demo.dto.AlbumShortDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
+import ru.reksoft.demo.dto.shortcut.AlbumShortDTO;
 import ru.reksoft.demo.service.AlbumService;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
+import ru.reksoft.demo.service.generic.ResourceCannotUpdateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
+import ru.reksoft.demo.service.generic.ResourceOptimisticLockException;
 import ru.reksoft.demo.util.ResourceLocationBuilder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,7 +58,7 @@ public class AlbumController {
      * @param albumDTO - sent album
      */
     @PostMapping
-    public void create(@RequestBody @Validated(AlbumDTO.FieldCheck.class) AlbumDTO albumDTO, HttpServletRequest request, HttpServletResponse response)
+    public void create(@RequestBody @Validated(AlbumDTO.CreateCheck.class) AlbumDTO albumDTO, HttpServletRequest request, HttpServletResponse response)
             throws ResourceCannotCreateException {
         response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(request, albumService.create(albumDTO)));
         response.setStatus(HttpServletResponse.SC_CREATED);
@@ -69,8 +71,11 @@ public class AlbumController {
      * @param albumDTO - album data
      */
     @PutMapping("/{id}")
-    public void update(@PathVariable int id, @RequestBody @Validated(AlbumDTO.FieldCheck.class) AlbumDTO albumDTO, HttpServletResponse response)
-            throws ResourceNotFoundException {
+    public void update(@PathVariable int id, @RequestBody @Validated(AlbumDTO.UpdateCheck.class) AlbumDTO albumDTO, HttpServletResponse response) throws
+            ResourceNotFoundException,
+            ResourceCannotUpdateException,
+            ResourceOptimisticLockException {
+
         albumService.update(id, albumDTO);
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }

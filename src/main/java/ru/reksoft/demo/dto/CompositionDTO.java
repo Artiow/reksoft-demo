@@ -2,7 +2,9 @@ package ru.reksoft.demo.dto;
 
 import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalTime;
 
 public class CompositionDTO extends AbstractIdentifiedDTO {
@@ -60,6 +62,7 @@ public class CompositionDTO extends AbstractIdentifiedDTO {
         this.duration = duration;
         return this;
     }
+
 
     public interface IdCheck {
 

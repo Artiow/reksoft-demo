@@ -1,13 +1,13 @@
 package ru.reksoft.demo.domain;
 
-import ru.reksoft.demo.domain.generic.AbstractIdentifiedEntity;
+import ru.reksoft.demo.domain.generic.AbstractVersionedEntity;
 
 import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
 @Table(name = "singer")
-public class SingerEntity extends AbstractIdentifiedEntity {
+public class SingerEntity extends AbstractVersionedEntity {
 
     @Basic
     @Column(name = "name", nullable = false)

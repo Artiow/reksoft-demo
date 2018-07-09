@@ -1,9 +1,12 @@
 package ru.reksoft.demo.dto;
 
 import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
+import ru.reksoft.demo.dto.validation.annotations.Phone;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class UserDTO extends AbstractIdentifiedDTO {
 
@@ -11,14 +14,36 @@ public class UserDTO extends AbstractIdentifiedDTO {
     @Min(value = 1, groups = IdCheck.class)
     private Integer id;
 
+    @NotNull(groups = FieldCheck.class)
+    @Size(min = 1, max = 45, groups = FieldCheck.class)
     private String login;
+
+    @NotNull(groups = FieldCheck.class)
+    @Size(min = 1, max = 90, groups = FieldCheck.class)
     private String password;
+
+    @NotNull(groups = FieldCheck.class)
+    @Size(min = 1, max = 45, groups = FieldCheck.class)
     private String name;
+
+    @NotNull(groups = FieldCheck.class)
+    @Size(min = 1, max = 45, groups = FieldCheck.class)
     private String surname;
+
+    @NotNull(groups = FieldCheck.class)
+    @Size(min = 1, max = 45, groups = FieldCheck.class)
     private String patronymic;
+
+    @NotNull(groups = FieldCheck.class)
+    @Size(min = 1, max = 90, groups = FieldCheck.class)
     private String address;
+
+    @NotNull(groups = FieldCheck.class)
+    @Phone(groups = FieldCheck.class)
     private String phone;
 
+    @Valid
+    @NotNull(groups = FieldCheck.class)
     private UserRoleDTO role;
 
 
@@ -110,7 +135,7 @@ public class UserDTO extends AbstractIdentifiedDTO {
 
     }
 
-    public interface FieldCheck {
+    public interface FieldCheck extends UserRoleDTO.IdCheck {
 
     }
 }

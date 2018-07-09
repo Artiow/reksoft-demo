@@ -1,6 +1,7 @@
 package ru.reksoft.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -9,20 +10,19 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.domain.*;
 import ru.reksoft.demo.dto.MediaDTO;
-import ru.reksoft.demo.dto.MediaShortDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.dto.pagination.PageDividerDTO;
 import ru.reksoft.demo.dto.pagination.filters.MediaFilterDTO;
+import ru.reksoft.demo.dto.shortcut.MediaShortDTO;
 import ru.reksoft.demo.mapper.MediaMapper;
 import ru.reksoft.demo.repository.AlbumRepository;
 import ru.reksoft.demo.repository.MediaRepository;
 import ru.reksoft.demo.repository.MediaTypeRepository;
-import ru.reksoft.demo.service.generic.AbstractService;
-import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
-import ru.reksoft.demo.service.generic.ResourceNotFoundException;
+import ru.reksoft.demo.service.generic.*;
 import ru.reksoft.demo.util.MediaSearchType;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.criteria.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -116,7 +116,7 @@ public class MediaService extends AbstractService<MediaDTO> {
         try {
             return mediaMapper.toDTO(mediaRepository.getOne(id));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Media.existById.message", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Media.notExistById.message", id));
         }
     }
 
@@ -135,15 +135,15 @@ public class MediaService extends AbstractService<MediaDTO> {
 
         if (!albumRepository.existsById(albumId)) {
             throw new ResourceCannotCreateException(messages.getAndFormat(
-                    "reksoft.demo.Album.existById.message", albumId
+                    "reksoft.demo.Album.notExistById.message", albumId
             ));
         } else if (!mediaTypeRepository.existsById(typeId)) {
             throw new ResourceCannotCreateException(messages.getAndFormat(
-                    "reksoft.demo.MediaType.existById.message", typeId
+                    "reksoft.demo.MediaType.notExistById.message", typeId
             ));
         } else if (mediaRepository.existsByAlbumIdAndTypeId(albumId, typeId)) {
             throw new ResourceCannotCreateException(messages.getAndFormat(
-                    "reksoft.demo.Media.existByIdAndMediaTypeId.message", albumId, typeId
+                    "reksoft.demo.Media.alreadyExistByIdAndMediaTypeId.message", albumId, typeId
             ));
         }
 
@@ -158,11 +158,30 @@ public class MediaService extends AbstractService<MediaDTO> {
      */
     @Override
     @Transactional
-    public void update(@NotNull Integer id, @NotNull MediaDTO mediaDTO) throws ResourceNotFoundException {
+    public void update(@NotNull Integer id, @NotNull MediaDTO mediaDTO) throws
+            ResourceNotFoundException,
+            ResourceCannotUpdateException,
+            ResourceOptimisticLockException {
+
+        Integer typeId = mediaDTO.getType().getId();
+        Integer albumId = mediaDTO.getAlbum().getId();
+
+        if (!albumRepository.existsById(albumId)) {
+            throw new ResourceCannotUpdateException(messages.getAndFormat(
+                    "reksoft.demo.Album.notExistById.message", albumId
+            ));
+        } else if (!mediaTypeRepository.existsById(typeId)) {
+            throw new ResourceCannotUpdateException(messages.getAndFormat(
+                    "reksoft.demo.MediaType.notExistById.message", typeId
+            ));
+        }
+
         try {
-            mediaRepository.save(mediaMapper.merge(mediaRepository.getOne(id), mediaMapper.toEntity(mediaDTO)));
+            mediaRepository.saveAndFlush(mediaMapper.merge(mediaRepository.getOne(id), mediaMapper.toEntity(mediaDTO)));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Media.existById.message", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Media.notExistById.message", id));
+        } catch (OptimisticLockException | OptimisticLockingFailureException e) {
+            throw new ResourceOptimisticLockException(messages.get("reksoft.demo.Media.optimisticLock.message"), e);
         }
     }
 
@@ -175,7 +194,7 @@ public class MediaService extends AbstractService<MediaDTO> {
     @Transactional
     public void delete(@NotNull Integer id) throws ResourceNotFoundException {
         if (!mediaRepository.existsById(id)) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Media.existById.message", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Media.notExistById.message", id));
         }
 
         mediaRepository.deleteById(id);

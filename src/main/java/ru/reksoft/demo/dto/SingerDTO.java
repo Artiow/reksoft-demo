@@ -1,14 +1,20 @@
 package ru.reksoft.demo.dto;
 
-import ru.reksoft.demo.dto.generic.AbstractIdentifiedDTO;
+import ru.reksoft.demo.dto.generic.AbstractVersionedDTO;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-public class SingerDTO extends AbstractIdentifiedDTO {
+public class SingerDTO extends AbstractVersionedDTO {
 
     @NotNull(groups = IdCheck.class)
     @Min(value = 1, groups = IdCheck.class)
     private Integer id;
+
+    @NotNull(groups = VersionCheck.class)
+    @Min(value = 1, groups = VersionCheck.class)
+    private Long version;
 
     @NotNull(groups = FieldCheck.class)
     @Size(min = 1, max = 45, groups = FieldCheck.class)
@@ -26,6 +32,17 @@ public class SingerDTO extends AbstractIdentifiedDTO {
         return this;
     }
 
+    @Override
+    public Long getVersion() {
+        return version;
+    }
+
+    @Override
+    public SingerDTO setVersion(Long version) {
+        this.version = version;
+        return this;
+    }
+
     public String getName() {
         return name;
     }
@@ -36,11 +53,24 @@ public class SingerDTO extends AbstractIdentifiedDTO {
     }
 
 
-    public interface IdCheck {
+    public interface IdCheck extends VersionCheck {
 
     }
 
-    public interface FieldCheck {
+    public interface CreateCheck extends FieldCheck {
+
+    }
+
+    public interface UpdateCheck extends VersionCheck, FieldCheck {
+
+    }
+
+
+    private interface VersionCheck {
+
+    }
+
+    private interface FieldCheck {
 
     }
 }

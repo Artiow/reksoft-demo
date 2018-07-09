@@ -16,13 +16,19 @@ import javax.persistence.metamodel.SingularAttribute;
 
 public abstract class AbstractService<T extends DataTransferObject> {
 
-    public abstract T get(Integer id) throws ResourceNotFoundException;
+    public abstract T get(Integer id) throws
+            ResourceNotFoundException;
 
-    public abstract Integer create(T t) throws ResourceCannotCreateException;
+    public abstract Integer create(T t) throws
+            ResourceCannotCreateException;
 
-    public abstract void update(Integer id, T t) throws ResourceNotFoundException;
+    public abstract void update(Integer id, T t) throws
+            ResourceNotFoundException,
+            ResourceCannotUpdateException,
+            ResourceOptimisticLockException;
 
-    public abstract void delete(Integer id) throws ResourceNotFoundException;
+    public abstract void delete(Integer id) throws
+            ResourceNotFoundException;
 
 
     public static class StringSearcher<T extends DomainObject> extends PageDivider implements Specification<T> {

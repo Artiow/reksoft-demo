@@ -24,7 +24,7 @@ public class MessagesConfig {
     }
 
     /**
-     * Config accessor.
+     * Accessor configuration.
      */
     @PostConstruct
     private void init() {
@@ -32,7 +32,7 @@ public class MessagesConfig {
     }
 
     /**
-     * Config message source for validation messages.
+     * Message source for validation messages configuration.
      *
      * @return LocalValidatorFactoryBean bean
      */

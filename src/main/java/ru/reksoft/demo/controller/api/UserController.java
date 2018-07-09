@@ -8,8 +8,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.UserDTO;
 import ru.reksoft.demo.dto.security.TokenDTO;
+import ru.reksoft.demo.dto.shortcut.UserShortDTO;
 import ru.reksoft.demo.service.UserService;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
+import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 import ru.reksoft.demo.util.ResourceLocationBuilder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +28,18 @@ public class UserController {
         this.userService = userService;
     }
 
+
+    /**
+     * Returns user data by sent id.
+     *
+     * @param id - user id
+     * @return user dto
+     * @throws ResourceNotFoundException - if user not found
+     */
+    @GetMapping("/{id}")
+    public UserShortDTO get(@PathVariable Integer id) throws ResourceNotFoundException {
+        return userService.get(id);
+    }
 
     /**
      * Returns TokenDTO by logged user.

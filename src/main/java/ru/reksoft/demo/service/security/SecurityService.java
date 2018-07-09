@@ -24,6 +24,15 @@ public class SecurityService {
     }
 
     /**
+     * Getting used token type from token service.
+     *
+     * @return tokenType
+     */
+    public String getTokenType() {
+        return tokenService.getTokenType();
+    }
+
+    /**
      * Returns JWT by UserDetails.
      *
      * @param userDetails - user data

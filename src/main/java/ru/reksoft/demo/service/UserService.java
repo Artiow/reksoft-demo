@@ -2,7 +2,6 @@ package ru.reksoft.demo.service;
 
 import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,10 +12,12 @@ import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.domain.UserEntity;
 import ru.reksoft.demo.dto.UserDTO;
 import ru.reksoft.demo.dto.security.TokenDTO;
+import ru.reksoft.demo.dto.shortcut.UserShortDTO;
 import ru.reksoft.demo.mapper.UserMapper;
 import ru.reksoft.demo.repository.UserRepository;
 import ru.reksoft.demo.repository.UserRoleRepository;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
+import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 import ru.reksoft.demo.service.security.SecurityService;
 
 import javax.persistence.EntityNotFoundException;
@@ -24,9 +25,6 @@ import javax.validation.constraints.NotNull;
 
 @Service
 public class UserService {
-
-    @Value("${jwt.token-type}")
-    private String TOKEN_TYPE;
 
     private MessagesConfig messages;
 
@@ -71,6 +69,22 @@ public class UserService {
 
 
     /**
+     * Returns user data by user id.
+     *
+     * @param id - user id
+     * @return user's data
+     * @throws ResourceNotFoundException - if user with sent id not found
+     */
+    @Transactional(readOnly = true)
+    public UserShortDTO get(@NotNull Integer id) throws ResourceNotFoundException {
+        try {
+            return userMapper.toShortDTO(userRepository.getOne(id));
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.User.notExistById.message", id));
+        }
+    }
+
+    /**
      * Login user and returns TokenDTO.
      *
      * @param login    - user's login
@@ -96,8 +110,8 @@ public class UserService {
         }
 
         return new TokenDTO()
-                .setUser(userMapper.toShortDTO(user))
-                .setTokenType(TOKEN_TYPE)
+                .setUser(userMapper.toAuthDTO(user))
+                .setTokenType(securityService.getTokenType())
                 .setAccessToken(
                         securityService.login(
                                 User.builder()

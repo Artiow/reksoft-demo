@@ -1,13 +1,12 @@
 package ru.reksoft.demo.dto.security;
 
 import ru.reksoft.demo.dto.generic.DataTransferObject;
-import ru.reksoft.demo.dto.shortcut.UserShortDTO;
 
 public class TokenDTO implements DataTransferObject {
 
     private String accessToken;
     private String tokenType;
-    private UserShortDTO user;
+    private LoginDTO user;
 
 
     public String getAccessToken() {
@@ -28,11 +27,11 @@ public class TokenDTO implements DataTransferObject {
         return this;
     }
 
-    public UserShortDTO getUser() {
+    public LoginDTO getUser() {
         return user;
     }
 
-    public TokenDTO setUser(UserShortDTO user) {
+    public TokenDTO setUser(LoginDTO user) {
         this.user = user;
         return this;
     }

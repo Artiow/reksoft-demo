@@ -15,6 +15,9 @@ import java.util.Map;
 @Service
 public class TokenService implements Clock {
 
+    @Value("${jwt.token-type}")
+    private String tokenType;
+
     @Value("${jwt.issuer}")
     private String issuer;
 
@@ -30,6 +33,15 @@ public class TokenService implements Clock {
         secretKey = TextCodec.BASE64.encode(secretKey);
         compressionCodec = new GzipCompressionCodec();
         signatureAlgorithm = SignatureAlgorithm.HS512;
+    }
+
+    /**
+     * Getting used token type.
+     *
+     * @return tokenType
+     */
+    public String getTokenType() {
+        return tokenType;
     }
 
     /**

@@ -28,7 +28,9 @@ import javax.servlet.http.HttpServletResponse;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final RequestMatcher DEFAULT_URLS = new OrRequestMatcher(
-            new AntPathRequestMatcher("/error")
+            new AntPathRequestMatcher("/error"),
+            new AntPathRequestMatcher("/csrf"),
+            new AntPathRequestMatcher("/")
     );
 
     private static final RequestMatcher SWAGGER_URLS = new OrRequestMatcher(

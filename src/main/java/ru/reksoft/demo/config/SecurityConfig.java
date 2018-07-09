@@ -83,8 +83,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler()).and()
 
                 .authorizeRequests()
-                .antMatchers(HttpMethod.PUT, "/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/*").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/api/*/*").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/api/*/*").hasRole("ADMIN")
                 .and()
 
                 .httpBasic().disable()

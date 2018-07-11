@@ -37,7 +37,7 @@ public class UserEntity extends AbstractIdentifiedEntity {
     @Column(name = "phone", nullable = false)
     private String phone;
 
-    @OneToMany(mappedBy = "pk.user")
+    @OneToMany(mappedBy = "pk.user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Collection<CurrentBasketEntity> basket;
 
     @ManyToOne

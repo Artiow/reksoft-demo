@@ -28,6 +28,7 @@ public class BasketService {
 
     private UserRepository userRepository;
     private MediaRepository mediaRepository;
+
     private CurrentBasketRepository currentBasketRepository;
 
     private BasketMapper basketMapper;
@@ -82,7 +83,7 @@ public class BasketService {
         UserEntity user = getCurrentUserEntity();
         Integer userId = user.getId();
 
-        if (currentBasketRepository.existsByUserIdAndMediaId(userId, mediaId)) {
+        if (currentBasketRepository.existsByPkUserIdAndPkMediaId(userId, mediaId)) {
             throw new ResourceCannotCreateException(messages.getAndFormat("reksoft.demo.Basket.alreadyExist.message", userId, mediaId));
         } else {
             try {

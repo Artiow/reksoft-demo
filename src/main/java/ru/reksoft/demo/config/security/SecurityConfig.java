@@ -1,11 +1,10 @@
-package ru.reksoft.demo.config;
+package ru.reksoft.demo.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -16,48 +15,13 @@ import org.springframework.security.web.authentication.AnonymousAuthenticationFi
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.security.web.util.matcher.*;
 import ru.reksoft.demo.controller.api.AdviseController;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 @Configuration
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    private static final RequestMatcher DEFAULT_URLS = new OrRequestMatcher(
-            new AntPathRequestMatcher("/error"),
-            new AntPathRequestMatcher("/csrf"),
-            new AntPathRequestMatcher("/")
-    );
-
-    private static final RequestMatcher SWAGGER_URLS = new OrRequestMatcher(
-            new AntPathRequestMatcher("/swagger-resources/**"),
-            new AntPathRequestMatcher("/configuration/**"),
-            new AntPathRequestMatcher("/webjars/**"),
-            new AntPathRequestMatcher("/swagger-ui.html"),
-            new AntPathRequestMatcher("/v2/api-docs")
-    );
-
-    private static final RequestMatcher PROTECTED_GET_API_URLS = new OrRequestMatcher(
-            new AntPathRequestMatcher("/api/basket", "GET")
-    );
-
-    private static final RequestMatcher API_URLS = new OrRequestMatcher(
-            new AndRequestMatcher(
-                    new AntPathRequestMatcher("/api/**", "GET"),
-                    new NegatedRequestMatcher(PROTECTED_GET_API_URLS)
-            ),
-            new AntPathRequestMatcher("/api/**/list"),
-            new AntPathRequestMatcher("/api/**/list/**"),
-            new AntPathRequestMatcher("/api/user/register"),
-            new AntPathRequestMatcher("/api/user/login")
-    );
-
-    private static final RequestMatcher PUBLIC_URLS = new OrRequestMatcher(API_URLS, SWAGGER_URLS, DEFAULT_URLS);
-
-    private static final RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(PUBLIC_URLS);
-
+public class SecurityConfig extends WebSecurityConfigurerAdapter implements RightsDifferentiationRouting {
 
     private final AdviseController adviseController;
 
@@ -87,9 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler()).and()
 
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/*").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/api/*/*").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/api/*/*").hasRole("ADMIN")
+                .requestMatchers(ADMIN_API_URLS).hasRole("ADMIN")
+                .requestMatchers(USER_API_URLS).hasRole("USER")
                 .and()
 
                 .httpBasic().disable()

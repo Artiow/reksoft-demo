@@ -7,5 +7,5 @@ import ru.reksoft.demo.domain.CurrentBasketEntityPK;
 
 public interface CurrentBasketRepository extends JpaRepository<CurrentBasketEntity, CurrentBasketEntityPK>, JpaSpecificationExecutor<CurrentBasketEntity> {
 
-    boolean existsByUserIdAndMediaId(Integer userId, Integer mediaId);
+    boolean existsByPkUserIdAndPkMediaId(Integer userId, Integer mediaId);
 }

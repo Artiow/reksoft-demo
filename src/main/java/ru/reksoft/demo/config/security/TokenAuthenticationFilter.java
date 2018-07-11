@@ -1,4 +1,4 @@
-package ru.reksoft.demo.config;
+package ru.reksoft.demo.config.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import ru.reksoft.demo.config.MessagesConfig;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

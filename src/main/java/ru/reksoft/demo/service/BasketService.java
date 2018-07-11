@@ -5,8 +5,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.config.MessagesConfig;
+import ru.reksoft.demo.domain.UserEntity;
 import ru.reksoft.demo.dto.BasketDTO;
+import ru.reksoft.demo.mapper.BasketMapper;
 import ru.reksoft.demo.repository.CurrentBasketRepository;
+import ru.reksoft.demo.repository.MediaRepository;
+import ru.reksoft.demo.repository.UserRepository;
 import ru.reksoft.demo.service.generic.AuthorizationRequiredException;
 import ru.reksoft.demo.service.security.userdetails.IdentifiedUserDetails;
 
@@ -17,7 +21,11 @@ public class BasketService {
 
     private MessagesConfig messages;
 
+    private UserRepository userRepository;
+    private MediaRepository mediaRepository;
     private CurrentBasketRepository currentBasketRepository;
+
+    private BasketMapper basketMapper;
 
     @Autowired
     public void setMessages(MessagesConfig messages) {
@@ -25,8 +33,23 @@ public class BasketService {
     }
 
     @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Autowired
+    public void setMediaRepository(MediaRepository mediaRepository) {
+        this.mediaRepository = mediaRepository;
+    }
+
+    @Autowired
     public void setCurrentBasketRepository(CurrentBasketRepository currentBasketRepository) {
         this.currentBasketRepository = currentBasketRepository;
+    }
+
+    @Autowired
+    public void setBasketMapper(BasketMapper basketMapper) {
+        this.basketMapper = basketMapper;
     }
 
 
@@ -38,8 +61,8 @@ public class BasketService {
      */
     @Transactional(readOnly = true)
     public BasketDTO get() throws AuthorizationRequiredException {
-        getUserId();
-        return null;
+        // hotfix: works only with 'group by', todo: replace on getUserEntity().getBasket()
+        return basketMapper.toBasket(currentBasketRepository.findByUserId(getUserId()));
     }
 
     /**
@@ -50,7 +73,7 @@ public class BasketService {
      */
     @Transactional
     public Integer add(@NotNull Integer mediaId) throws AuthorizationRequiredException {
-        return getUserId();
+        return null;
     }
 
     /**
@@ -62,7 +85,7 @@ public class BasketService {
      */
     @Transactional
     public void update(@NotNull Integer mediaId, @NotNull Integer quantity) throws AuthorizationRequiredException {
-        getUserId();
+
     }
 
     /**
@@ -73,12 +96,12 @@ public class BasketService {
      */
     @Transactional
     public void remove(@NotNull Integer mediaId) throws AuthorizationRequiredException {
-        getUserId();
+
     }
 
 
     /**
-     * Returns authenticated use id.
+     * Returns authenticated user id.
      *
      * @return user id
      * @throws AuthorizationRequiredException - if user is anonymous
@@ -89,5 +112,15 @@ public class BasketService {
         } catch (ClassCastException e) {
             throw new AuthorizationRequiredException(messages.get("reksoft.demo.auth.filter.credentialsNotFound.message"), e);
         }
+    }
+
+    /**
+     * Returns authenticated user.
+     *
+     * @return user entity
+     * @throws AuthorizationRequiredException - if user is anonymous
+     */
+    private UserEntity getUserEntity() throws AuthorizationRequiredException {
+        return userRepository.getOne(getUserId());
     }
 }

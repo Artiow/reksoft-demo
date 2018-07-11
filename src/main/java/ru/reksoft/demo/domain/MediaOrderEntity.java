@@ -1,10 +1,12 @@
 package ru.reksoft.demo.domain;
 
+import ru.reksoft.demo.domain.generic.DomainObject;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "media_order")
-public class MediaOrderEntity {
+public class MediaOrderEntity implements DomainObject {
 
     @EmbeddedId
     private MediaOrderEntityPK pk;

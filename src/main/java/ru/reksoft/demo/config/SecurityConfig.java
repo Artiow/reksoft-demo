@@ -16,10 +16,7 @@ import org.springframework.security.web.authentication.AnonymousAuthenticationFi
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
-import org.springframework.security.web.util.matcher.OrRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.security.web.util.matcher.*;
 import ru.reksoft.demo.controller.api.AdviseController;
 
 import javax.servlet.ServletOutputStream;
@@ -42,8 +39,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             new AntPathRequestMatcher("/v2/api-docs")
     );
 
+    private static final RequestMatcher PROTECTED_GET_API_URLS = new OrRequestMatcher(
+            new AntPathRequestMatcher("/api/basket", "GET")
+    );
+
     private static final RequestMatcher API_URLS = new OrRequestMatcher(
-            new AntPathRequestMatcher("/api/**", "GET"),
+            new AndRequestMatcher(
+                    new AntPathRequestMatcher("/api/**", "GET"),
+                    new NegatedRequestMatcher(PROTECTED_GET_API_URLS)
+            ),
             new AntPathRequestMatcher("/api/**/list"),
             new AntPathRequestMatcher("/api/**/list/**"),
             new AntPathRequestMatcher("/api/user/register"),

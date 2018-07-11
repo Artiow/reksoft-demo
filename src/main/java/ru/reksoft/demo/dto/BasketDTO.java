@@ -33,7 +33,7 @@ public class BasketDTO implements DataTransferObject {
     public static class BasketItemDTO implements DataTransferObject {
 
         private MediaShortDTO media;
-        private Integer amount;
+        private Integer count;
 
 
         public MediaShortDTO getMedia() {
@@ -45,12 +45,12 @@ public class BasketDTO implements DataTransferObject {
             return this;
         }
 
-        public Integer getAmount() {
-            return amount;
+        public Integer getCount() {
+            return count;
         }
 
-        public BasketItemDTO setAmount(Integer amount) {
-            this.amount = amount;
+        public BasketItemDTO setCount(Integer count) {
+            this.count = count;
             return this;
         }
     }

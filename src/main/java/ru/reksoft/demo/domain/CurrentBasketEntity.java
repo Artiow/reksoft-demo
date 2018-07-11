@@ -1,10 +1,12 @@
 package ru.reksoft.demo.domain;
 
+import ru.reksoft.demo.domain.generic.DomainObject;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "current_basket")
-public class CurrentBasketEntity {
+public class CurrentBasketEntity implements DomainObject {
 
     @EmbeddedId
     private CurrentBasketEntityPK pk;

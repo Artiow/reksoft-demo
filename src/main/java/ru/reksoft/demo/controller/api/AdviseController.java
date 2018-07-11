@@ -83,6 +83,12 @@ public class AdviseController implements ErrorController {
         return warnDTO(ex, "Sent HTTP Message Not Readable.");
     }
 
+    @ExceptionHandler(AuthorizationRequiredException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorDTO handleHttpMessageNotReadableException(AuthorizationRequiredException ex) {
+        return warnDTO(ex, "Unexpected Unauthorized Access Attempt.");
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorDTO handleResourceNotFoundException(ResourceNotFoundException ex) {

@@ -14,7 +14,6 @@ import ru.reksoft.demo.repository.MediaRepository;
 import ru.reksoft.demo.repository.UserRepository;
 import ru.reksoft.demo.service.generic.AuthorizationRequiredException;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
-import ru.reksoft.demo.service.generic.ResourceCannotUpdateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 import ru.reksoft.demo.service.security.userdetails.IdentifiedUserDetails;
 
@@ -106,11 +105,20 @@ public class BasketService {
      * @param quantity - quantity
      * @throws AuthorizationRequiredException - if authorization is missing
      * @throws ResourceNotFoundException      - if media not found in basket
-     * @throws ResourceCannotUpdateException  - ???
      */
     @Transactional
-    public void update(@NotNull Integer mediaId, @NotNull Integer quantity) throws AuthorizationRequiredException, ResourceNotFoundException, ResourceCannotUpdateException {
+    public void update(@NotNull Integer mediaId, @NotNull Integer quantity) throws AuthorizationRequiredException, ResourceNotFoundException {
+        UserEntity user = getCurrentUserEntity();
+        Integer userId = user.getId();
 
+        if (!currentBasketRepository.existsByPkUserIdAndPkMediaId(userId, mediaId)) {
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Basket.alreadyExist.message", userId, mediaId));
+        } else {
+            CurrentBasketEntity item = currentBasketRepository.findByPkUserIdAndPkMediaId(userId, mediaId);
+            item.setCount(quantity);
+
+            currentBasketRepository.save(item);
+        }
     }
 
     /**

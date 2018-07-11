@@ -7,7 +7,6 @@ import ru.reksoft.demo.dto.BasketDTO;
 import ru.reksoft.demo.service.BasketService;
 import ru.reksoft.demo.service.generic.AuthorizationRequiredException;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
-import ru.reksoft.demo.service.generic.ResourceCannotUpdateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 import ru.reksoft.demo.util.ResourceLocationBuilder;
 
@@ -59,12 +58,11 @@ public class BasketController {
      * @param mediaId  - media id
      * @param quantity - quantity of media
      * @param response - http response
-     * @throws ResourceNotFoundException     - if media not found in basket
-     * @throws ResourceCannotUpdateException - if media cannot be updated
+     * @throws ResourceNotFoundException - if media not found in basket
      */
     @PutMapping
     public void update(@RequestParam("updated") @Min(value = 1) int mediaId, @RequestParam("quantity") @Min(value = 1) int quantity, HttpServletResponse response)
-            throws AuthorizationRequiredException, ResourceNotFoundException, ResourceCannotUpdateException {
+            throws AuthorizationRequiredException, ResourceNotFoundException {
         basketService.update(mediaId, quantity);
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }

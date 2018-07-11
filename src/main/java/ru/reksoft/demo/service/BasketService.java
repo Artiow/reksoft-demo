@@ -122,7 +122,12 @@ public class BasketService {
      */
     @Transactional
     public void remove(@NotNull Integer mediaId) throws AuthorizationRequiredException, ResourceNotFoundException {
+        Integer userId = getCurrentUserId();
+        if (!currentBasketRepository.existsByPkUserIdAndPkMediaId(userId, mediaId)) {
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Basket.notExist.message", userId, mediaId));
+        }
 
+        currentBasketRepository.deleteByPkUserIdAndPkMediaId(userId, mediaId);
     }
 
 

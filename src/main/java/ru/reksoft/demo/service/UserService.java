@@ -81,7 +81,7 @@ public class UserService {
         try {
             return userMapper.toShortDTO(userRepository.getOne(id));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.User.notExistById.message", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.User.notExistById.message", id), e);
         }
     }
 

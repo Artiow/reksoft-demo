@@ -70,7 +70,7 @@ public class SingerService extends AbstractService<SingerDTO> {
         try {
             return singerMapper.toDTO(singerRepository.getOne(id));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Singer.notExistById.message", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Singer.notExistById.message", id), e);
         }
     }
 

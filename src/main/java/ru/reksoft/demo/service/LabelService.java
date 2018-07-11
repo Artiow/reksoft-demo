@@ -70,7 +70,7 @@ public class LabelService extends AbstractService<LabelDTO> {
         try {
             return labelMapper.toDTO(labelRepository.getOne(id));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Label.notExistById.message", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Label.notExistById.message", id), e);
         }
     }
 

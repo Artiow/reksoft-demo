@@ -47,7 +47,7 @@ public class BasketController {
      */
     @PostMapping
     public void add(@RequestParam("added") @Min(value = 1) int mediaId, HttpServletRequest request, HttpServletResponse response)
-            throws AuthorizationRequiredException, ResourceCannotCreateException {
+            throws AuthorizationRequiredException, ResourceNotFoundException, ResourceCannotCreateException {
         basketService.add(mediaId);
         response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(request));
         response.setStatus(HttpServletResponse.SC_CREATED);

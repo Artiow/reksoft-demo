@@ -116,7 +116,7 @@ public class MediaService extends AbstractService<MediaDTO> {
         try {
             return mediaMapper.toDTO(mediaRepository.getOne(id));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Media.notExistById.message", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Media.notExistById.message", id), e);
         }
     }
 

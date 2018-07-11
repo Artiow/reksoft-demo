@@ -13,10 +13,10 @@ public class MediaEntity extends AbstractVersionedEntity {
     @Column(name = "price", nullable = false)
     private Integer price;
 
-    @OneToMany(mappedBy = "media")
+    @OneToMany(mappedBy = "pk.media")
     private Collection<CurrentBasketEntity> baskets;
 
-    @OneToMany(mappedBy = "media")
+    @OneToMany(mappedBy = "pk.media")
     private Collection<MediaOrderEntity> orders;
 
     @ManyToOne

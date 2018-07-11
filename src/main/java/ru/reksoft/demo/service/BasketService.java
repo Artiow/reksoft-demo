@@ -8,7 +8,6 @@ import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.domain.UserEntity;
 import ru.reksoft.demo.dto.BasketDTO;
 import ru.reksoft.demo.mapper.BasketMapper;
-import ru.reksoft.demo.repository.CurrentBasketRepository;
 import ru.reksoft.demo.repository.MediaRepository;
 import ru.reksoft.demo.repository.UserRepository;
 import ru.reksoft.demo.service.generic.AuthorizationRequiredException;
@@ -23,7 +22,6 @@ public class BasketService {
 
     private UserRepository userRepository;
     private MediaRepository mediaRepository;
-    private CurrentBasketRepository currentBasketRepository;
 
     private BasketMapper basketMapper;
 
@@ -43,11 +41,6 @@ public class BasketService {
     }
 
     @Autowired
-    public void setCurrentBasketRepository(CurrentBasketRepository currentBasketRepository) {
-        this.currentBasketRepository = currentBasketRepository;
-    }
-
-    @Autowired
     public void setBasketMapper(BasketMapper basketMapper) {
         this.basketMapper = basketMapper;
     }
@@ -61,8 +54,7 @@ public class BasketService {
      */
     @Transactional(readOnly = true)
     public BasketDTO get() throws AuthorizationRequiredException {
-        // hotfix: works only with 'group by', todo: replace on getUserEntity().getBasket()
-        return basketMapper.toBasket(currentBasketRepository.findByUserId(getUserId()));
+        return basketMapper.toBasket(getUserEntity().getBasket());
     }
 
     /**

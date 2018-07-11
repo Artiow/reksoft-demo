@@ -18,7 +18,7 @@ public class OrderEntity extends AbstractIdentifiedEntity {
     @Column(name = "ordered")
     private Timestamp orderedTime;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "pk.order")
     private Collection<MediaOrderEntity> media;
 
     @ManyToOne

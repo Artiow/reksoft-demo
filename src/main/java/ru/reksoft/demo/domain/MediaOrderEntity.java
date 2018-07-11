@@ -6,20 +6,22 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "media_order")
+@AssociationOverrides({
+        @AssociationOverride(name = "pk.order", joinColumns = @JoinColumn(name = "order_id")),
+        @AssociationOverride(name = "pk.media", joinColumns = @JoinColumn(name = "media_id"))
+})
 public class MediaOrderEntity implements DomainObject {
 
     @EmbeddedId
     private MediaOrderEntityPK pk;
 
+    @Basic
+    @Column(name = "count", nullable = false)
     private Integer count = 1;
-    private Integer totalPrice;
 
-    @ManyToOne
-    @MapsId("mediaId")
-    private MediaEntity media;
-    @ManyToOne
-    @MapsId("orderId")
-    private OrderEntity order;
+    @Basic
+    @Column(name = "total_price", nullable = false)
+    private Integer totalPrice;
 
 
     public MediaOrderEntity() {
@@ -35,8 +37,6 @@ public class MediaOrderEntity implements DomainObject {
         this.pk = pk;
     }
 
-    @Basic
-    @Column(name = "count", nullable = false)
     public Integer getCount() {
         return count;
     }
@@ -45,8 +45,6 @@ public class MediaOrderEntity implements DomainObject {
         this.count = count;
     }
 
-    @Basic
-    @Column(name = "total_price", nullable = false)
     public Integer getTotalPrice() {
         return totalPrice;
     }
@@ -56,23 +54,21 @@ public class MediaOrderEntity implements DomainObject {
     }
 
 
-    @ManyToOne
-    @JoinColumn(name = "media_id", referencedColumnName = "id", nullable = false)
+    @Transient
     public MediaEntity getMedia() {
-        return media;
+        return pk.getMedia();
     }
 
     public void setMedia(MediaEntity media) {
-        this.media = media;
+        pk.setMedia(media);
     }
 
-    @ManyToOne
-    @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
+    @Transient
     public OrderEntity getOrder() {
-        return order;
+        return pk.getOrder();
     }
 
     public void setOrder(OrderEntity order) {
-        this.order = order;
+        pk.setOrder(order);
     }
 }

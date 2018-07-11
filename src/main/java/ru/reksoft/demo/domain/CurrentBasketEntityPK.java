@@ -1,34 +1,32 @@
 package ru.reksoft.demo.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 @Embeddable
 public class CurrentBasketEntityPK implements Serializable {
 
-    private Integer userId;
-    private Integer mediaId;
+    @ManyToOne
+    private UserEntity user;
+
+    @ManyToOne
+    private MediaEntity media;
 
 
-    @Id
-    @Column(name = "user_id", nullable = false)
-    public Integer getUserId() {
-        return userId;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
-    @Id
-    @Column(name = "media_id", nullable = false)
-    public Integer getMediaId() {
-        return mediaId;
+    public MediaEntity getMedia() {
+        return media;
     }
 
-    public void setMediaId(Integer mediaId) {
-        this.mediaId = mediaId;
+    public void setMedia(MediaEntity media) {
+        this.media = media;
     }
 }

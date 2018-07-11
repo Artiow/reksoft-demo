@@ -37,7 +37,7 @@ public class UserEntity extends AbstractIdentifiedEntity {
     @Column(name = "phone", nullable = false)
     private String phone;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "pk.user")
     private Collection<CurrentBasketEntity> basket;
 
     @ManyToOne

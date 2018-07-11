@@ -123,17 +123,16 @@ public class PictureService {
      */
     @Transactional
     public void delete(@NotNull Integer id) throws ResourceNotFoundException {
-        if (!pictureRepository.existsById(id)) {
+        boolean existing = pictureRepository.existsById(id);
+        if (!existing) {
             throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Picture.notExistById.message", id));
-        }
+        } else {
+            pictureRepository.deleteById(id);
 
-        pictureRepository.deleteById(id);
-
-        try {
-            // todo: resolve deleting from disk if deleting from db not complete
-            Files.delete(this.fileStorageLocation.resolve(getFilename(id)));
-        } catch (IOException ignored) {
-
+            try {
+                Files.delete(this.fileStorageLocation.resolve(getFilename(id)));
+            } catch (IOException ignored) {
+            }
         }
     }
 

@@ -69,10 +69,8 @@ public class SingerController {
      * @param singerDTO - singer data
      */
     @PutMapping("/{id}")
-    public void update(@PathVariable int id, @RequestBody @Validated(SingerDTO.UpdateCheck.class) SingerDTO singerDTO, HttpServletResponse response) throws
-            ResourceNotFoundException,
-            ResourceOptimisticLockException {
-
+    public void update(@PathVariable int id, @RequestBody @Validated(SingerDTO.UpdateCheck.class) SingerDTO singerDTO, HttpServletResponse response)
+            throws ResourceNotFoundException, ResourceOptimisticLockException {
         singerService.update(id, singerDTO);
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }

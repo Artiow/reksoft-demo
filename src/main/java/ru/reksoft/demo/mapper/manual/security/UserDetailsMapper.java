@@ -5,8 +5,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import ru.reksoft.demo.service.security.userdetails.IdentifiedUser;
+import ru.reksoft.demo.service.security.userdetails.IdentifiedUserDetails;
 
 import java.util.Collection;
 import java.util.Map;
@@ -21,23 +22,35 @@ public class UserDetailsMapper {
     };
 
 
-    public Map<String, Object> toMap(UserDetails userDetails) {
+    public Map<String, Object> toMap(IdentifiedUserDetails userDetails) {
         return mapper.convertValue(userDetails, mapTypeReference);
     }
 
-    public UserDetails toUserDetails(Map<String, Object> map) {
-        return User.withUserDetails(mapper.convertValue(map, UserDetailsImpl.class)).build();
+    public IdentifiedUserDetails toIdentifiedUserDetails(Map<String, Object> map) {
+        IdentifiedUserDetailsDTO dto = mapper.convertValue(map, IdentifiedUserDetailsDTO.class);
+        return new IdentifiedUser(dto.getId(), User.withUserDetails(dto).build());
     }
 
-    private static class UserDetailsImpl implements UserDetails {
 
+    private static class IdentifiedUserDetailsDTO implements IdentifiedUserDetails {
+
+        private Integer id;
         private String password;
         private String username;
-        private Collection<GrantedAuthorityImpl> authorities;
+        private Collection<GrantedAuthorityDTO> authorities;
         private boolean accountNonExpired;
         private boolean accountNonLocked;
         private boolean credentialsNonExpired;
         private boolean enabled;
+
+        @Override
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
 
         @Override
         public String getPassword() {
@@ -58,11 +71,11 @@ public class UserDetailsMapper {
         }
 
         @Override
-        public Collection<GrantedAuthorityImpl> getAuthorities() {
+        public Collection<GrantedAuthorityDTO> getAuthorities() {
             return authorities;
         }
 
-        public void setAuthorities(Collection<GrantedAuthorityImpl> authorities) {
+        public void setAuthorities(Collection<GrantedAuthorityDTO> authorities) {
             this.authorities = authorities;
         }
 
@@ -103,7 +116,7 @@ public class UserDetailsMapper {
         }
     }
 
-    private static class GrantedAuthorityImpl implements GrantedAuthority {
+    private static class GrantedAuthorityDTO implements GrantedAuthority {
 
         private String role;
 

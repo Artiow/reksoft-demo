@@ -19,6 +19,7 @@ import ru.reksoft.demo.repository.UserRoleRepository;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 import ru.reksoft.demo.service.security.SecurityService;
+import ru.reksoft.demo.service.security.userdetails.IdentifiedUser;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
@@ -114,11 +115,14 @@ public class UserService {
                 .setTokenType(securityService.getTokenType())
                 .setAccessToken(
                         securityService.login(
-                                User.builder()
-                                        .username(user.getLogin())
-                                        .password(user.getPassword())
-                                        .roles(user.getRole().getCode().toUpperCase())
-                                        .build()
+                                new IdentifiedUser(
+                                        user.getId(),
+                                        User.builder()
+                                                .username(user.getLogin())
+                                                .password(user.getPassword())
+                                                .roles(user.getRole().getCode().toUpperCase())
+                                                .build()
+                                )
                         )
                 );
     }

@@ -69,10 +69,8 @@ public class LabelController {
      * @param labelDTO - label data
      */
     @PutMapping("/{id}")
-    public void update(@PathVariable int id, @RequestBody @Validated(LabelDTO.UpdateCheck.class) LabelDTO labelDTO, HttpServletResponse response) throws
-            ResourceNotFoundException,
-            ResourceOptimisticLockException {
-
+    public void update(@PathVariable int id, @RequestBody @Validated(LabelDTO.UpdateCheck.class) LabelDTO labelDTO, HttpServletResponse response)
+            throws ResourceNotFoundException, ResourceOptimisticLockException {
         labelService.update(id, labelDTO);
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }

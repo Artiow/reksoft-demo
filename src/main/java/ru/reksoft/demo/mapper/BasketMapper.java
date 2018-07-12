@@ -13,7 +13,7 @@ public interface BasketMapper {
     default BasketDTO toBasket(Collection<CurrentBasketEntity> entityCollection) {
 
         BasketDTO basketDTO = new BasketDTO();
-        List<BasketDTO.BasketItemDTO> content = toDTO(entityCollection);
+        List<BasketDTO.BasketItemDTO> content = toItemDTO(entityCollection);
         if (content != null) {
             basketDTO.setContent(content);
             basketDTO.setNumberOfElements(content.size());
@@ -25,7 +25,7 @@ public interface BasketMapper {
         return basketDTO;
     }
 
-    BasketDTO.BasketItemDTO toDTO(CurrentBasketEntity entity);
+    BasketDTO.BasketItemDTO toItemDTO(CurrentBasketEntity entity);
 
-    List<BasketDTO.BasketItemDTO> toDTO(Collection<CurrentBasketEntity> entityCollection);
+    List<BasketDTO.BasketItemDTO> toItemDTO(Collection<CurrentBasketEntity> entityCollection);
 }

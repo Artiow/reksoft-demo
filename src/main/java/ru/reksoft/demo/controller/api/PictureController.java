@@ -10,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.reksoft.demo.service.PictureService;
-import ru.reksoft.demo.service.generic.FileNotFoundException;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
+import ru.reksoft.demo.service.generic.ResourceFileNotFoundException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,12 +39,12 @@ public class PictureController {
      * @param id      - picture id
      * @param request - http request
      * @return picture resource
-     * @throws ResourceNotFoundException - if record not found in database
-     * @throws FileNotFoundException     - iuf file not found on disk
+     * @throws ResourceNotFoundException     - if record not found in database
+     * @throws ResourceFileNotFoundException - if file not found on disk
      */
     @GetMapping("/{id}")
     public ResponseEntity<Resource> download(@PathVariable int id, HttpServletRequest request)
-            throws ResourceNotFoundException, FileNotFoundException {
+            throws ResourceNotFoundException, ResourceFileNotFoundException {
         Resource resource = pictureService.get(id);
         MediaType contentType;
 

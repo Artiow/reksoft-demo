@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.reksoft.demo.dto.form.OrderFormDTO;
+import ru.reksoft.demo.dto.OrderDTO;
 
 import javax.validation.Valid;
 
@@ -17,11 +17,11 @@ public class OrderController {
     /**
      * Make an order by current basket for authenticated user.
      *
-     * @param formDTO - order form
+     * @param orderDTO - order form
      * @return user's order location
      */
     @PostMapping
-    public ResponseEntity<Void> make(@Valid OrderFormDTO formDTO) {
+    public ResponseEntity<Void> make(@Valid OrderDTO orderDTO) {
         // todo: make an order service here
         return ResponseEntity.created(buildURI()).build();
     }

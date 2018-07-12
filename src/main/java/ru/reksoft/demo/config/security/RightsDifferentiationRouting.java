@@ -19,7 +19,8 @@ public interface RightsDifferentiationRouting {
     );
 
     RequestMatcher USER_API_URLS = new OrRequestMatcher(
-            new AntPathRequestMatcher("/api/basket")
+            new AntPathRequestMatcher("/api/basket"),
+            new AntPathRequestMatcher("/api/order", "POST")
     );
 
     RequestMatcher ADMIN_API_URLS = new AndRequestMatcher(
@@ -27,7 +28,8 @@ public interface RightsDifferentiationRouting {
             new OrRequestMatcher(
                     new AntPathRequestMatcher("/api/*", "POST"),
                     new AntPathRequestMatcher("/api/*/*", "PUT"),
-                    new AntPathRequestMatcher("/api/*/*", "DELETE")
+                    new AntPathRequestMatcher("/api/*/*", "DELETE"),
+                    new AntPathRequestMatcher("/api/order/*")
             )
     );
 

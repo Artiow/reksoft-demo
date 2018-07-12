@@ -16,7 +16,7 @@ public class CurrentBasketEntity implements DomainObject {
     private CurrentBasketEntityPK pk;
 
     @Basic
-    @Column(name = "media_count", nullable = false)
+    @Column(name = "count", nullable = false)
     private Integer count = 1;
 
 

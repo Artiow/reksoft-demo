@@ -19,10 +19,6 @@ public class MediaOrderEntity implements DomainObject {
     @Column(name = "count", nullable = false)
     private Integer count = 1;
 
-    @Basic
-    @Column(name = "total_price", nullable = false)
-    private Integer totalPrice;
-
 
     public MediaOrderEntity() {
         pk = new MediaOrderEntityPK();
@@ -44,15 +40,6 @@ public class MediaOrderEntity implements DomainObject {
     public void setCount(Integer count) {
         this.count = count;
     }
-
-    public Integer getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(Integer totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
 
     @Transient
     public MediaEntity getMedia() {

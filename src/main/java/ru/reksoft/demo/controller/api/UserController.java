@@ -3,7 +3,7 @@ package ru.reksoft.demo.controller.api;
 import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +13,8 @@ import ru.reksoft.demo.dto.shortcut.UserShortDTO;
 import ru.reksoft.demo.service.UserService;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
-import ru.reksoft.demo.util.ResourceLocationBuilder;
 
-import javax.servlet.http.HttpServletResponse;
+import static ru.reksoft.demo.util.ResourceLocationBuilder.buildURI;
 
 @RestController
 @RequestMapping("${api-path.user}")
@@ -52,20 +51,20 @@ public class UserController {
      * @return token data
      */
     @GetMapping("/login")
-    public TokenDTO login(@RequestParam String login, @RequestParam String password) throws UsernameNotFoundException, JwtException {
+    public TokenDTO login(@RequestParam String login, @RequestParam String password)
+            throws UsernameNotFoundException, JwtException {
         return userService.login(login, password);
     }
 
     /**
      * Register new user.
      *
-     * @param userDTO  - new user data
-     * @param response - http response
+     * @param userDTO - new user data
+     * @return new user location
      */
     @PostMapping("/register")
-    public void register(@RequestBody @Validated(UserDTO.FieldCheck.class) UserDTO userDTO, HttpServletResponse response)
+    public ResponseEntity<Void> register(@RequestBody @Validated(UserDTO.FieldCheck.class) UserDTO userDTO)
             throws ResourceCannotCreateException {
-        response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(apiPath, userService.register(userDTO)));
-        response.setStatus(HttpServletResponse.SC_CREATED);
+        return ResponseEntity.created(buildURI(apiPath, userService.register(userDTO))).build();
     }
 }

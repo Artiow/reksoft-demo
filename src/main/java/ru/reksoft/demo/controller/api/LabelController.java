@@ -1,7 +1,7 @@
 package ru.reksoft.demo.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.LabelDTO;
@@ -11,10 +11,8 @@ import ru.reksoft.demo.service.LabelService;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 import ru.reksoft.demo.service.generic.ResourceOptimisticLockException;
-import ru.reksoft.demo.util.ResourceLocationBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import static ru.reksoft.demo.util.ResourceLocationBuilder.buildURI;
 
 @RestController
 @RequestMapping("${api-path.label}")
@@ -44,6 +42,7 @@ public class LabelController {
      *
      * @param id - label id
      * @return label
+     * @throws ResourceNotFoundException - if label not found
      */
     @GetMapping("/{id}")
     public LabelDTO get(@PathVariable int id) throws ResourceNotFoundException {
@@ -51,15 +50,16 @@ public class LabelController {
     }
 
     /**
-     * Returns created label id and location.
+     * Returns created label and location.
      *
      * @param labelDTO - sent label
+     * @return new label location
+     * @throws ResourceCannotCreateException - if label cannot created
      */
     @PostMapping
-    public void create(@RequestBody @Validated(LabelDTO.CreateCheck.class) LabelDTO labelDTO, HttpServletRequest request, HttpServletResponse response)
+    public ResponseEntity<Void> create(@RequestBody @Validated(LabelDTO.CreateCheck.class) LabelDTO labelDTO)
             throws ResourceCannotCreateException {
-        response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(request, labelService.create(labelDTO)));
-        response.setStatus(HttpServletResponse.SC_CREATED);
+        return ResponseEntity.created(buildURI(labelService.create(labelDTO))).build();
     }
 
     /**
@@ -67,23 +67,27 @@ public class LabelController {
      *
      * @param id       - label id
      * @param labelDTO - label data
+     * @return no content
+     * @throws ResourceNotFoundException       - if label not found
+     * @throws ResourceOptimisticLockException - if label was already updated
      */
     @PutMapping("/{id}")
-    public void update(@PathVariable int id, @RequestBody @Validated(LabelDTO.UpdateCheck.class) LabelDTO labelDTO, HttpServletResponse response)
+    public ResponseEntity<Void> update(@PathVariable int id, @RequestBody @Validated(LabelDTO.UpdateCheck.class) LabelDTO labelDTO)
             throws ResourceNotFoundException, ResourceOptimisticLockException {
         labelService.update(id, labelDTO);
-        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
     /**
      * Delete label by id.
      *
      * @param id - label id
+     * @return no content
+     * @throws ResourceNotFoundException - if label not found
      */
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id, HttpServletResponse response)
-            throws ResourceNotFoundException {
+    public ResponseEntity<Void> delete(@PathVariable int id) throws ResourceNotFoundException {
         labelService.delete(id);
-        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -137,6 +137,12 @@ public class PictureService {
     }
 
 
+    /**
+     * Form picture filename.
+     *
+     * @param identifier - picture id
+     * @return picture filename
+     */
     private String getFilename(@NotNull Integer identifier) {
         return String.format(pattern, identifier);
     }

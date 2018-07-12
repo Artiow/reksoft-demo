@@ -13,10 +13,11 @@ import ru.reksoft.demo.service.PictureService;
 import ru.reksoft.demo.service.generic.FileNotFoundException;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
-import ru.reksoft.demo.util.ResourceLocationBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+
+import static ru.reksoft.demo.util.ResourceLocationBuilder.buildURI;
 
 @RestController
 @RequestMapping("${api-path.picture}")
@@ -64,27 +65,28 @@ public class PictureController {
      * Upload picture and returns new resource URI.
      *
      * @param picture - picture file
-     * @param request - http request
-     * @return picture URI
+     * @return uploaded picture location
      * @throws ResourceCannotCreateException - if resource cannot create
      */
     @PostMapping
-    public ResponseEntity<Void> upload(@RequestParam("picture") MultipartFile picture, HttpServletRequest request)
-            throws ResourceCannotCreateException {
-        return ResponseEntity.created(ResourceLocationBuilder.buildURI(request, pictureService.create(picture))).build();
+    public ResponseEntity<Void> upload(@RequestParam("picture") MultipartFile picture) throws ResourceCannotCreateException {
+        return ResponseEntity
+                .created(buildURI(pictureService.create(picture)))
+                .build();
     }
 
     /**
-     * Delete picture.
+     * Delete picture by id.
      *
      * @param id - picture id
      * @return no content
      * @throws ResourceNotFoundException - if record not found in database
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id)
-            throws ResourceNotFoundException {
+    public ResponseEntity<Void> delete(@PathVariable int id) throws ResourceNotFoundException {
         pictureService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }

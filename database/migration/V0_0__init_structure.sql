@@ -72,6 +72,7 @@ create table demo."order"
     constraint order_status_id_fk
     references demo.order_status,
 
+  cost      integer     not null,
   address   varchar(90) not null,
   ordered   timestamp   not null
 );
@@ -246,16 +247,15 @@ create unique index media_type_id_album_id_uindex
 
 create table demo.media_order
 (
-  media_id    integer           not null
+  media_id integer           not null
     constraint media_order_media_id_fk
     references demo.media,
 
-  order_id    integer           not null
+  order_id integer           not null
     constraint media_order_order_id_fk
     references demo."order",
 
-  count       integer default 1 not null,
-  total_price integer           not null,
+  count    integer default 1 not null,
 
   constraint media_order_pk
   primary key (media_id, order_id)
@@ -265,15 +265,15 @@ create table demo.media_order
 
 create table demo.current_basket
 (
-  user_id     integer           not null
+  user_id  integer           not null
     constraint current_basket_user_id_fk
     references demo."user",
 
-  media_id    integer           not null
+  media_id integer           not null
     constraint current_basket_media_id_fk
     references demo.media,
 
-  media_count integer default 1 not null,
+  count    integer default 1 not null,
 
   constraint current_basket_user_id_media_id_pk
   primary key (user_id, media_id)

@@ -33,15 +33,16 @@ public class ApplicationConfig implements WebMvcConfigurer {
                 .paths(PathSelectors.any())
                 .build();
 
-        return docket
-                .globalOperationParameters(Collections.singletonList(
+        return docket.globalOperationParameters(
+                Collections.singletonList(
                         new ParameterBuilder()
                                 .name(HttpHeaders.AUTHORIZATION)
                                 .modelRef(new ModelRef("string"))
                                 .parameterType("header")
                                 .required(false)
                                 .build()
-                ));
+                )
+        );
     }
 
 

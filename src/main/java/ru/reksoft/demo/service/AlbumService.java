@@ -83,6 +83,7 @@ public class AlbumService extends AbstractService<AlbumDTO> {
      *
      * @param id - album id
      * @return album
+     * @throws ResourceNotFoundException if album not found by id
      */
     @Override
     @Transactional(readOnly = true)
@@ -102,6 +103,7 @@ public class AlbumService extends AbstractService<AlbumDTO> {
      *
      * @param albumDTO - album
      * @return saved entity id
+     * @throws ResourceCannotCreateException - if album cannot created
      */
     @Override
     @Transactional
@@ -142,13 +144,14 @@ public class AlbumService extends AbstractService<AlbumDTO> {
      *
      * @param id       - album id
      * @param albumDTO - new album data
+     * @throws ResourceNotFoundException       - if album not found by id
+     * @throws ResourceCannotUpdateException   - if album cannot updated
+     * @throws ResourceOptimisticLockException - if album was already updated
      */
     @Override
     @Transactional
-    public void update(@NotNull Integer id, @NotNull AlbumDTO albumDTO) throws
-            ResourceNotFoundException,
-            ResourceCannotUpdateException,
-            ResourceOptimisticLockException {
+    public void update(@NotNull Integer id, @NotNull AlbumDTO albumDTO)
+            throws ResourceNotFoundException, ResourceCannotUpdateException, ResourceOptimisticLockException {
 
         Integer labelId = albumDTO.getLabel().getId();
         Integer singerId = albumDTO.getSinger().getId();
@@ -185,6 +188,7 @@ public class AlbumService extends AbstractService<AlbumDTO> {
      * Delete album.
      *
      * @param id - album id
+     * @throws ResourceNotFoundException - if album not found by id
      */
     @Override
     @Transactional

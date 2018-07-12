@@ -1,18 +1,17 @@
 package ru.reksoft.demo.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.BasketDTO;
 import ru.reksoft.demo.service.BasketService;
 import ru.reksoft.demo.service.generic.AuthorizationRequiredException;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
-import ru.reksoft.demo.util.ResourceLocationBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.Min;
+
+import static ru.reksoft.demo.util.ResourceLocationBuilder.buildURI;
 
 @RestController
 @RequestMapping("${api-path.basket}")
@@ -30,6 +29,7 @@ public class BasketController {
      * Returns basket by user by authentication.
      *
      * @return basket
+     * @throws AuthorizationRequiredException - if user not authorized
      */
     @GetMapping
     public BasketDTO get() throws AuthorizationRequiredException {
@@ -39,17 +39,17 @@ public class BasketController {
     /**
      * Add media by media id in basket by user by authentication.
      *
-     * @param mediaId  - media id
-     * @param request  - http request
-     * @param response - http response
-     * @throws ResourceCannotCreateException - if media cannot be added
+     * @param mediaId - media id
+     * @return user's basket location
+     * @throws AuthorizationRequiredException - if user not authorized
+     * @throws ResourceNotFoundException      - if media not found
+     * @throws ResourceCannotCreateException  - if media cannot be added
      */
     @PostMapping
-    public void add(@RequestParam("added") @Min(value = 1) int mediaId, HttpServletRequest request, HttpServletResponse response)
+    public ResponseEntity<Void> add(@RequestParam("added") @Min(value = 1) int mediaId)
             throws AuthorizationRequiredException, ResourceNotFoundException, ResourceCannotCreateException {
         basketService.add(mediaId);
-        response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(request));
-        response.setStatus(HttpServletResponse.SC_CREATED);
+        return ResponseEntity.created(buildURI()).build();
     }
 
     /**
@@ -57,27 +57,29 @@ public class BasketController {
      *
      * @param mediaId  - media id
      * @param quantity - quantity of media
-     * @param response - http response
-     * @throws ResourceNotFoundException - if media not found in basket
+     * @return no content
+     * @throws AuthorizationRequiredException - if user not authorized
+     * @throws ResourceNotFoundException      - if media not found in basket
      */
     @PutMapping
-    public void update(@RequestParam("updated") @Min(value = 1) int mediaId, @RequestParam("quantity") @Min(value = 1) int quantity, HttpServletResponse response)
+    public ResponseEntity<Void> update(@RequestParam("updated") @Min(value = 1) int mediaId, @RequestParam("quantity") @Min(value = 1) int quantity)
             throws AuthorizationRequiredException, ResourceNotFoundException {
         basketService.update(mediaId, quantity);
-        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
     /**
      * Remove media from the basket by media id in basket by user by authentication.
      *
-     * @param mediaId  - media id
-     * @param response - http response
-     * @throws ResourceNotFoundException - if media not found in basket
+     * @param mediaId - media id
+     * @return no content
+     * @throws AuthorizationRequiredException - if user not authorized
+     * @throws ResourceNotFoundException      - if media not found in basket
      */
     @DeleteMapping
-    public void remove(@RequestParam("removed") @Min(value = 1) int mediaId, HttpServletResponse response)
+    public ResponseEntity<Void> remove(@RequestParam("removed") @Min(value = 1) int mediaId)
             throws AuthorizationRequiredException, ResourceNotFoundException {
         basketService.remove(mediaId);
-        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }

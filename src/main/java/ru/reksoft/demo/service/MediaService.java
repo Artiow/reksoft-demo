@@ -109,6 +109,7 @@ public class MediaService extends AbstractService<MediaDTO> {
      *
      * @param id - media id
      * @return media
+     * @throws ResourceNotFoundException - if media not found by id
      */
     @Override
     @Transactional(readOnly = true)
@@ -126,6 +127,7 @@ public class MediaService extends AbstractService<MediaDTO> {
      *
      * @param mediaDTO - media
      * @return saved entity id
+     * @throws ResourceCannotCreateException - if media cannot created
      */
     @Override
     @Transactional
@@ -155,13 +157,14 @@ public class MediaService extends AbstractService<MediaDTO> {
      *
      * @param id       - media id
      * @param mediaDTO - new media data
+     * @throws ResourceNotFoundException       - if media not found by id
+     * @throws ResourceCannotUpdateException   - if media cannot updated
+     * @throws ResourceOptimisticLockException - if media was already updated
      */
     @Override
     @Transactional
-    public void update(@NotNull Integer id, @NotNull MediaDTO mediaDTO) throws
-            ResourceNotFoundException,
-            ResourceCannotUpdateException,
-            ResourceOptimisticLockException {
+    public void update(@NotNull Integer id, @NotNull MediaDTO mediaDTO)
+            throws ResourceNotFoundException, ResourceCannotUpdateException, ResourceOptimisticLockException {
 
         Integer typeId = mediaDTO.getType().getId();
         Integer albumId = mediaDTO.getAlbum().getId();
@@ -189,6 +192,7 @@ public class MediaService extends AbstractService<MediaDTO> {
      * Delete media.
      *
      * @param id - media id
+     * @throws ResourceNotFoundException- if media not found by id
      */
     @Override
     @Transactional

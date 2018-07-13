@@ -22,7 +22,7 @@ public class OrderEntity extends AbstractIdentifiedEntity {
     @Column(name = "ordered")
     private Timestamp orderedTime;
 
-    @OneToMany(mappedBy = "pk.order")
+    @OneToMany(mappedBy = "pk.order", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Collection<OrderedMediaEntity> medias;
 
     @ManyToOne

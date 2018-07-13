@@ -10,7 +10,6 @@ import ru.reksoft.demo.dto.pagination.filters.OrderFilterDTO;
 import ru.reksoft.demo.service.OrderService;
 import ru.reksoft.demo.service.generic.AuthorizationRequiredException;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
-import ru.reksoft.demo.service.generic.ResourceCannotUpdateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 
 import java.time.LocalDateTime;
@@ -61,7 +60,7 @@ public class OrderController {
      * @throws ResourceCannotCreateException  - if order cannot be made
      */
     @PostMapping
-    public ResponseEntity<Void> make(@Validated(OrderDTO.FieldCheck.class) OrderDTO orderDTO) throws AuthorizationRequiredException, ResourceCannotCreateException {
+    public ResponseEntity<Void> make(@RequestBody @Validated(OrderDTO.FieldCheck.class) OrderDTO orderDTO) throws AuthorizationRequiredException, ResourceCannotCreateException {
         orderService.make(orderDTO.setOrderedTime(LocalDateTime.now()));
         return ResponseEntity.created(buildURI()).build();
     }
@@ -71,11 +70,10 @@ public class OrderController {
      *
      * @param id - order id
      * @return no content
-     * @throws ResourceNotFoundException     - if order not found
-     * @throws ResourceCannotUpdateException - if order cannot updated
+     * @throws ResourceNotFoundException - if order not found
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Void> send(@PathVariable int id) throws ResourceNotFoundException, ResourceCannotUpdateException {
+    public ResponseEntity<Void> send(@PathVariable int id) throws ResourceNotFoundException {
         orderService.send(id);
         return ResponseEntity.noContent().build();
     }

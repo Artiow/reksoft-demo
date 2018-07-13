@@ -14,7 +14,10 @@ import ru.reksoft.demo.mapper.OrderMapper;
 import ru.reksoft.demo.repository.OrderRepository;
 import ru.reksoft.demo.repository.OrderStatusRepository;
 import ru.reksoft.demo.repository.UserRepository;
-import ru.reksoft.demo.service.generic.*;
+import ru.reksoft.demo.service.generic.AbstractService;
+import ru.reksoft.demo.service.generic.AuthorizationRequiredException;
+import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
+import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 import ru.reksoft.demo.service.security.userdetails.IdentifiedUserDetails;
 
 import javax.persistence.EntityNotFoundException;
@@ -128,6 +131,8 @@ public class OrderService {
 
             order.setCost(cost);
             orderRepository.save(order);
+            user.getBasket().clear();
+            userRepository.save(user);
         }
     }
 
@@ -135,12 +140,19 @@ public class OrderService {
      * Update order status (set it as sent) by order id.
      *
      * @param id - order id
-     * @throws ResourceNotFoundException     - if order not found
-     * @throws ResourceCannotUpdateException - if order cannot updated
+     * @throws ResourceNotFoundException - if order not found
      */
     @Transactional
-    public void send(@NotNull Integer id) throws ResourceNotFoundException, ResourceCannotUpdateException {
+    public void send(@NotNull Integer id) throws ResourceNotFoundException {
+        String ORDER_SENT = "sent"; // order sent status code
 
+        try {
+            OrderEntity orderEntity = orderRepository.getOne(id);
+            orderEntity.setStatus(orderStatusRepository.findByCode(ORDER_SENT));
+            orderRepository.save(orderEntity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Order.notExistById.message", id), e);
+        }
     }
 
 

@@ -23,7 +23,7 @@ public class OrderEntity extends AbstractIdentifiedEntity {
     private Timestamp orderedTime;
 
     @OneToMany(mappedBy = "pk.order")
-    private Collection<MediaOrderEntity> media;
+    private Collection<OrderedMediaEntity> medias;
 
     @ManyToOne
     @JoinColumn(name = "status_id", referencedColumnName = "id", nullable = false)
@@ -54,12 +54,12 @@ public class OrderEntity extends AbstractIdentifiedEntity {
         this.orderedTime = orderedTime;
     }
 
-    public Collection<MediaOrderEntity> getMedia() {
-        return media;
+    public Collection<OrderedMediaEntity> getMedias() {
+        return medias;
     }
 
-    public void setMedia(Collection<MediaOrderEntity> media) {
-        this.media = media;
+    public void setMedias(Collection<OrderedMediaEntity> media) {
+        this.medias = media;
     }
 
     public OrderStatusEntity getStatus() {

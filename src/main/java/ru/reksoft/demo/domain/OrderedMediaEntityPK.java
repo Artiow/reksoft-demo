@@ -5,7 +5,7 @@ import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 @Embeddable
-public class MediaOrderEntityPK implements Serializable {
+public class OrderedMediaEntityPK implements Serializable {
 
     @ManyToOne
     private OrderEntity order;

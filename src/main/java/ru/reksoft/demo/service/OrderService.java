@@ -6,10 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.config.MessagesConfig;
-import ru.reksoft.demo.domain.OrderEntity;
-import ru.reksoft.demo.domain.OrderEntity_;
-import ru.reksoft.demo.domain.OrderStatusEntity_;
-import ru.reksoft.demo.domain.UserEntity;
+import ru.reksoft.demo.domain.*;
 import ru.reksoft.demo.dto.OrderDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.dto.pagination.filters.OrderFilterDTO;
@@ -81,6 +78,7 @@ public class OrderService {
     /**
      * Returns order by order id.
      *
+     * @param id - order id
      * @return order
      * @throws ResourceNotFoundException - if order not found by id
      */
@@ -98,11 +96,39 @@ public class OrderService {
      *
      * @param orderDTO - order form
      * @throws AuthorizationRequiredException - if authorization is missing
-     * @throws ResourceCannotCreateException  - if current basket already exist for user and media
+     * @throws ResourceCannotCreateException  - if current basket is empty for user and media
      */
     @Transactional
     public void make(@NotNull OrderDTO orderDTO) throws AuthorizationRequiredException, ResourceCannotCreateException {
+        String ORDER_EXPECT = "expect"; // order expect status code
 
+        UserEntity user = getCurrentUserEntity();
+        Collection<CurrentBasketEntity> basket = user.getBasket();
+
+        if ((basket == null) || (basket.isEmpty())) {
+            throw new ResourceCannotCreateException(messages.get("reksoft.demo.Basket.isEmpty.message"));
+        } else {
+            OrderEntity order = orderMapper.toEntity(orderDTO);
+            order.setStatus(orderStatusRepository.findByCode(ORDER_EXPECT));
+            order.setMedias(new ArrayList<>(basket.size()));
+            order.setAddress(user.getAddress());
+
+            Integer cost = 0;
+            for (CurrentBasketEntity basketItem : basket) {
+                Integer count = basketItem.getCount();
+                cost += ((basketItem.getMedia().getPrice()) * count);
+
+                OrderedMediaEntity orderItem = new OrderedMediaEntity();
+                orderItem.setMedia(basketItem.getMedia());
+                orderItem.setOrder(order);
+                orderItem.setCount(count);
+
+                order.getMedias().add(orderItem);
+            }
+
+            order.setCost(cost);
+            orderRepository.save(order);
+        }
     }
 
     /**

@@ -5,31 +5,31 @@ import ru.reksoft.demo.domain.generic.DomainObject;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "media_order")
+@Table(name = "ordered_media")
 @AssociationOverrides({
         @AssociationOverride(name = "pk.order", joinColumns = @JoinColumn(name = "order_id")),
         @AssociationOverride(name = "pk.media", joinColumns = @JoinColumn(name = "media_id"))
 })
-public class MediaOrderEntity implements DomainObject {
+public class OrderedMediaEntity implements DomainObject {
 
     @EmbeddedId
-    private MediaOrderEntityPK pk;
+    private OrderedMediaEntityPK pk;
 
     @Basic
     @Column(name = "count", nullable = false)
     private Integer count = 1;
 
 
-    public MediaOrderEntity() {
-        pk = new MediaOrderEntityPK();
+    public OrderedMediaEntity() {
+        pk = new OrderedMediaEntityPK();
     }
 
 
-    public MediaOrderEntityPK getPk() {
+    public OrderedMediaEntityPK getPk() {
         return pk;
     }
 
-    public void setPk(MediaOrderEntityPK pk) {
+    public void setPk(OrderedMediaEntityPK pk) {
         this.pk = pk;
     }
 

@@ -243,22 +243,22 @@ create table demo.media
 create unique index media_type_id_album_id_uindex
   on demo.media (type_id, album_id);
 
--- media_order
+-- ordered_media
 
-create table demo.media_order
+create table demo.ordered_media
 (
-  media_id integer           not null
-    constraint media_order_media_id_fk
-    references demo.media,
-
   order_id integer           not null
-    constraint media_order_order_id_fk
+    constraint ordered_media_order_id_fk
     references demo."order",
+
+  media_id integer           not null
+    constraint ordered_media_media_id_fk
+    references demo.media,
 
   count    integer default 1 not null,
 
-  constraint media_order_pk
-  primary key (media_id, order_id)
+  constraint ordered_media_pk
+  primary key (order_id, media_id)
 );
 
 -- current_basket

@@ -10,7 +10,7 @@ insert into demo."order" (status_id, cost, address, ordered) values
   (1, 0, 'ул. Адрес, дом 3', '2018-07-12 14:00:00'),
   (1, 0, 'ул. Адрес, дом 4', '2018-07-12 14:00:00');
 
-insert into demo.media_order (media_id, order_id, count) values
+insert into demo.ordered_media (order_id, media_id, count) values
   (1, 1, 1),
-  (2, 1, 2),
+  (1, 2, 2),
   (2, 2, 3);

@@ -13,6 +13,8 @@ import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceCannotUpdateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 
+import java.time.LocalDateTime;
+
 import static ru.reksoft.demo.util.ResourceLocationBuilder.buildURI;
 
 @RestController
@@ -60,7 +62,7 @@ public class OrderController {
      */
     @PostMapping
     public ResponseEntity<Void> make(@Validated(OrderDTO.FieldCheck.class) OrderDTO orderDTO) throws AuthorizationRequiredException, ResourceCannotCreateException {
-        orderService.make(orderDTO);
+        orderService.make(orderDTO.setOrderedTime(LocalDateTime.now()));
         return ResponseEntity.created(buildURI()).build();
     }
 

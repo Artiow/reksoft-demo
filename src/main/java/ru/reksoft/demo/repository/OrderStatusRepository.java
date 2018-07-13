@@ -6,4 +6,5 @@ import ru.reksoft.demo.domain.OrderStatusEntity;
 
 public interface OrderStatusRepository extends JpaRepository<OrderStatusEntity, Integer>, JpaSpecificationExecutor<OrderStatusEntity> {
 
+    OrderStatusEntity findByCode(String code);
 }

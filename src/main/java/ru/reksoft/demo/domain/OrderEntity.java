@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 import java.util.Collection;
 
 @Entity
-@Table(name = "order")
+@Table(name = "order", schema = "demo")
 public class OrderEntity extends AbstractIdentifiedEntity {
 
     @Basic

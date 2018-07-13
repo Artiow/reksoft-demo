@@ -6,7 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.OrderDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
-import ru.reksoft.demo.dto.pagination.PageDividerDTO;
+import ru.reksoft.demo.dto.pagination.filters.OrderFilterDTO;
 import ru.reksoft.demo.service.OrderService;
 import ru.reksoft.demo.service.generic.AuthorizationRequiredException;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
@@ -28,14 +28,14 @@ public class OrderController {
 
 
     /**
-     * Return list of orders by page divider.
+     * Return list of orders by a certain statuses by page divider.
      *
-     * @param dividerDTO - page divider
+     * @param filterDTO - order filter
      * @return page with labels
      */
     @PostMapping("/list")
-    public PageDTO<OrderDTO> getList(@RequestBody PageDividerDTO dividerDTO) {
-        return orderService.getList(dividerDTO);
+    public PageDTO<OrderDTO> getList(@RequestBody OrderFilterDTO filterDTO) {
+        return orderService.getList(filterDTO);
     }
 
     /**

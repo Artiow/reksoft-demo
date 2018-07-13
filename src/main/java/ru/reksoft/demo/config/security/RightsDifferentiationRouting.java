@@ -20,7 +20,7 @@ public interface RightsDifferentiationRouting {
 
     RequestMatcher USER_API_URLS = new OrRequestMatcher(
             new AntPathRequestMatcher("/api/basket"),
-            new AntPathRequestMatcher("/api/order", "POST")
+            new AntPathRequestMatcher("/api/order")
     );
 
     RequestMatcher ADMIN_API_URLS = new AndRequestMatcher(

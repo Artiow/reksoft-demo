@@ -11,8 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.domain.PictureEntity;
 import ru.reksoft.demo.repository.PictureRepository;
-import ru.reksoft.demo.service.generic.FileNotFoundException;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
+import ru.reksoft.demo.service.generic.ResourceFileNotFoundException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 
 import javax.annotation.PostConstruct;
@@ -69,22 +69,22 @@ public class PictureService {
      *
      * @param id - resource id
      * @return resource
-     * @throws ResourceNotFoundException - if record not found in database
-     * @throws FileNotFoundException     - if file not found on disk
+     * @throws ResourceNotFoundException     - if record not found in database
+     * @throws ResourceFileNotFoundException - if file not found on disk
      */
     @Transactional(readOnly = true)
-    public Resource get(@NotNull Integer id) throws ResourceNotFoundException, FileNotFoundException {
+    public Resource get(@NotNull Integer id) throws ResourceNotFoundException, ResourceFileNotFoundException {
         try {
             Resource resource = new UrlResource((this.fileStorageLocation.resolve(getFilename(pictureRepository.getOne(id).getId()))).toUri());
             if (resource.exists()) {
                 return resource;
             } else {
-                throw new FileNotFoundException(messages.getAndFormat("reksoft.demo.Picture.notExistByFile.message", id));
+                throw new ResourceFileNotFoundException(messages.getAndFormat("reksoft.demo.Picture.notExistByFile.message", id));
             }
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Picture.notExistById.message", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Picture.notExistById.message", id), e);
         } catch (MalformedURLException e) {
-            throw new FileNotFoundException(messages.getAndFormat("reksoft.demo.Picture.notExistByFile.message", id), e);
+            throw new ResourceFileNotFoundException(messages.getAndFormat("reksoft.demo.Picture.notExistByFile.message", id), e);
         }
     }
 
@@ -99,19 +99,20 @@ public class PictureService {
     public Integer create(@NotNull MultipartFile picture) throws ResourceCannotCreateException {
         if (!picture.getContentType().equals(MediaType.IMAGE_JPEG_VALUE)) {
             throw new ResourceCannotCreateException(messages.get("reksoft.demo.Picture.couldNotStore.message"));
-        }
+        } else {
 
-        PictureEntity pictureEntity = new PictureEntity();
+            PictureEntity pictureEntity = new PictureEntity();
 
-        pictureEntity.setSize(picture.getSize());
-        pictureEntity.setUploaded(Timestamp.valueOf(LocalDateTime.now()));
+            pictureEntity.setSize(picture.getSize());
+            pictureEntity.setUploaded(Timestamp.valueOf(LocalDateTime.now()));
 
-        try {
-            Integer newId = pictureRepository.save(pictureEntity).getId();
-            Files.copy(picture.getInputStream(), this.fileStorageLocation.resolve(getFilename(newId)), StandardCopyOption.REPLACE_EXISTING);
-            return newId;
-        } catch (IOException e) {
-            throw new ResourceCannotCreateException(messages.get("reksoft.demo.Picture.couldNotStore.message"), e);
+            try {
+                Integer newId = pictureRepository.save(pictureEntity).getId();
+                Files.copy(picture.getInputStream(), this.fileStorageLocation.resolve(getFilename(newId)), StandardCopyOption.REPLACE_EXISTING);
+                return newId;
+            } catch (IOException e) {
+                throw new ResourceCannotCreateException(messages.get("reksoft.demo.Picture.couldNotStore.message"), e);
+            }
         }
     }
 
@@ -125,19 +126,23 @@ public class PictureService {
     public void delete(@NotNull Integer id) throws ResourceNotFoundException {
         if (!pictureRepository.existsById(id)) {
             throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Picture.notExistById.message", id));
-        }
+        } else {
+            pictureRepository.deleteById(id);
 
-        pictureRepository.deleteById(id);
-
-        try {
-            // todo: resolve deleting from disk if deleting from db not complete
-            Files.delete(this.fileStorageLocation.resolve(getFilename(id)));
-        } catch (IOException ignored) {
-
+            try {
+                Files.delete(this.fileStorageLocation.resolve(getFilename(id)));
+            } catch (IOException ignored) {
+            }
         }
     }
 
 
+    /**
+     * Form picture filename.
+     *
+     * @param identifier - picture id
+     * @return picture filename
+     */
     private String getFilename(@NotNull Integer identifier) {
         return String.format(pattern, identifier);
     }

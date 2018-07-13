@@ -1,22 +1,23 @@
 package ru.reksoft.demo.domain;
 
+import ru.reksoft.demo.domain.generic.DomainObject;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "current_basket")
-public class CurrentBasketEntity {
+@AssociationOverrides({
+        @AssociationOverride(name = "pk.user", joinColumns = @JoinColumn(name = "user_id")),
+        @AssociationOverride(name = "pk.media", joinColumns = @JoinColumn(name = "media_id"))
+})
+public class CurrentBasketEntity implements DomainObject {
 
     @EmbeddedId
     private CurrentBasketEntityPK pk;
 
+    @Basic
+    @Column(name = "count", nullable = false)
     private Integer count = 1;
-
-    @ManyToOne
-    @MapsId("userId")
-    private UserEntity user;
-    @ManyToOne
-    @MapsId("mediaId")
-    private MediaEntity media;
 
 
     public CurrentBasketEntity() {
@@ -32,8 +33,6 @@ public class CurrentBasketEntity {
         this.pk = pk;
     }
 
-    @Basic
-    @Column(name = "media_count", nullable = false)
     public Integer getCount() {
         return count;
     }
@@ -42,24 +41,21 @@ public class CurrentBasketEntity {
         this.count = count;
     }
 
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @Transient
     public UserEntity getUser() {
-        return user;
+        return pk.getUser();
     }
 
     public void setUser(UserEntity user) {
-        this.user = user;
+        pk.setUser(user);
     }
 
-    @ManyToOne
-    @JoinColumn(name = "media_id", referencedColumnName = "id", nullable = false)
+    @Transient
     public MediaEntity getMedia() {
-        return media;
+        return pk.getMedia();
     }
 
     public void setMedia(MediaEntity media) {
-        this.media = media;
+        pk.setMedia(media);
     }
 }

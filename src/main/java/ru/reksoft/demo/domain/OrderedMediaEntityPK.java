@@ -5,21 +5,21 @@ import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 @Embeddable
-public class CurrentBasketEntityPK implements Serializable {
+public class OrderedMediaEntityPK implements Serializable {
 
     @ManyToOne
-    private UserEntity user;
+    private OrderEntity order;
 
     @ManyToOne
     private MediaEntity media;
 
 
-    public UserEntity getUser() {
-        return user;
+    public OrderEntity getOrder() {
+        return order;
     }
 
-    public void setUser(UserEntity user) {
-        this.user = user;
+    public void setOrder(OrderEntity order) {
+        this.order = order;
     }
 
     public MediaEntity getMedia() {

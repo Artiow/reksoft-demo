@@ -63,6 +63,7 @@ public class SingerService extends AbstractService<SingerDTO> {
      *
      * @param id - singer id
      * @return found singer
+     * @throws ResourceNotFoundException - if singer not found by id
      */
     @Override
     @Transactional(readOnly = true)
@@ -70,7 +71,7 @@ public class SingerService extends AbstractService<SingerDTO> {
         try {
             return singerMapper.toDTO(singerRepository.getOne(id));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Singer.notExistById.message", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Singer.notExistById.message", id), e);
         }
     }
 
@@ -79,6 +80,7 @@ public class SingerService extends AbstractService<SingerDTO> {
      *
      * @param singerDTO - singer
      * @return saved entity id
+     * @throws ResourceCannotCreateException - if singer cannot created
      */
     @Override
     @Transactional
@@ -95,12 +97,13 @@ public class SingerService extends AbstractService<SingerDTO> {
      *
      * @param id        - singer id
      * @param singerDTO - new singer data
+     * @throws ResourceNotFoundException       - if singer not found by id
+     * @throws ResourceOptimisticLockException - if singer was already updated
      */
     @Override
     @Transactional
-    public void update(@NotNull Integer id, @NotNull SingerDTO singerDTO) throws
-            ResourceNotFoundException,
-            ResourceOptimisticLockException {
+    public void update(@NotNull Integer id, @NotNull SingerDTO singerDTO)
+            throws ResourceNotFoundException, ResourceOptimisticLockException {
 
         try {
             singerRepository.saveAndFlush(singerMapper.merge(singerRepository.getOne(id), singerMapper.toEntity(singerDTO)));
@@ -112,9 +115,10 @@ public class SingerService extends AbstractService<SingerDTO> {
     }
 
     /**
-     * Delete label.
+     * Delete singer.
      *
-     * @param id - label id
+     * @param id - singer id
+     * @throws ResourceNotFoundException - if singer not found by id
      */
     @Override
     @Transactional

@@ -1,7 +1,7 @@
 package ru.reksoft.demo.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.AlbumDTO;
@@ -13,10 +13,8 @@ import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceCannotUpdateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 import ru.reksoft.demo.service.generic.ResourceOptimisticLockException;
-import ru.reksoft.demo.util.ResourceLocationBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import static ru.reksoft.demo.util.ResourceLocationBuilder.buildURI;
 
 @RestController
 @RequestMapping("${api-path.album}")
@@ -46,6 +44,7 @@ public class AlbumController {
      *
      * @param id - album id
      * @return album
+     * @throws ResourceNotFoundException - if album not found
      */
     @GetMapping("/{id}")
     public AlbumDTO get(@PathVariable int id) throws ResourceNotFoundException {
@@ -56,12 +55,13 @@ public class AlbumController {
      * Returns created album id and location.
      *
      * @param albumDTO - sent album
+     * @return new album location
+     * @throws ResourceCannotCreateException - if album cannot created
      */
     @PostMapping
-    public void create(@RequestBody @Validated(AlbumDTO.CreateCheck.class) AlbumDTO albumDTO, HttpServletRequest request, HttpServletResponse response)
+    public ResponseEntity<Void> create(@RequestBody @Validated(AlbumDTO.CreateCheck.class) AlbumDTO albumDTO)
             throws ResourceCannotCreateException {
-        response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(request, albumService.create(albumDTO)));
-        response.setStatus(HttpServletResponse.SC_CREATED);
+        return ResponseEntity.created(buildURI(albumService.create(albumDTO))).build();
     }
 
     /**
@@ -69,26 +69,28 @@ public class AlbumController {
      *
      * @param id       - album id
      * @param albumDTO - album data
+     * @return no content
+     * @throws ResourceNotFoundException       - if album not found
+     * @throws ResourceCannotUpdateException   - if album cannot updated
+     * @throws ResourceOptimisticLockException - if album was already updated
      */
     @PutMapping("/{id}")
-    public void update(@PathVariable int id, @RequestBody @Validated(AlbumDTO.UpdateCheck.class) AlbumDTO albumDTO, HttpServletResponse response) throws
-            ResourceNotFoundException,
-            ResourceCannotUpdateException,
-            ResourceOptimisticLockException {
-
+    public ResponseEntity<Void> update(@PathVariable int id, @RequestBody @Validated(AlbumDTO.UpdateCheck.class) AlbumDTO albumDTO)
+            throws ResourceNotFoundException, ResourceCannotUpdateException, ResourceOptimisticLockException {
         albumService.update(id, albumDTO);
-        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
     /**
      * Delete album by id.
      *
      * @param id - album id
+     * @return no content
+     * @throws ResourceNotFoundException - if album not found
      */
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id, HttpServletResponse response)
-            throws ResourceNotFoundException {
+    public ResponseEntity<Void> delete(@PathVariable int id) throws ResourceNotFoundException {
         albumService.delete(id);
-        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }

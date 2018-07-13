@@ -1,4 +1,4 @@
-package ru.reksoft.demo.config;
+package ru.reksoft.demo.config.security;
 
 import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +8,7 @@ import org.springframework.security.authentication.dao.AbstractUserDetailsAuthen
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import ru.reksoft.demo.config.MessagesConfig;
 import ru.reksoft.demo.service.security.SecurityService;
 
 @Component

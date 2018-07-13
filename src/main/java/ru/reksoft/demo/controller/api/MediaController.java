@@ -1,7 +1,7 @@
 package ru.reksoft.demo.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.MediaDTO;
@@ -15,10 +15,8 @@ import ru.reksoft.demo.service.generic.ResourceCannotUpdateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 import ru.reksoft.demo.service.generic.ResourceOptimisticLockException;
 import ru.reksoft.demo.util.MediaSearchType;
-import ru.reksoft.demo.util.ResourceLocationBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import static ru.reksoft.demo.util.ResourceLocationBuilder.buildURI;
 
 @RestController
 @RequestMapping("${api-path.media}")
@@ -48,11 +46,13 @@ public class MediaController {
      *
      * @param attributeType - attribute search type (byAlbum, byLabel, bySinger)
      * @param attributeId   - attribute id
+     * @param pageDivider   - page divider
      * @return page with media
      */
     @PostMapping("/list/byAttribute")
     public PageDTO<MediaShortDTO> getList(
-            @RequestParam("attribute") String attributeType, @RequestParam("id") Integer attributeId,
+            @RequestParam("attribute") String attributeType,
+            @RequestParam("id") Integer attributeId,
             @RequestBody PageDividerDTO pageDivider
     ) {
         return mediaService.getListByAttribute(MediaSearchType.fromValue(attributeType), attributeId, pageDivider);
@@ -63,6 +63,7 @@ public class MediaController {
      *
      * @param id - media id
      * @return media
+     * @throws ResourceNotFoundException - if media not found
      */
     @GetMapping("/{id}")
     public MediaDTO get(@PathVariable int id) throws ResourceNotFoundException {
@@ -73,12 +74,13 @@ public class MediaController {
      * Returns created media id and location.
      *
      * @param mediaDTO - sent media
+     * @return new media location
+     * @throws ResourceCannotCreateException - if media cannot created
      */
     @PostMapping
-    public void create(@RequestBody @Validated(MediaDTO.CreateCheck.class) MediaDTO mediaDTO, HttpServletRequest request, HttpServletResponse response)
+    public ResponseEntity<Void> create(@RequestBody @Validated(MediaDTO.CreateCheck.class) MediaDTO mediaDTO)
             throws ResourceCannotCreateException {
-        response.setHeader(HttpHeaders.LOCATION, ResourceLocationBuilder.build(request, mediaService.create(mediaDTO)));
-        response.setStatus(HttpServletResponse.SC_CREATED);
+        return ResponseEntity.created(buildURI(mediaService.create(mediaDTO))).build();
     }
 
     /**
@@ -86,26 +88,29 @@ public class MediaController {
      *
      * @param id       - media id
      * @param mediaDTO - media data
+     * @return no content
+     * @throws ResourceNotFoundException       - if media not found
+     * @throws ResourceCannotUpdateException   - if media cannot updated
+     * @throws ResourceOptimisticLockException - if media was already updated
      */
     @PutMapping("/{id}")
-    public void update(@PathVariable int id, @RequestBody @Validated(MediaDTO.UpdateCheck.class) MediaDTO mediaDTO, HttpServletResponse response) throws
-            ResourceNotFoundException,
-            ResourceCannotUpdateException,
-            ResourceOptimisticLockException {
-
+    public ResponseEntity<Void> update(@PathVariable int id, @RequestBody @Validated(MediaDTO.UpdateCheck.class) MediaDTO mediaDTO)
+            throws ResourceNotFoundException, ResourceCannotUpdateException, ResourceOptimisticLockException {
         mediaService.update(id, mediaDTO);
-        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
     /**
      * Delete media by id.
      *
      * @param id - media id
+     * @return no content
+     * @throws ResourceNotFoundException - of media not found
      */
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id, HttpServletResponse response)
+    public ResponseEntity<Void> delete(@PathVariable int id)
             throws ResourceNotFoundException {
         mediaService.delete(id);
-        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }

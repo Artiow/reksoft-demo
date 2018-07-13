@@ -7,8 +7,12 @@ import java.sql.Timestamp;
 import java.util.Collection;
 
 @Entity
-@Table(name = "order")
+@Table(name = "order", schema = "demo")
 public class OrderEntity extends AbstractIdentifiedEntity {
+
+    @Basic
+    @Column(name = "cost")
+    private Integer cost;
 
     @Basic
     @Column(name = "address")
@@ -18,13 +22,21 @@ public class OrderEntity extends AbstractIdentifiedEntity {
     @Column(name = "ordered")
     private Timestamp orderedTime;
 
-    @OneToMany(mappedBy = "order")
-    private Collection<MediaOrderEntity> media;
+    @OneToMany(mappedBy = "pk.order", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Collection<OrderedMediaEntity> medias;
 
     @ManyToOne
     @JoinColumn(name = "status_id", referencedColumnName = "id", nullable = false)
     private OrderStatusEntity status;
 
+
+    public Integer getCost() {
+        return cost;
+    }
+
+    public void setCost(Integer cost) {
+        this.cost = cost;
+    }
 
     public String getAddress() {
         return address;
@@ -42,12 +54,12 @@ public class OrderEntity extends AbstractIdentifiedEntity {
         this.orderedTime = orderedTime;
     }
 
-    public Collection<MediaOrderEntity> getMedia() {
-        return media;
+    public Collection<OrderedMediaEntity> getMedias() {
+        return medias;
     }
 
-    public void setMedia(Collection<MediaOrderEntity> media) {
-        this.media = media;
+    public void setMedias(Collection<OrderedMediaEntity> media) {
+        this.medias = media;
     }
 
     public OrderStatusEntity getStatus() {

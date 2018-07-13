@@ -37,8 +37,8 @@ public class UserEntity extends AbstractIdentifiedEntity {
     @Column(name = "phone", nullable = false)
     private String phone;
 
-    @OneToMany(mappedBy = "user")
-    private Collection<CurrentBasketEntity> baskets;
+    @OneToMany(mappedBy = "pk.user", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    private Collection<CurrentBasketEntity> basket;
 
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
@@ -101,12 +101,12 @@ public class UserEntity extends AbstractIdentifiedEntity {
         this.phone = phone;
     }
 
-    public Collection<CurrentBasketEntity> getBaskets() {
-        return baskets;
+    public Collection<CurrentBasketEntity> getBasket() {
+        return basket;
     }
 
-    public void setBaskets(Collection<CurrentBasketEntity> baskets) {
-        this.baskets = baskets;
+    public void setBasket(Collection<CurrentBasketEntity> baskets) {
+        this.basket = baskets;
     }
 
     public UserRoleEntity getRole() {

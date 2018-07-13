@@ -63,6 +63,7 @@ public class LabelService extends AbstractService<LabelDTO> {
      *
      * @param id - label id
      * @return found label
+     * @throws ResourceNotFoundException - if label not found by id
      */
     @Override
     @Transactional(readOnly = true)
@@ -70,7 +71,7 @@ public class LabelService extends AbstractService<LabelDTO> {
         try {
             return labelMapper.toDTO(labelRepository.getOne(id));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Label.notExistById.message", id));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Label.notExistById.message", id), e);
         }
     }
 
@@ -79,6 +80,7 @@ public class LabelService extends AbstractService<LabelDTO> {
      *
      * @param labelDTO - label
      * @return saved entity id
+     * @throws ResourceCannotCreateException - if label cannot created
      */
     @Override
     @Transactional
@@ -95,12 +97,13 @@ public class LabelService extends AbstractService<LabelDTO> {
      *
      * @param id       - label id
      * @param labelDTO - new label data
+     * @throws ResourceNotFoundException       - if label not found by id
+     * @throws ResourceOptimisticLockException - if label was already updated
      */
     @Override
     @Transactional
-    public void update(@NotNull Integer id, @NotNull LabelDTO labelDTO) throws
-            ResourceNotFoundException,
-            ResourceOptimisticLockException {
+    public void update(@NotNull Integer id, @NotNull LabelDTO labelDTO)
+            throws ResourceNotFoundException, ResourceOptimisticLockException {
 
         try {
             labelRepository.saveAndFlush(labelMapper.merge(labelRepository.getOne(id), labelMapper.toEntity(labelDTO)));
@@ -115,6 +118,7 @@ public class LabelService extends AbstractService<LabelDTO> {
      * Delete label.
      *
      * @param id - label id
+     * @throws ResourceNotFoundException - if label not found by id
      */
     @Override
     @Transactional

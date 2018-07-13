@@ -54,9 +54,9 @@ public class AdviseController implements ErrorController {
         return errorDTO(ex, "JWT Read/Write Error.");
     }
 
-    @ExceptionHandler(FileNotFoundException.class)
+    @ExceptionHandler(ResourceFileNotFoundException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorDTO handleFileNotFoundException(FileNotFoundException ex) {
+    public ErrorDTO handleFileNotFoundException(ResourceFileNotFoundException ex) {
         return errorDTO(ex, "Requested File Not Found.");
     }
 
@@ -81,6 +81,12 @@ public class AdviseController implements ErrorController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDTO handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         return warnDTO(ex, "Sent HTTP Message Not Readable.");
+    }
+
+    @ExceptionHandler(AuthorizationRequiredException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorDTO handleHttpMessageNotReadableException(AuthorizationRequiredException ex) {
+        return warnDTO(ex, "Unexpected Unauthorized Access Attempt.");
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)

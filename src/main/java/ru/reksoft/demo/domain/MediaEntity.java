@@ -13,11 +13,11 @@ public class MediaEntity extends AbstractVersionedEntity {
     @Column(name = "price", nullable = false)
     private Integer price;
 
-    @OneToMany(mappedBy = "media")
+    @OneToMany(mappedBy = "pk.media")
     private Collection<CurrentBasketEntity> baskets;
 
-    @OneToMany(mappedBy = "media")
-    private Collection<MediaOrderEntity> orders;
+    @OneToMany(mappedBy = "pk.media")
+    private Collection<OrderedMediaEntity> orders;
 
     @ManyToOne
     @JoinColumn(name = "type_id", referencedColumnName = "id", nullable = false)
@@ -44,11 +44,11 @@ public class MediaEntity extends AbstractVersionedEntity {
         this.baskets = baskets;
     }
 
-    public Collection<MediaOrderEntity> getOrders() {
+    public Collection<OrderedMediaEntity> getOrders() {
         return orders;
     }
 
-    public void setOrders(Collection<MediaOrderEntity> orders) {
+    public void setOrders(Collection<OrderedMediaEntity> orders) {
         this.orders = orders;
     }
 

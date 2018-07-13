@@ -96,8 +96,7 @@ public class MediaDTO extends AbstractVersionedDTO {
 
     }
 
-    private interface FieldCheck extends
-            MediaTypeDTO.IdCheck, AlbumDTO.IdCheck {
+    private interface FieldCheck extends MediaTypeDTO.IdCheck, AlbumDTO.IdCheck {
 
     }
 }

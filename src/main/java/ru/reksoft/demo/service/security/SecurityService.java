@@ -2,9 +2,9 @@ package ru.reksoft.demo.service.security;
 
 import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import ru.reksoft.demo.mapper.manual.security.UserDetailsMapper;
+import ru.reksoft.demo.service.security.userdetails.IdentifiedUserDetails;
 
 @Service
 public class SecurityService {
@@ -35,11 +35,11 @@ public class SecurityService {
     /**
      * Returns JWT by UserDetails.
      *
-     * @param userDetails - user data
+     * @param identifiedUserDetails - user data
      * @return encoded json
      */
-    public String login(UserDetails userDetails) throws JwtException {
-        return tokenService.generate(mapper.toMap(userDetails));
+    public String login(IdentifiedUserDetails identifiedUserDetails) throws JwtException {
+        return tokenService.generate(mapper.toMap(identifiedUserDetails));
     }
 
     /**
@@ -48,7 +48,7 @@ public class SecurityService {
      * @param token - encoded json
      * @return user data
      */
-    public UserDetails authentication(String token) throws JwtException {
-        return mapper.toUserDetails(tokenService.verify(token));
+    public IdentifiedUserDetails authentication(String token) throws JwtException {
+        return mapper.toIdentifiedUserDetails(tokenService.verify(token));
     }
 }

@@ -2,7 +2,6 @@ package ru.reksoft.demo.service.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.TextCodec;
-import io.jsonwebtoken.impl.compression.GzipCompressionCodec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +14,8 @@ import java.util.Map;
 @Service
 public class TokenService implements Clock {
 
+    private static SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
+
     @Value("${jwt.token-type}")
     private String tokenType;
 
@@ -24,16 +25,15 @@ public class TokenService implements Clock {
     @Value("${jwt.secret-key}")
     private String secretKey;
 
-    private GzipCompressionCodec compressionCodec;
 
-    private SignatureAlgorithm signatureAlgorithm;
-
+    /**
+     * Secret key Base64 encoding.
+     */
     @PostConstruct
     private void init() {
         secretKey = TextCodec.BASE64.encode(secretKey);
-        compressionCodec = new GzipCompressionCodec();
-        signatureAlgorithm = SignatureAlgorithm.HS512;
     }
+
 
     /**
      * Getting used token type.
@@ -59,7 +59,6 @@ public class TokenService implements Clock {
         return Jwts
                 .builder()
                 .setClaims(claims)
-                .compressWith(compressionCodec)
                 .signWith(signatureAlgorithm, secretKey)
                 .compact();
     }

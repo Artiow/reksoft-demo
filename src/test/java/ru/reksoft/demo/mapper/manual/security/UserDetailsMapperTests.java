@@ -2,7 +2,6 @@ package ru.reksoft.demo.mapper.manual.security;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +16,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-@Ignore
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ReksoftDemoApplication.class)
 public class UserDetailsMapperTests {

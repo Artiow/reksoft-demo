@@ -1,13 +1,12 @@
-package ru.reksoft.demo.service;
+package ru.reksoft.demo.service.security;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.reksoft.demo.boot.ReksoftDemoApplication;
-import ru.reksoft.demo.service.security.TokenService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,14 +17,17 @@ public class TokenServiceTests {
 
     private TokenService tokenService;
 
-    @Autowired
-    public void setTokenService(TokenService tokenService) {
-        this.tokenService = tokenService;
+
+    @Before
+    public void setUp() {
+        tokenService = new TokenService();
+        tokenService.setIssuer("test-issuer");
+        tokenService.setSign("test-sign");
     }
 
 
     @Test
-    public void generateAndVerify_mapSentAndMapReturns_mapsMatched() {
+    public void lifecycle() {
 
         // arrange
         Map<String, Object> entryMap = new HashMap<>();

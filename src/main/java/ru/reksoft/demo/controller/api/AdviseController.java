@@ -37,10 +37,6 @@ public class AdviseController implements ErrorController {
         this.messages = messages;
     }
 
-    public MessagesConfig getMessages() {
-        return messages;
-    }
-
 
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

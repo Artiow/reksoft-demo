@@ -88,7 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Righ
     public TokenAuthenticationFilter authenticationFilter()
             throws Exception {
 
-        final TokenAuthenticationFilter filter = new TokenAuthenticationFilter(PROTECTED_URLS, adviseController.getMessages());
+        final TokenAuthenticationFilter filter = new TokenAuthenticationFilter(PROTECTED_URLS);
         filter.setAuthenticationManager(authenticationManager());
         filter.setAuthenticationSuccessHandler(successHandler());
         filter.setAuthenticationFailureHandler(failureHandler());

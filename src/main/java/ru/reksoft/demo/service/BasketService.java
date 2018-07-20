@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.reksoft.demo.config.MessagesConfig;
+import ru.reksoft.demo.config.messages.MessageContainer;
 import ru.reksoft.demo.domain.CurrentBasketEntity;
 import ru.reksoft.demo.domain.UserEntity;
 import ru.reksoft.demo.dto.BasketDTO;
@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
 @Service
 public class BasketService {
 
-    private MessagesConfig messages;
+    private MessageContainer messages;
 
     private UserRepository userRepository;
     private MediaRepository mediaRepository;
@@ -33,7 +33,7 @@ public class BasketService {
     private BasketMapper basketMapper;
 
     @Autowired
-    public void setMessages(MessagesConfig messages) {
+    public void setMessages(MessageContainer messages) {
         this.messages = messages;
     }
 

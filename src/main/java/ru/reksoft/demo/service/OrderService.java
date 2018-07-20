@@ -5,7 +5,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.reksoft.demo.config.MessagesConfig;
+import ru.reksoft.demo.config.messages.MessageContainer;
 import ru.reksoft.demo.domain.*;
 import ru.reksoft.demo.dto.OrderDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
@@ -32,7 +32,7 @@ import java.util.Collection;
 @Service
 public class OrderService {
 
-    private MessagesConfig messages;
+    private MessageContainer messages;
 
     private UserRepository userRepository;
     private OrderRepository orderRepository;
@@ -41,7 +41,7 @@ public class OrderService {
     private OrderMapper orderMapper;
 
     @Autowired
-    public void setMessages(MessagesConfig messages) {
+    public void setMessages(MessageContainer messages) {
         this.messages = messages;
     }
 

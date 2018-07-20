@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.reksoft.demo.config.MessagesConfig;
+import ru.reksoft.demo.config.messages.MessageContainer;
 import ru.reksoft.demo.domain.AlbumEntity;
 import ru.reksoft.demo.domain.AlbumEntity_;
 import ru.reksoft.demo.domain.CompositionEntity;
@@ -26,7 +26,7 @@ import javax.validation.constraints.NotNull;
 @Service
 public class AlbumService extends AbstractService<AlbumDTO> {
 
-    private MessagesConfig messages;
+    private MessageContainer messages;
 
     private LabelRepository labelRepository;
     private SingerRepository singerRepository;
@@ -36,7 +36,7 @@ public class AlbumService extends AbstractService<AlbumDTO> {
     private AlbumMapper albumMapper;
 
     @Autowired
-    public void setMessages(MessagesConfig messages) {
+    public void setMessages(MessageContainer messages) {
         this.messages = messages;
     }
 

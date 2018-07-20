@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.reksoft.demo.config.MessagesConfig;
+import ru.reksoft.demo.config.messages.MessageContainer;
 import ru.reksoft.demo.domain.*;
 import ru.reksoft.demo.dto.MediaDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
@@ -31,7 +31,7 @@ import java.util.Collection;
 @Service
 public class MediaService extends AbstractService<MediaDTO> {
 
-    private MessagesConfig messages;
+    private MessageContainer messages;
 
     private AlbumRepository albumRepository;
     private MediaTypeRepository mediaTypeRepository;
@@ -40,7 +40,7 @@ public class MediaService extends AbstractService<MediaDTO> {
     private MediaMapper mediaMapper;
 
     @Autowired
-    public void setMessages(MessagesConfig messages) {
+    public void setMessages(MessageContainer messages) {
         this.messages = messages;
     }
 

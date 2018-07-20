@@ -15,7 +15,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.reksoft.demo.config.MessagesConfig;
+import ru.reksoft.demo.config.messages.MessageContainer;
 import ru.reksoft.demo.dto.handling.ErrorDTO;
 import ru.reksoft.demo.dto.handling.ErrorMapDTO;
 import ru.reksoft.demo.service.generic.*;
@@ -30,10 +30,10 @@ public class AdviseController implements ErrorController {
 
     private static final Logger logger = LoggerFactory.getLogger(AdviseController.class);
 
-    private final MessagesConfig messages;
+    private final MessageContainer messages;
 
     @Autowired
-    public AdviseController(MessagesConfig messages) {
+    public AdviseController(MessageContainer messages) {
         this.messages = messages;
     }
 

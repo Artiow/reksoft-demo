@@ -48,7 +48,7 @@ public class BasketService {
     }
 
     @Autowired
-    public void setCurrentBasketEntity(CurrentBasketRepository currentBasketRepository) {
+    public void setCurrentBasketRepository(CurrentBasketRepository currentBasketRepository) {
         this.currentBasketRepository = currentBasketRepository;
     }
 

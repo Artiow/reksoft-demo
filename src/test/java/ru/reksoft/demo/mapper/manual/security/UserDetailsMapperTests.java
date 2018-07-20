@@ -22,13 +22,13 @@ public class UserDetailsMapperTests {
 
     private UserDetailsMapper userDetailsMapper;
 
-    private Collection<GrantedAuthority> EMPTY_AUTHORITIES;
+    private Collection<GrantedAuthority> authorities;
 
 
     @Before
     public void setUp() {
         userDetailsMapper = new UserDetailsMapper();
-        EMPTY_AUTHORITIES = Collections.emptySet();
+        authorities = Collections.emptySet();
     }
 
 
@@ -36,7 +36,7 @@ public class UserDetailsMapperTests {
     public void toMap() {
 
         // arrange
-        IdentifiedUserDetails identifiedUserDetails = new IdentifiedUser(0, "username", "password", true, true, true, true, EMPTY_AUTHORITIES);
+        IdentifiedUserDetails identifiedUserDetails = new IdentifiedUser(0, "username", "password", true, true, true, true, authorities);
 
         // act
         Map<String, Object> map = userDetailsMapper.toMap(identifiedUserDetails);
@@ -49,7 +49,8 @@ public class UserDetailsMapperTests {
         Assert.assertTrue((boolean) map.get("accountNonLocked"));
         Assert.assertTrue((boolean) map.get("credentialsNonExpired"));
         Assert.assertTrue((boolean) map.get("enabled"));
-        Assert.assertEquals(EMPTY_AUTHORITIES, map.get("authorities"));
+
+        Assert.assertTrue(((Collection) map.get("authorities")).isEmpty());
     }
 
     @Test
@@ -64,7 +65,7 @@ public class UserDetailsMapperTests {
         map.put("accountNonLocked", true);
         map.put("credentialsNonExpired", true);
         map.put("enabled", true);
-        map.put("authorities", EMPTY_AUTHORITIES);
+        map.put("authorities", authorities);
 
         // act
         IdentifiedUserDetails identifiedUserDetails = userDetailsMapper.toIdentifiedUserDetails(map);
@@ -77,6 +78,7 @@ public class UserDetailsMapperTests {
         Assert.assertTrue(identifiedUserDetails.isAccountNonLocked());
         Assert.assertTrue(identifiedUserDetails.isCredentialsNonExpired());
         Assert.assertTrue(identifiedUserDetails.isEnabled());
-        Assert.assertEquals(EMPTY_AUTHORITIES, identifiedUserDetails.getAuthorities());
+
+        Assert.assertTrue(identifiedUserDetails.getAuthorities().isEmpty());
     }
 }

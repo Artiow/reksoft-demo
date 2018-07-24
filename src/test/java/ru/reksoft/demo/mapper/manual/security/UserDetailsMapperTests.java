@@ -33,7 +33,7 @@ public class UserDetailsMapperTests {
 
 
     @Test
-    public void toMap() {
+    public void generateMap() {
 
         // arrange
         IdentifiedUserDetails identifiedUserDetails = new IdentifiedUser(0, "username", "password", true, true, true, true, authorities);
@@ -54,7 +54,7 @@ public class UserDetailsMapperTests {
     }
 
     @Test
-    public void toIdentifiedUserDetails() {
+    public void parseMap() {
 
         // arrange
         Map<String, Object> map = new HashMap<>();

@@ -147,7 +147,7 @@ public class BasketService {
     private Integer getCurrentUserId() throws AuthorizationRequiredException {
         try {
             return ((IdentifiedUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-        } catch (ClassCastException e) {
+        } catch (ClassCastException | NullPointerException e) {
             throw new AuthorizationRequiredException(messages.get("reksoft.demo.auth.filter.credentialsNotFound.message"), e);
         }
     }

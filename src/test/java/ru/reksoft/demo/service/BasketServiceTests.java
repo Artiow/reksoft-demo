@@ -29,6 +29,8 @@ import ru.reksoft.demo.repository.CurrentBasketRepository;
 import ru.reksoft.demo.repository.MediaRepository;
 import ru.reksoft.demo.repository.UserRepository;
 import ru.reksoft.demo.service.generic.AuthorizationRequiredException;
+import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
+import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 import ru.reksoft.demo.service.security.userdetails.IdentifiedUser;
 import ru.reksoft.demo.service.security.userdetails.IdentifiedUserDetails;
 
@@ -69,36 +71,6 @@ public class BasketServiceTests {
 
     @Before
     public void setUp() {
-        UserRoleEntity testRole = new UserRoleEntity();
-        testRole.setCode("user");
-
-        testUser = new UserEntity();
-        testUser.setId(0);
-        testUser.setLogin("login");
-        testUser.setPassword("password");
-        testUser.setRole(testRole);
-
-        int mediaCapacity = 3;
-        testMedias = new ArrayList<>(mediaCapacity);
-        for (int i = 1; i <= mediaCapacity; i++) {
-            MediaEntity media = new MediaEntity();
-            media.setId(i);
-            media.setPrice(1000);
-            testMedias.add(media);
-        }
-
-        int basketCapacity = 2;
-        testBasket = new ArrayList<>(basketCapacity);
-        for (int i = 1; i <= basketCapacity; i++) {
-            CurrentBasketEntity item = new CurrentBasketEntity();
-            item.setUser(testUser);
-            item.setMedia(testMedias.get(i));
-            item.setCount(1);
-            testBasket.add(item);
-        }
-
-        testUser.setBasket(testBasket);
-
         basketService = new BasketService();
         basketService.setMessages(messages);
         basketService.setBasketMapper(basketMapper);
@@ -110,15 +82,49 @@ public class BasketServiceTests {
         basketService.setCurrentBasketRepository(currentBasketRepository);
     }
 
+    private void restart() {
+        UserRoleEntity testRole = new UserRoleEntity();
+        testRole.setCode("user");
 
-    @Test(expected = AuthorizationRequiredException.class)
-    @WithAnonymousUser
-    public void add_forAnonymous_authorizationRequiredException() throws AuthorizationRequiredException {
+        testUser = new UserEntity();
+        testUser.setId(0);
+        testUser.setLogin("login");
+        testUser.setPassword("password");
+        testUser.setRole(testRole);
 
-        // arrange
+        int mediaCapacity = 3;
+        testMedias = new ArrayList<>(mediaCapacity);
+        for (int i = 0; i < mediaCapacity; i++) {
+            MediaEntity media = new MediaEntity();
+            media.setId(i);
+            media.setPrice(1000);
+            testMedias.add(media);
+        }
+
+        int basketCapacity = 2;
+        testBasket = new ArrayList<>(basketCapacity);
+        for (int i = 0; i < basketCapacity; i++) {
+            CurrentBasketEntity item = new CurrentBasketEntity();
+            item.setMedia(testMedias.get(i));
+            item.setUser(testUser);
+            item.setCount(1);
+            testBasket.add(item);
+        }
+
+        testUser.setBasket(testBasket);
+
         userRepository.setInMemoryUser(testUser);
         mediaRepository.setInMemoryMedias(testMedias);
         currentBasketRepository.setInMemoryBasket(testBasket);
+    }
+
+
+    @Test(expected = AuthorizationRequiredException.class)
+    @WithAnonymousUser
+    public void get_forAnonymousUser_authException() throws AuthorizationRequiredException {
+
+        // arrange
+        restart();
 
         // act
         basketService.get();
@@ -126,12 +132,10 @@ public class BasketServiceTests {
 
     @Test
     @WithMockIdentifiedUser
-    public void add_forUser_getBasket() throws AuthorizationRequiredException {
+    public void get_forAuthorizeUser_basketReturns() throws AuthorizationRequiredException {
 
         // arrange
-        userRepository.setInMemoryUser(testUser);
-        mediaRepository.setInMemoryMedias(testMedias);
-        currentBasketRepository.setInMemoryBasket(testBasket);
+        restart();
 
         // act
         BasketDTO basketDTO = basketService.get();
@@ -142,11 +146,53 @@ public class BasketServiceTests {
             Assert.assertEquals(itemDTO.getCount().intValue(), 1);
 
             MediaShortDTO mediaShortDTO = itemDTO.getMedia();
-            MediaEntity mediaEntity = testMedias.get(mediaShortDTO.getId() - 1);
+            MediaEntity mediaEntity = testMedias.get(mediaShortDTO.getId());
 
             Assert.assertEquals(mediaEntity.getId(), mediaShortDTO.getId());
             Assert.assertEquals(mediaEntity.getPrice(), mediaShortDTO.getPrice());
         }
+    }
+
+    @Test
+    @WithMockIdentifiedUser
+    public void add_forAuthorizeUser_itemAdded() throws AuthorizationRequiredException, ResourceCannotCreateException, ResourceNotFoundException {
+
+        // arrange
+        restart();
+
+        // act
+        basketService.add(2);
+
+        // assert
+        Assert.assertEquals(((ArrayList<CurrentBasketEntity>) testUser.getBasket()).get(2).getMedia().getId().intValue(), 2);
+    }
+
+    @Test
+    @WithMockIdentifiedUser
+    public void update_forAuthorizeUser_quantityUpdated() throws AuthorizationRequiredException, ResourceNotFoundException {
+
+        // arrange
+        restart();
+
+        // act
+        basketService.update(0, 5);
+
+        // assert
+        Assert.assertEquals(((ArrayList<CurrentBasketEntity>) testUser.getBasket()).get(0).getCount().intValue(), 5);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    @WithMockIdentifiedUser
+    public void remove_forAuthorizeUser_itemRemoved() throws AuthorizationRequiredException, ResourceNotFoundException {
+
+        // arrange
+        restart();
+
+        // act
+        basketService.remove(1);
+
+        // assert (was failed)
+        Assert.assertEquals(((ArrayList<CurrentBasketEntity>) testUser.getBasket()).get(1).getMedia().getId().intValue(), 1);
     }
 
 
@@ -156,7 +202,7 @@ public class BasketServiceTests {
 
         int id() default 0;
 
-        String username() default "login";
+        String login() default "login";
 
         String password() default "password";
 
@@ -172,7 +218,7 @@ public class BasketServiceTests {
             IdentifiedUserDetails principal = new IdentifiedUser(
                     user.id(),
                     User.builder()
-                            .username(user.username())
+                            .username(user.login())
                             .password(user.password())
                             .roles(user.role().toUpperCase())
                             .build()
@@ -486,7 +532,7 @@ public class BasketServiceTests {
 
         @Override
         public MediaEntity getOne(Integer integer) {
-            return null;
+            return inMemoryMedias.get(integer);
         }
 
         @Override
@@ -561,17 +607,31 @@ public class BasketServiceTests {
 
         @Override
         public CurrentBasketEntity findByPkUserIdAndPkMediaId(Integer userId, Integer mediaId) {
-            return null;
+            CurrentBasketEntity sought = null;
+            for (CurrentBasketEntity item : inMemoryBasket) {
+                if ((item.getUser().getId().equals(userId)) && (item.getMedia().getId().equals(mediaId))) {
+                    sought = item;
+                    break;
+                }
+            }
+
+            return sought;
         }
 
         @Override
         public boolean existsByPkUserIdAndPkMediaId(Integer userId, Integer mediaId) {
+            for (CurrentBasketEntity item : inMemoryBasket) {
+                if ((item.getUser().getId().equals(userId)) && (item.getMedia().getId().equals(mediaId))) {
+                    return true;
+                }
+            }
+
             return false;
         }
 
         @Override
         public void deleteByPkUserIdAndPkMediaId(Integer userId, Integer mediaId) {
-
+            Optional.ofNullable(findByPkUserIdAndPkMediaId(userId, mediaId)).map(inMemoryBasket::remove);
         }
 
         @Override

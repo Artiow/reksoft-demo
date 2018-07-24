@@ -8,5 +8,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>, JpaS
 
     UserEntity findByLogin(String login);
 
-    boolean existsByLogin(String name);
+    boolean existsByLogin(String login);
 }

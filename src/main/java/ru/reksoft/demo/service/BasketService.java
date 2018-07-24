@@ -27,7 +27,6 @@ public class BasketService {
 
     private UserRepository userRepository;
     private MediaRepository mediaRepository;
-
     private CurrentBasketRepository currentBasketRepository;
 
     private BasketMapper basketMapper;

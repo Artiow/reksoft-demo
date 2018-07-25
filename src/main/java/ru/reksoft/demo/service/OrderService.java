@@ -26,6 +26,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -95,14 +97,13 @@ public class OrderService {
     }
 
     /**
-     * Make an order by order form for auth user.
+     * Make an order by auth user.
      *
-     * @param orderDTO - order form
      * @throws AuthorizationRequiredException - if authorization is missing
      * @throws ResourceCannotCreateException  - if current basket is empty for user and media
      */
     @Transactional
-    public void make(@NotNull OrderDTO orderDTO) throws AuthorizationRequiredException, ResourceCannotCreateException {
+    public Integer make() throws AuthorizationRequiredException, ResourceCannotCreateException {
         String ORDER_EXPECT = "expect"; // order expect status code
 
         UserEntity user = getCurrentUserEntity();
@@ -111,7 +112,8 @@ public class OrderService {
         if ((basket == null) || (basket.isEmpty())) {
             throw new ResourceCannotCreateException(messages.get("reksoft.demo.Basket.isEmpty.message"));
         } else {
-            OrderEntity order = orderMapper.toEntity(orderDTO);
+            OrderEntity order = new OrderEntity();
+            order.setOrderedTime(Timestamp.valueOf(LocalDateTime.now()));
             order.setStatus(orderStatusRepository.findByCode(ORDER_EXPECT));
             order.setMedias(new ArrayList<>(basket.size()));
             order.setAddress(user.getAddress());
@@ -130,9 +132,12 @@ public class OrderService {
             }
 
             order.setCost(cost);
-            orderRepository.save(order);
+            Integer orderId = orderRepository.save(order).getId();
+
             user.getBasket().clear();
             userRepository.save(user);
+
+            return orderId;
         }
     }
 

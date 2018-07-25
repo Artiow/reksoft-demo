@@ -6,11 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,7 +17,10 @@ import org.springframework.security.test.context.support.WithSecurityContextFact
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.reksoft.demo.boot.ReksoftDemoApplication;
 import ru.reksoft.demo.config.messages.MessageContainer;
-import ru.reksoft.demo.domain.*;
+import ru.reksoft.demo.domain.CurrentBasketEntity;
+import ru.reksoft.demo.domain.MediaEntity;
+import ru.reksoft.demo.domain.UserEntity;
+import ru.reksoft.demo.domain.UserRoleEntity;
 import ru.reksoft.demo.dto.BasketDTO;
 import ru.reksoft.demo.dto.shortcut.MediaShortDTO;
 import ru.reksoft.demo.mapper.BasketMapper;
@@ -37,36 +36,34 @@ import ru.reksoft.demo.service.security.userdetails.IdentifiedUserDetails;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ReksoftDemoApplication.class)
 public class BasketServiceTests {
 
-    private MessageContainer messages;
+    private BasketService basketService;
 
     private UserEntity testUser;
     private ArrayList<MediaEntity> testMedias;
     private ArrayList<CurrentBasketEntity> testBasket;
 
-    private UserRepositoryImpl userRepository;
-    private MediaRepositoryImpl mediaRepository;
-    private CurrentBasketRepositoryImpl currentBasketRepository;
+    @MockBean
+    private UserRepository userRepository;
 
+    @MockBean
+    private MediaRepository mediaRepository;
+
+    @MockBean
+    private CurrentBasketRepository currentBasketRepository;
+
+    @Autowired
+    private MessageContainer messages;
+
+    @Autowired
     private BasketMapper basketMapper;
-
-    private BasketService basketService;
-
-    @Autowired
-    public void setMessages(MessageContainer messages) {
-        this.messages = messages;
-    }
-
-    @Autowired
-    public void setBasketMapper(BasketMapper basketMapper) {
-        this.basketMapper = basketMapper;
-    }
 
 
     @Before
@@ -74,15 +71,15 @@ public class BasketServiceTests {
         basketService = new BasketService();
         basketService.setMessages(messages);
         basketService.setBasketMapper(basketMapper);
-        userRepository = new UserRepositoryImpl();
         basketService.setUserRepository(userRepository);
-        mediaRepository = new MediaRepositoryImpl();
         basketService.setMediaRepository(mediaRepository);
-        currentBasketRepository = new CurrentBasketRepositoryImpl();
         basketService.setCurrentBasketRepository(currentBasketRepository);
+
+        setData();
+        setMockLogic();
     }
 
-    private void restart() {
+    private void setData() {
         UserRoleEntity testRole = new UserRoleEntity();
         testRole.setCode("user");
 
@@ -112,10 +109,28 @@ public class BasketServiceTests {
         }
 
         testUser.setBasket(testBasket);
+    }
 
-        userRepository.setInMemoryUser(testUser);
-        mediaRepository.setInMemoryMedias(testMedias);
-        currentBasketRepository.setInMemoryBasket(testBasket);
+    private void setMockLogic() {
+
+        // user repository
+        when(userRepository.getOne(testUser.getId())).thenReturn(testUser);
+        when(userRepository.save(testUser)).thenReturn(testUser);
+
+        // media repository
+        for (MediaEntity media : testMedias) {
+            when(mediaRepository.getOne(media.getId())).thenReturn(media);
+        }
+
+        // current basket repository
+        for (CurrentBasketEntity item : testBasket) {
+            int userId = item.getUser().getId();
+            int mediaId = item.getMedia().getId();
+            doAnswer(invoke -> testBasket.remove(item)).when(currentBasketRepository).deleteByPkUserIdAndPkMediaId(userId, mediaId);
+            when(currentBasketRepository.existsByPkUserIdAndPkMediaId(userId, mediaId)).thenReturn(true);
+            when(currentBasketRepository.findByPkUserIdAndPkMediaId(userId, mediaId)).thenReturn(item);
+            when(currentBasketRepository.save(item)).thenReturn(item);
+        }
     }
 
 
@@ -123,19 +138,16 @@ public class BasketServiceTests {
     @WithAnonymousUser
     public void get_forAnonymousUser_authException() throws AuthorizationRequiredException {
 
-        // arrange
-        restart();
-
         // act
         basketService.get();
+
+        // no assert
+        // must throw AuthorizationRequiredException
     }
 
     @Test
     @WithMockIdentifiedUser
     public void get_forAuthorizeUser_basketReturns() throws AuthorizationRequiredException {
-
-        // arrange
-        restart();
 
         // act
         BasketDTO basketDTO = basketService.get();
@@ -157,9 +169,6 @@ public class BasketServiceTests {
     @WithMockIdentifiedUser
     public void add_forAuthorizeUser_itemAdded() throws AuthorizationRequiredException, ResourceCannotCreateException, ResourceNotFoundException {
 
-        // arrange
-        restart();
-
         // act
         basketService.add(2);
 
@@ -171,9 +180,6 @@ public class BasketServiceTests {
     @WithMockIdentifiedUser
     public void update_forAuthorizeUser_quantityUpdated() throws AuthorizationRequiredException, ResourceNotFoundException {
 
-        // arrange
-        restart();
-
         // act
         basketService.update(0, 5);
 
@@ -184,9 +190,6 @@ public class BasketServiceTests {
     @Test(expected = IndexOutOfBoundsException.class)
     @WithMockIdentifiedUser
     public void remove_forAuthorizeUser_itemRemoved() throws AuthorizationRequiredException, ResourceNotFoundException {
-
-        // arrange
-        restart();
 
         // act
         basketService.remove(1);
@@ -226,557 +229,6 @@ public class BasketServiceTests {
 
             context.setAuthentication(new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), principal.getAuthorities()));
             return context;
-        }
-    }
-
-
-    private static class UserRepositoryImpl implements UserRepository {
-
-        private UserEntity inMemoryUser;
-
-
-        UserEntity getInMemoryUser() {
-            return inMemoryUser;
-        }
-
-        void setInMemoryUser(UserEntity inMemoryUser) {
-            this.inMemoryUser = inMemoryUser;
-        }
-
-
-        @Override
-        public UserEntity findByLogin(String login) {
-            if (existsByLogin(login)) {
-                return inMemoryUser;
-            } else {
-                return null;
-            }
-        }
-
-        @Override
-        public boolean existsByLogin(String login) {
-            return inMemoryUser.getLogin().equals(login);
-        }
-
-        @Override
-        public List<UserEntity> findAll() {
-            return null;
-        }
-
-        @Override
-        public List<UserEntity> findAll(Sort sort) {
-            return null;
-        }
-
-        @Override
-        public Page<UserEntity> findAll(Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public List<UserEntity> findAllById(Iterable<Integer> iterable) {
-            return null;
-        }
-
-        @Override
-        public long count() {
-            return 0;
-        }
-
-        @Override
-        public void deleteById(Integer integer) {
-
-        }
-
-        @Override
-        public void delete(UserEntity entity) {
-
-        }
-
-        @Override
-        public void deleteAll(Iterable<? extends UserEntity> entities) {
-
-        }
-
-        @Override
-        public void deleteAll() {
-
-        }
-
-        @Override
-        public <S extends UserEntity> S save(S entity) {
-            inMemoryUser = entity;
-            return entity;
-        }
-
-        @Override
-        public <S extends UserEntity> List<S> saveAll(Iterable<S> iterable) {
-            return null;
-        }
-
-        @Override
-        public Optional<UserEntity> findById(Integer integer) {
-            return Optional.empty();
-        }
-
-        @Override
-        public boolean existsById(Integer integer) {
-            return inMemoryUser.getId().equals(integer);
-        }
-
-        @Override
-        public void flush() {
-
-        }
-
-        @Override
-        public <S extends UserEntity> S saveAndFlush(S s) {
-            S entity = save(s);
-            flush();
-            return entity;
-        }
-
-        @Override
-        public void deleteInBatch(Iterable<UserEntity> iterable) {
-
-        }
-
-        @Override
-        public void deleteAllInBatch() {
-
-        }
-
-        @Override
-        public UserEntity getOne(Integer integer) {
-            if (existsById(integer)) {
-                return inMemoryUser;
-            } else {
-                return null;
-            }
-        }
-
-        @Override
-        public <S extends UserEntity> Optional<S> findOne(Example<S> example) {
-            return Optional.empty();
-        }
-
-        @Override
-        public <S extends UserEntity> List<S> findAll(Example<S> example) {
-            return null;
-        }
-
-        @Override
-        public <S extends UserEntity> List<S> findAll(Example<S> example, Sort sort) {
-            return null;
-        }
-
-        @Override
-        public <S extends UserEntity> Page<S> findAll(Example<S> example, Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public <S extends UserEntity> long count(Example<S> example) {
-            return 0;
-        }
-
-        @Override
-        public <S extends UserEntity> boolean exists(Example<S> example) {
-            return false;
-        }
-
-        @Override
-        public Optional<UserEntity> findOne(Specification<UserEntity> specification) {
-            return Optional.empty();
-        }
-
-        @Override
-        public List<UserEntity> findAll(Specification<UserEntity> specification) {
-            return null;
-        }
-
-        @Override
-        public Page<UserEntity> findAll(Specification<UserEntity> specification, Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public List<UserEntity> findAll(Specification<UserEntity> specification, Sort sort) {
-            return null;
-        }
-
-        @Override
-        public long count(Specification<UserEntity> specification) {
-            return 0;
-        }
-    }
-
-    private static class MediaRepositoryImpl implements MediaRepository {
-
-        private ArrayList<MediaEntity> inMemoryMedias;
-
-
-        ArrayList<MediaEntity> getInMemoryMedias() {
-            return inMemoryMedias;
-        }
-
-        void setInMemoryMedias(ArrayList<MediaEntity> inMemoryMedias) {
-            this.inMemoryMedias = inMemoryMedias;
-        }
-
-
-        @Override
-        public boolean existsByAlbumIdAndTypeId(Integer albumId, Integer typeId) {
-            return false;
-        }
-
-        @Override
-        public Page<MediaEntity> findByAlbumSingerId(Integer id, Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public Page<MediaEntity> findByAlbumLabelId(Integer id, Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public Page<MediaEntity> findByAlbumId(Integer id, Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public List<MediaEntity> findAll() {
-            return null;
-        }
-
-        @Override
-        public List<MediaEntity> findAll(Sort sort) {
-            return null;
-        }
-
-        @Override
-        public Page<MediaEntity> findAll(Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public List<MediaEntity> findAllById(Iterable<Integer> iterable) {
-            return null;
-        }
-
-        @Override
-        public long count() {
-            return 0;
-        }
-
-        @Override
-        public void deleteById(Integer integer) {
-
-        }
-
-        @Override
-        public void delete(MediaEntity entity) {
-
-        }
-
-        @Override
-        public void deleteAll(Iterable<? extends MediaEntity> entities) {
-
-        }
-
-        @Override
-        public void deleteAll() {
-
-        }
-
-        @Override
-        public <S extends MediaEntity> S save(S entity) {
-            return null;
-        }
-
-        @Override
-        public <S extends MediaEntity> List<S> saveAll(Iterable<S> iterable) {
-            return null;
-        }
-
-        @Override
-        public Optional<MediaEntity> findById(Integer integer) {
-            return Optional.empty();
-        }
-
-        @Override
-        public boolean existsById(Integer integer) {
-            return false;
-        }
-
-        @Override
-        public void flush() {
-
-        }
-
-        @Override
-        public <S extends MediaEntity> S saveAndFlush(S s) {
-            return null;
-        }
-
-        @Override
-        public void deleteInBatch(Iterable<MediaEntity> iterable) {
-
-        }
-
-        @Override
-        public void deleteAllInBatch() {
-
-        }
-
-        @Override
-        public MediaEntity getOne(Integer integer) {
-            return inMemoryMedias.get(integer);
-        }
-
-        @Override
-        public <S extends MediaEntity> Optional<S> findOne(Example<S> example) {
-            return Optional.empty();
-        }
-
-        @Override
-        public <S extends MediaEntity> List<S> findAll(Example<S> example) {
-            return null;
-        }
-
-        @Override
-        public <S extends MediaEntity> List<S> findAll(Example<S> example, Sort sort) {
-            return null;
-        }
-
-        @Override
-        public <S extends MediaEntity> Page<S> findAll(Example<S> example, Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public <S extends MediaEntity> long count(Example<S> example) {
-            return 0;
-        }
-
-        @Override
-        public <S extends MediaEntity> boolean exists(Example<S> example) {
-            return false;
-        }
-
-        @Override
-        public Optional<MediaEntity> findOne(Specification<MediaEntity> specification) {
-            return Optional.empty();
-        }
-
-        @Override
-        public List<MediaEntity> findAll(Specification<MediaEntity> specification) {
-            return null;
-        }
-
-        @Override
-        public Page<MediaEntity> findAll(Specification<MediaEntity> specification, Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public List<MediaEntity> findAll(Specification<MediaEntity> specification, Sort sort) {
-            return null;
-        }
-
-        @Override
-        public long count(Specification<MediaEntity> specification) {
-            return 0;
-        }
-    }
-
-    private static class CurrentBasketRepositoryImpl implements CurrentBasketRepository {
-
-        private ArrayList<CurrentBasketEntity> inMemoryBasket;
-
-
-        ArrayList<CurrentBasketEntity> getInMemoryBasket() {
-            return inMemoryBasket;
-        }
-
-        void setInMemoryBasket(ArrayList<CurrentBasketEntity> inMemoryBasket) {
-            this.inMemoryBasket = inMemoryBasket;
-        }
-
-
-        @Override
-        public CurrentBasketEntity findByPkUserIdAndPkMediaId(Integer userId, Integer mediaId) {
-            CurrentBasketEntity sought = null;
-            for (CurrentBasketEntity item : inMemoryBasket) {
-                if ((item.getUser().getId().equals(userId)) && (item.getMedia().getId().equals(mediaId))) {
-                    sought = item;
-                    break;
-                }
-            }
-
-            return sought;
-        }
-
-        @Override
-        public boolean existsByPkUserIdAndPkMediaId(Integer userId, Integer mediaId) {
-            for (CurrentBasketEntity item : inMemoryBasket) {
-                if ((item.getUser().getId().equals(userId)) && (item.getMedia().getId().equals(mediaId))) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        @Override
-        public void deleteByPkUserIdAndPkMediaId(Integer userId, Integer mediaId) {
-            Optional.ofNullable(findByPkUserIdAndPkMediaId(userId, mediaId)).map(inMemoryBasket::remove);
-        }
-
-        @Override
-        public List<CurrentBasketEntity> findAll() {
-            return null;
-        }
-
-        @Override
-        public List<CurrentBasketEntity> findAll(Sort sort) {
-            return null;
-        }
-
-        @Override
-        public Page<CurrentBasketEntity> findAll(Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public List<CurrentBasketEntity> findAllById(Iterable<CurrentBasketEntityPK> iterable) {
-            return null;
-        }
-
-        @Override
-        public long count() {
-            return 0;
-        }
-
-        @Override
-        public void deleteById(CurrentBasketEntityPK currentBasketEntityPK) {
-
-        }
-
-        @Override
-        public void delete(CurrentBasketEntity entity) {
-
-        }
-
-        @Override
-        public void deleteAll(Iterable<? extends CurrentBasketEntity> entities) {
-
-        }
-
-        @Override
-        public void deleteAll() {
-
-        }
-
-        @Override
-        public <S extends CurrentBasketEntity> S save(S entity) {
-            return null;
-        }
-
-        @Override
-        public <S extends CurrentBasketEntity> List<S> saveAll(Iterable<S> iterable) {
-            return null;
-        }
-
-        @Override
-        public Optional<CurrentBasketEntity> findById(CurrentBasketEntityPK currentBasketEntityPK) {
-            return Optional.empty();
-        }
-
-        @Override
-        public boolean existsById(CurrentBasketEntityPK currentBasketEntityPK) {
-            return false;
-        }
-
-        @Override
-        public void flush() {
-
-        }
-
-        @Override
-        public <S extends CurrentBasketEntity> S saveAndFlush(S s) {
-            return null;
-        }
-
-        @Override
-        public void deleteInBatch(Iterable<CurrentBasketEntity> iterable) {
-
-        }
-
-        @Override
-        public void deleteAllInBatch() {
-
-        }
-
-        @Override
-        public CurrentBasketEntity getOne(CurrentBasketEntityPK currentBasketEntityPK) {
-            return null;
-        }
-
-        @Override
-        public <S extends CurrentBasketEntity> Optional<S> findOne(Example<S> example) {
-            return Optional.empty();
-        }
-
-        @Override
-        public <S extends CurrentBasketEntity> List<S> findAll(Example<S> example) {
-            return null;
-        }
-
-        @Override
-        public <S extends CurrentBasketEntity> List<S> findAll(Example<S> example, Sort sort) {
-            return null;
-        }
-
-        @Override
-        public <S extends CurrentBasketEntity> Page<S> findAll(Example<S> example, Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public <S extends CurrentBasketEntity> long count(Example<S> example) {
-            return 0;
-        }
-
-        @Override
-        public <S extends CurrentBasketEntity> boolean exists(Example<S> example) {
-            return false;
-        }
-
-        @Override
-        public Optional<CurrentBasketEntity> findOne(Specification<CurrentBasketEntity> specification) {
-            return Optional.empty();
-        }
-
-        @Override
-        public List<CurrentBasketEntity> findAll(Specification<CurrentBasketEntity> specification) {
-            return null;
-        }
-
-        @Override
-        public Page<CurrentBasketEntity> findAll(Specification<CurrentBasketEntity> specification, Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public List<CurrentBasketEntity> findAll(Specification<CurrentBasketEntity> specification, Sort sort) {
-            return null;
-        }
-
-        @Override
-        public long count(Specification<CurrentBasketEntity> specification) {
-            return 0;
         }
     }
 }

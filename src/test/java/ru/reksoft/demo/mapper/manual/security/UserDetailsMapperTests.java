@@ -4,10 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.runners.JUnit4;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.test.context.junit4.SpringRunner;
-import ru.reksoft.demo.boot.ReksoftDemoApplication;
 import ru.reksoft.demo.service.security.userdetails.IdentifiedUser;
 import ru.reksoft.demo.service.security.userdetails.IdentifiedUserDetails;
 
@@ -16,8 +14,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = ReksoftDemoApplication.class)
+@RunWith(JUnit4.class)
 public class UserDetailsMapperTests {
 
     private UserDetailsMapper userDetailsMapper;

@@ -40,6 +40,7 @@ import static org.mockito.Mockito.when;
 public class OrderServiceTests {
 
     private OrderService orderService;
+
     private ArrayList<MediaEntity> testMedias;
     private ArrayList<OrderEntity> testOrders;
     private OrderStatusEntity testExpectStatus;

@@ -19,11 +19,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ReksoftDemoApplication.class)
 @TestPropertySource("classpath:application-test.properties")
+//@TestExecutionListeners(SqlScriptsTestExecutionListener.class)
 @AutoConfigureMockMvc
 public class BasketControllerTests extends AbstractSecuredControllerTests {
 
     @Autowired
     private MockMvc mvc;
+
 
     @Test
     public void get_forAuthorizeUser_basketReturns() throws Exception {

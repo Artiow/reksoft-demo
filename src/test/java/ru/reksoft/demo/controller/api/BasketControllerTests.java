@@ -7,26 +7,29 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.reksoft.demo.boot.ReksoftDemoApplication;
 
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ReksoftDemoApplication.class)
 @TestPropertySource("classpath:application-test.properties")
-//@Sql(scripts = "file:database/testing/init.sql", executionPhase = BEFORE_TEST_METHOD)
-//@Sql(scripts = "file:database/testing/clear.sql", executionPhase = AFTER_TEST_METHOD)
-//@TestExecutionListeners(SqlScriptsTestExecutionListener.class) todo: MockMvc doesn't working with listener!
+@Sql(scripts = "file:database/testing/init.sql", executionPhase = BEFORE_TEST_METHOD)
+@Sql(scripts = "file:database/testing/clear.sql", executionPhase = AFTER_TEST_METHOD)
 @AutoConfigureMockMvc
 public class BasketControllerTests extends AbstractSecuredControllerTests {
 
     @Autowired
     private MockMvc mvc;
+
 
     @Test
     public void get_forAuthorizeUser_basketReturns() throws Exception {

@@ -1,7 +1,5 @@
 package ru.reksoft.demo.controller.api;
 
-import org.json.JSONObject;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.ResultActions;
 import ru.reksoft.demo.boot.ReksoftDemoApplication;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -20,35 +20,31 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = ReksoftDemoApplication.class)
 @TestPropertySource("classpath:application-test.properties")
 @AutoConfigureMockMvc
-public class BasketControllerTests {
-
-    private String token;
+public class BasketControllerTests extends AbstractSecuredControllerTests {
 
     @Autowired
     private MockMvc mvc;
 
-    @Before
-    public void setUp() throws Exception {
-        JSONObject json = new JSONObject(
-                mvc
-                        .perform(
-                                get("/api/user/login")
-                                        .param("login", "user")
-                                        .param("password", "user")
-                        ).andReturn()
-                        .getResponse()
-                        .getContentAsString()
-        );
-
-        token = (String) json.get("tokenType") + ' ' + json.get("accessToken");
-    }
-
     @Test
-    public void test() throws Exception {
-        mvc
-                .perform(get("/api/basket").header("Authorization", token))
+    public void get_forAuthorizeUser_basketReturns() throws Exception {
+
+        // arrange
+        String token = login(mvc, "user", "user");
+        RequestBuilder request = get("/api/basket").header("Authorization", token);
+
+        // act
+        ResultActions result = mvc.perform(request);
+
+        // assert
+        result
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.numberOfElements").value(3));
+                .andExpect(jsonPath("$.numberOfElements").value(3))
+                .andExpect(jsonPath("$.content[0].media.id").value(4))
+                .andExpect(jsonPath("$.content[0].count").value(1))
+                .andExpect(jsonPath("$.content[1].media.id").value(3))
+                .andExpect(jsonPath("$.content[1].count").value(1))
+                .andExpect(jsonPath("$.content[2].media.id").value(5))
+                .andExpect(jsonPath("$.content[2].count").value(1));
     }
 }

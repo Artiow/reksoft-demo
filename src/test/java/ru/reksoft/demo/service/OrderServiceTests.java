@@ -7,13 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithSecurityContext;
-import org.springframework.security.test.context.support.WithSecurityContextFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.reksoft.demo.boot.ReksoftDemoApplication;
 import ru.reksoft.demo.config.messages.MessageContainer;
@@ -25,11 +19,7 @@ import ru.reksoft.demo.repository.UserRepository;
 import ru.reksoft.demo.service.generic.AuthorizationRequiredException;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
-import ru.reksoft.demo.service.security.userdetails.IdentifiedUser;
-import ru.reksoft.demo.service.security.userdetails.IdentifiedUserDetails;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
 import static org.mockito.Mockito.any;
@@ -37,7 +27,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ReksoftDemoApplication.class)
-public class OrderServiceTests {
+public class OrderServiceTests extends AbstractSecuredServiceTests {
 
     private OrderService orderService;
 
@@ -191,40 +181,6 @@ public class OrderServiceTests {
         // assert
         for (OrderEntity order : testOrders) {
             Assert.assertEquals(testSentStatus.getCode(), order.getStatus().getCode());
-        }
-    }
-
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @WithSecurityContext(factory = WithMockIdentifiedUserSecurityContextFactory.class)
-    private @interface WithMockIdentifiedUser {
-
-        int id() default 0;
-
-        String login() default "login";
-
-        String password() default "password";
-
-        String role() default "user";
-    }
-
-    private static class WithMockIdentifiedUserSecurityContextFactory implements WithSecurityContextFactory<WithMockIdentifiedUser> {
-
-        @Override
-        public SecurityContext createSecurityContext(WithMockIdentifiedUser user) {
-            SecurityContext context = SecurityContextHolder.createEmptyContext();
-
-            IdentifiedUserDetails principal = new IdentifiedUser(
-                    user.id(),
-                    User.builder()
-                            .username(user.login())
-                            .password(user.password())
-                            .roles(user.role().toUpperCase())
-                            .build()
-            );
-
-            context.setAuthentication(new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), principal.getAuthorities()));
-            return context;
         }
     }
 }

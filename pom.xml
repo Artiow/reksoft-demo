@@ -190,11 +190,6 @@
                     <!-- TEST EXECUTION -->
                     <execution>
                         <id>test</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>clean</goal>
-                            <goal>migrate</goal>
-                        </goals>
                         <configuration>
                             <url>jdbc:postgresql://localhost:5432/reksoft_test</url>
                             <user>postgres</user>

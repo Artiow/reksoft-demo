@@ -19,13 +19,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ReksoftDemoApplication.class)
 @TestPropertySource("classpath:application-test.properties")
-//@TestExecutionListeners(SqlScriptsTestExecutionListener.class)
+//@Sql(scripts = "file:database/testing/init.sql", executionPhase = BEFORE_TEST_METHOD)
+//@Sql(scripts = "file:database/testing/clear.sql", executionPhase = AFTER_TEST_METHOD)
+//@TestExecutionListeners(SqlScriptsTestExecutionListener.class) todo: MockMvc doesn't working with listener!
 @AutoConfigureMockMvc
 public class BasketControllerTests extends AbstractSecuredControllerTests {
 
     @Autowired
     private MockMvc mvc;
-
 
     @Test
     public void get_forAuthorizeUser_basketReturns() throws Exception {
@@ -42,11 +43,11 @@ public class BasketControllerTests extends AbstractSecuredControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.numberOfElements").value(3))
-                .andExpect(jsonPath("$.content[0].media.id").value(4))
+                .andExpect(jsonPath("$.content[0].media.id").value(1))
                 .andExpect(jsonPath("$.content[0].count").value(1))
-                .andExpect(jsonPath("$.content[1].media.id").value(3))
+                .andExpect(jsonPath("$.content[1].media.id").value(4))
                 .andExpect(jsonPath("$.content[1].count").value(1))
-                .andExpect(jsonPath("$.content[2].media.id").value(5))
+                .andExpect(jsonPath("$.content[2].media.id").value(6))
                 .andExpect(jsonPath("$.content[2].count").value(1));
     }
 }

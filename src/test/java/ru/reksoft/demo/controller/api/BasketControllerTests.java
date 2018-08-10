@@ -54,7 +54,8 @@ public class BasketControllerTests extends AbstractSecuredControllerTests {
 
         // arrange
         String token = login(mvc, "user", "user");
-        RequestBuilder request = get("/api/basket").header("Authorization", token);
+        RequestBuilder request = get("/api/basket")
+                .header("Authorization", token);
 
         // act
         ResultActions result = mvc.perform(request);

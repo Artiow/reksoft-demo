@@ -166,7 +166,7 @@ INSERT INTO demo.current_basket (user_id, media_id, count) VALUES
 -- order
 
 INSERT INTO demo."order" (id, status_id, cost, address, ordered) VALUES
-  (1, 2, 300, 'ул. Адрес, дом 1', '2018-07-12 14:00:00'),
+  (1, 2, 3000, 'ул. Адрес, дом 1', '2018-07-12 14:00:00'),
   (2, 2, 3000, 'ул. Адрес, дом 2', '2018-07-12 14:00:00'),
   (3, 1, 1500, 'ул. Адрес, дом 3', '2018-07-12 14:00:00');
 

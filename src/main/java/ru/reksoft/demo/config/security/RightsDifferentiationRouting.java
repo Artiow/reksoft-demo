@@ -5,6 +5,7 @@ import org.springframework.security.web.util.matcher.*;
 public interface RightsDifferentiationRouting {
 
     RequestMatcher DEFAULT_URLS = new OrRequestMatcher(
+            new AntPathRequestMatcher("/favicon.ico"),
             new AntPathRequestMatcher("/error"),
             new AntPathRequestMatcher("/csrf"),
             new AntPathRequestMatcher("/")

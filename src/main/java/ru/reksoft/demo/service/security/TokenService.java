@@ -2,7 +2,6 @@ package ru.reksoft.demo.service.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.TextCodec;
-import io.jsonwebtoken.impl.compression.GzipCompressionCodec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,25 +14,12 @@ import java.util.Map;
 @Service
 public class TokenService implements Clock {
 
-    @Value("${jwt.token-type}")
+    private static SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
+
     private String tokenType;
-
-    @Value("${jwt.issuer}")
     private String issuer;
+    private String sign;
 
-    @Value("${jwt.secret-key}")
-    private String secretKey;
-
-    private GzipCompressionCodec compressionCodec;
-
-    private SignatureAlgorithm signatureAlgorithm;
-
-    @PostConstruct
-    private void init() {
-        secretKey = TextCodec.BASE64.encode(secretKey);
-        compressionCodec = new GzipCompressionCodec();
-        signatureAlgorithm = SignatureAlgorithm.HS512;
-    }
 
     /**
      * Getting used token type.
@@ -43,6 +29,31 @@ public class TokenService implements Clock {
     public String getTokenType() {
         return tokenType;
     }
+
+    @Value("${jwt.token-type}")
+    public void setTokenType(String tokenType) {
+        this.tokenType = tokenType;
+    }
+
+    @Value("${jwt.issuer}")
+    public void setIssuer(String issuer) {
+        this.issuer = issuer;
+    }
+
+    @Value("${jwt.sign}")
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+
+    /**
+     * Secret key Base64 encoding.
+     */
+    @PostConstruct
+    private void init() {
+        sign = TextCodec.BASE64.encode(sign);
+    }
+
 
     /**
      * Returns JWT.
@@ -59,8 +70,7 @@ public class TokenService implements Clock {
         return Jwts
                 .builder()
                 .setClaims(claims)
-                .compressWith(compressionCodec)
-                .signWith(signatureAlgorithm, secretKey)
+                .signWith(signatureAlgorithm, sign)
                 .compact();
     }
 
@@ -74,7 +84,7 @@ public class TokenService implements Clock {
         return Jwts
                 .parser()
                 .requireIssuer(issuer)
-                .setSigningKey(secretKey)
+                .setSigningKey(sign)
                 .parseClaimsJws(token)
                 .getBody();
     }

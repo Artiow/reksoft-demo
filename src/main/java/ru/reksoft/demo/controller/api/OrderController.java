@@ -2,7 +2,6 @@ package ru.reksoft.demo.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.reksoft.demo.dto.OrderDTO;
 import ru.reksoft.demo.dto.pagination.PageDTO;
@@ -11,8 +10,6 @@ import ru.reksoft.demo.service.OrderService;
 import ru.reksoft.demo.service.generic.AuthorizationRequiredException;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
-
-import java.time.LocalDateTime;
 
 import static ru.reksoft.demo.util.ResourceLocationBuilder.buildURI;
 
@@ -54,15 +51,14 @@ public class OrderController {
     /**
      * Make an order by current basket for authenticated user.
      *
-     * @param orderDTO - order form
      * @return user's order location
      * @throws AuthorizationRequiredException - if user not authorized
      * @throws ResourceCannotCreateException  - if order cannot be made
      */
     @PostMapping
-    public ResponseEntity<Void> make(@RequestBody @Validated(OrderDTO.FieldCheck.class) OrderDTO orderDTO) throws AuthorizationRequiredException, ResourceCannotCreateException {
-        orderService.make(orderDTO.setOrderedTime(LocalDateTime.now()));
-        return ResponseEntity.created(buildURI()).build();
+    public ResponseEntity<Void> make()
+            throws AuthorizationRequiredException, ResourceCannotCreateException {
+        return ResponseEntity.created(buildURI(orderService.make())).build();
     }
 
     /**

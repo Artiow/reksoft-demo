@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.reksoft.demo.config.MessagesConfig;
+import ru.reksoft.demo.config.messages.MessageContainer;
 import ru.reksoft.demo.domain.LabelEntity;
 import ru.reksoft.demo.domain.LabelEntity_;
 import ru.reksoft.demo.dto.LabelDTO;
@@ -24,14 +24,14 @@ import javax.validation.constraints.NotNull;
 @Service
 public class LabelService extends AbstractService<LabelDTO> {
 
-    private MessagesConfig messages;
+    private MessageContainer messages;
 
     private LabelRepository labelRepository;
 
     private LabelMapper labelMapper;
 
     @Autowired
-    public void setMessages(MessagesConfig messages) {
+    public void setMessages(MessageContainer messages) {
         this.messages = messages;
     }
 

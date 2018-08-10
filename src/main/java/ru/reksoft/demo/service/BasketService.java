@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.reksoft.demo.config.MessagesConfig;
+import ru.reksoft.demo.config.messages.MessageContainer;
 import ru.reksoft.demo.domain.CurrentBasketEntity;
 import ru.reksoft.demo.domain.UserEntity;
 import ru.reksoft.demo.dto.BasketDTO;
@@ -17,23 +17,21 @@ import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 import ru.reksoft.demo.service.security.userdetails.IdentifiedUserDetails;
 
-import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
 
 @Service
 public class BasketService {
 
-    private MessagesConfig messages;
+    private MessageContainer messages;
 
     private UserRepository userRepository;
     private MediaRepository mediaRepository;
-
     private CurrentBasketRepository currentBasketRepository;
 
     private BasketMapper basketMapper;
 
     @Autowired
-    public void setMessages(MessagesConfig messages) {
+    public void setMessages(MessageContainer messages) {
         this.messages = messages;
     }
 
@@ -48,7 +46,7 @@ public class BasketService {
     }
 
     @Autowired
-    public void setCurrentBasketEntity(CurrentBasketRepository currentBasketRepository) {
+    public void setCurrentBasketRepository(CurrentBasketRepository currentBasketRepository) {
         this.currentBasketRepository = currentBasketRepository;
     }
 
@@ -84,17 +82,15 @@ public class BasketService {
 
         if (currentBasketRepository.existsByPkUserIdAndPkMediaId(userId, mediaId)) {
             throw new ResourceCannotCreateException(messages.getAndFormat("reksoft.demo.Basket.alreadyExist.message", userId, mediaId));
+        } else if (!mediaRepository.existsById(mediaId)) {
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Media.notExistById.message", mediaId));
         } else {
-            try {
-                CurrentBasketEntity newItem = new CurrentBasketEntity();
-                newItem.setMedia(mediaRepository.getOne(mediaId));
-                newItem.setUser(user);
+            CurrentBasketEntity newItem = new CurrentBasketEntity();
+            newItem.setMedia(mediaRepository.getOne(mediaId));
+            newItem.setUser(user);
 
-                user.getBasket().add(newItem);
-                userRepository.save(user);
-            } catch (EntityNotFoundException e) {
-                throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Media.notExistById.message", mediaId), e);
-            }
+            user.getBasket().add(newItem);
+            userRepository.save(user);
         }
     }
 
@@ -112,7 +108,7 @@ public class BasketService {
         Integer userId = user.getId();
 
         if (!currentBasketRepository.existsByPkUserIdAndPkMediaId(userId, mediaId)) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Basket.alreadyExist.message", userId, mediaId));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Basket.notExist.message", userId, mediaId));
         } else {
             CurrentBasketEntity item = currentBasketRepository.findByPkUserIdAndPkMediaId(userId, mediaId);
             item.setCount(quantity);
@@ -148,7 +144,7 @@ public class BasketService {
     private Integer getCurrentUserId() throws AuthorizationRequiredException {
         try {
             return ((IdentifiedUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-        } catch (ClassCastException e) {
+        } catch (ClassCastException | NullPointerException e) {
             throw new AuthorizationRequiredException(messages.get("reksoft.demo.auth.filter.credentialsNotFound.message"), e);
         }
     }

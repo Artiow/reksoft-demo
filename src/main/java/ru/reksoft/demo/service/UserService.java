@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.reksoft.demo.config.MessagesConfig;
+import ru.reksoft.demo.config.messages.MessageContainer;
 import ru.reksoft.demo.domain.UserEntity;
 import ru.reksoft.demo.dto.UserDTO;
 import ru.reksoft.demo.dto.security.TokenDTO;
@@ -27,7 +27,7 @@ import javax.validation.constraints.NotNull;
 @Service
 public class UserService {
 
-    private MessagesConfig messages;
+    private MessageContainer messages;
 
     private BCryptPasswordEncoder passwordEncoder;
 
@@ -39,7 +39,7 @@ public class UserService {
     private UserMapper userMapper;
 
     @Autowired
-    public void setMessages(MessagesConfig messages) {
+    public void setMessages(MessageContainer messages) {
         this.messages = messages;
     }
 

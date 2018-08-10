@@ -1,5 +1,6 @@
 package ru.reksoft.demo.config.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -9,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import ru.reksoft.demo.config.MessagesConfig;
+import ru.reksoft.demo.config.messages.MessageContainer;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -19,20 +20,27 @@ import java.io.IOException;
 
 public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    /**
-     * Messages container.
-     */
-    private final MessagesConfig messages;
+    private MessageContainer messages;
 
-    @Value("${jwt.token-type}")
-    private String TOKEN_TYPE;
+    private String tokenType;
+
 
     /**
      * Required authentication request matcher setting.
      */
-    protected TokenAuthenticationFilter(RequestMatcher requestMatcher, MessagesConfig messages) {
+    protected TokenAuthenticationFilter(RequestMatcher requestMatcher) {
         super(requestMatcher);
+    }
+
+
+    @Autowired
+    public void setMessages(MessageContainer messages) {
         this.messages = messages;
+    }
+
+    @Value("${jwt.token-type}")
+    public void setTokenType(String tokenType) {
+        this.tokenType = tokenType;
     }
 
 
@@ -55,10 +63,10 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
         final String credentials = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (credentials == null) {
             throw new AuthenticationCredentialsNotFoundException(messages.get("reksoft.demo.auth.filter.credentialsNotFound.message"));
-        } else if (!credentials.startsWith(TOKEN_TYPE)) {
+        } else if (!credentials.startsWith(tokenType)) {
             throw new BadCredentialsException(messages.get("reksoft.demo.auth.filter.credentialsNotValid.message"));
         } else {
-            token = credentials.substring(TOKEN_TYPE.length()).trim();
+            token = credentials.substring(tokenType.length()).trim();
         }
 
         return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(null, token));

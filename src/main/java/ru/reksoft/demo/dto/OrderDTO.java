@@ -6,7 +6,6 @@ import ru.reksoft.demo.dto.shortcut.MediaShortDTO;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,11 +15,8 @@ public class OrderDTO extends AbstractIdentifiedDTO {
     @Min(value = 1, groups = IdCheck.class)
     private Integer id;
 
-    @NotNull(groups = FieldCheck.class)
-    @Size(min = 1, max = 90, groups = FieldCheck.class)
-    private String address;
-
     private Integer cost;
+    private String address;
     private LocalDateTime orderedTime;
 
     private OrderStatusDTO status;
@@ -96,10 +92,6 @@ public class OrderDTO extends AbstractIdentifiedDTO {
 
 
     public interface IdCheck {
-
-    }
-
-    public interface FieldCheck {
 
     }
 

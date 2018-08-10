@@ -184,6 +184,23 @@
                         <schema>demo</schema>
                     </schemas>
                 </configuration>
+
+                <executions>
+
+                    <!-- TEST EXECUTION -->
+                    <execution>
+                        <id>test</id>
+                        <configuration>
+                            <url>jdbc:postgresql://localhost:5432/reksoft_test</url>
+                            <user>postgres</user>
+                            <password>postgres</password>
+                            <locations>filesystem:database/migration</locations>
+                            <schemas>
+                                <schema>demo</schema>
+                            </schemas>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- MAVEN COMPILER PLUGIN -->

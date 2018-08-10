@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import ru.reksoft.demo.config.MessagesConfig;
+import ru.reksoft.demo.config.messages.MessageContainer;
 import ru.reksoft.demo.domain.PictureEntity;
 import ru.reksoft.demo.repository.PictureRepository;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
@@ -36,7 +36,7 @@ public class PictureService {
     @Value("${file.location}")
     private String dir;
 
-    private MessagesConfig messages;
+    private MessageContainer messages;
 
     private Path fileStorageLocation;
 
@@ -54,7 +54,7 @@ public class PictureService {
     }
 
     @Autowired
-    public void setMessages(MessagesConfig messages) {
+    public void setMessages(MessageContainer messages) {
         this.messages = messages;
     }
 

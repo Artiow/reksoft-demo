@@ -56,7 +56,7 @@ public class PictureController {
         }
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, getContentDisposition(resource.getFilename()))
                 .contentType(contentType)
                 .body(resource);
     }
@@ -88,5 +88,16 @@ public class PictureController {
         return ResponseEntity
                 .noContent()
                 .build();
+    }
+
+
+    /**
+     * Build content disposition.
+     *
+     * @param filename - filename
+     * @return content disposition line
+     */
+    private String getContentDisposition(String filename) {
+        return "inline; filename=\"" + filename + "\"";
     }
 }

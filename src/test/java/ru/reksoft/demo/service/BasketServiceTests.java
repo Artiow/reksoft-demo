@@ -109,6 +109,7 @@ public class BasketServiceTests extends AbstractSecuredServiceTests {
 
         // media repository
         for (MediaEntity media : testMedias) {
+            when(mediaRepository.existsById(media.getId())).thenReturn(true);
             when(mediaRepository.getOne(media.getId())).thenReturn(media);
         }
 

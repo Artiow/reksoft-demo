@@ -17,7 +17,6 @@ import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 import ru.reksoft.demo.service.security.userdetails.IdentifiedUserDetails;
 
-import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
 
 @Service
@@ -83,17 +82,15 @@ public class BasketService {
 
         if (currentBasketRepository.existsByPkUserIdAndPkMediaId(userId, mediaId)) {
             throw new ResourceCannotCreateException(messages.getAndFormat("reksoft.demo.Basket.alreadyExist.message", userId, mediaId));
+        } else if (!mediaRepository.existsById(mediaId)) {
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Media.notExistById.message", mediaId));
         } else {
-            try {
-                CurrentBasketEntity newItem = new CurrentBasketEntity();
-                newItem.setMedia(mediaRepository.getOne(mediaId));
-                newItem.setUser(user);
+            CurrentBasketEntity newItem = new CurrentBasketEntity();
+            newItem.setMedia(mediaRepository.getOne(mediaId));
+            newItem.setUser(user);
 
-                user.getBasket().add(newItem);
-                userRepository.save(user);
-            } catch (EntityNotFoundException e) {
-                throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Media.notExistById.message", mediaId), e);
-            }
+            user.getBasket().add(newItem);
+            userRepository.save(user);
         }
     }
 
@@ -111,7 +108,7 @@ public class BasketService {
         Integer userId = user.getId();
 
         if (!currentBasketRepository.existsByPkUserIdAndPkMediaId(userId, mediaId)) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Basket.alreadyExist.message", userId, mediaId));
+            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Basket.notExist.message", userId, mediaId));
         } else {
             CurrentBasketEntity item = currentBasketRepository.findByPkUserIdAndPkMediaId(userId, mediaId);
             item.setCount(quantity);

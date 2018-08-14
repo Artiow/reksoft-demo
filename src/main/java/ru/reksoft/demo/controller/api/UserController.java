@@ -11,6 +11,8 @@ import ru.reksoft.demo.dto.UserDTO;
 import ru.reksoft.demo.dto.security.TokenDTO;
 import ru.reksoft.demo.dto.shortcut.UserShortDTO;
 import ru.reksoft.demo.service.UserService;
+import ru.reksoft.demo.service.generic.AuthorizationRequiredException;
+import ru.reksoft.demo.service.generic.ForbiddenAccessException;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 
@@ -39,7 +41,7 @@ public class UserController {
      * @throws ResourceNotFoundException - if user not found
      */
     @GetMapping("/{id}")
-    public UserShortDTO get(@PathVariable Integer id) throws ResourceNotFoundException {
+    public UserShortDTO get(@PathVariable Integer id) throws ResourceNotFoundException, AuthorizationRequiredException, ForbiddenAccessException {
         return userService.get(id);
     }
 

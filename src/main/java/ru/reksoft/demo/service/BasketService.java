@@ -1,7 +1,6 @@
 package ru.reksoft.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.config.messages.MessageContainer;
@@ -12,19 +11,17 @@ import ru.reksoft.demo.mapper.BasketMapper;
 import ru.reksoft.demo.repository.CurrentBasketRepository;
 import ru.reksoft.demo.repository.MediaRepository;
 import ru.reksoft.demo.repository.UserRepository;
+import ru.reksoft.demo.repository.UserRoleRepository;
+import ru.reksoft.demo.service.generic.AbstractSecurityService;
 import ru.reksoft.demo.service.generic.AuthorizationRequiredException;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
-import ru.reksoft.demo.service.security.userdetails.IdentifiedUserDetails;
 
 import javax.validation.constraints.NotNull;
 
 @Service
-public class BasketService {
+public class BasketService extends AbstractSecurityService {
 
-    private MessageContainer messages;
-
-    private UserRepository userRepository;
     private MediaRepository mediaRepository;
     private CurrentBasketRepository currentBasketRepository;
 
@@ -32,12 +29,17 @@ public class BasketService {
 
     @Autowired
     public void setMessages(MessageContainer messages) {
-        this.messages = messages;
+        super.setMessages(messages);
     }
 
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
+        super.setUserRepository(userRepository);
+    }
+
+    @Autowired
+    protected void setUserRoleRepository(UserRoleRepository userRoleRepository) {
+        super.setUserRoleRepository(userRoleRepository);
     }
 
     @Autowired
@@ -81,16 +83,16 @@ public class BasketService {
         Integer userId = user.getId();
 
         if (currentBasketRepository.existsByPkUserIdAndPkMediaId(userId, mediaId)) {
-            throw new ResourceCannotCreateException(messages.getAndFormat("reksoft.demo.Basket.alreadyExist.message", userId, mediaId));
+            throw new ResourceCannotCreateException(getMessages().getAndFormat("reksoft.demo.Basket.alreadyExist.message", userId, mediaId));
         } else if (!mediaRepository.existsById(mediaId)) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Media.notExistById.message", mediaId));
+            throw new ResourceNotFoundException(getMessages().getAndFormat("reksoft.demo.Media.notExistById.message", mediaId));
         } else {
             CurrentBasketEntity newItem = new CurrentBasketEntity();
             newItem.setMedia(mediaRepository.getOne(mediaId));
             newItem.setUser(user);
 
             user.getBasket().add(newItem);
-            userRepository.save(user);
+            getUserRepository().save(user);
         }
     }
 
@@ -108,7 +110,7 @@ public class BasketService {
         Integer userId = user.getId();
 
         if (!currentBasketRepository.existsByPkUserIdAndPkMediaId(userId, mediaId)) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Basket.notExist.message", userId, mediaId));
+            throw new ResourceNotFoundException(getMessages().getAndFormat("reksoft.demo.Basket.notExist.message", userId, mediaId));
         } else {
             CurrentBasketEntity item = currentBasketRepository.findByPkUserIdAndPkMediaId(userId, mediaId);
             item.setCount(quantity);
@@ -128,34 +130,9 @@ public class BasketService {
     public void remove(@NotNull Integer mediaId) throws AuthorizationRequiredException, ResourceNotFoundException {
         Integer userId = getCurrentUserId();
         if (!currentBasketRepository.existsByPkUserIdAndPkMediaId(userId, mediaId)) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Basket.notExist.message", userId, mediaId));
+            throw new ResourceNotFoundException(getMessages().getAndFormat("reksoft.demo.Basket.notExist.message", userId, mediaId));
         }
 
         currentBasketRepository.deleteByPkUserIdAndPkMediaId(userId, mediaId);
-    }
-
-
-    /**
-     * Returns authenticated user id.
-     *
-     * @return user id
-     * @throws AuthorizationRequiredException - if user is anonymous
-     */
-    private Integer getCurrentUserId() throws AuthorizationRequiredException {
-        try {
-            return ((IdentifiedUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-        } catch (ClassCastException | NullPointerException e) {
-            throw new AuthorizationRequiredException(messages.get("reksoft.demo.auth.filter.credentialsNotFound.message"), e);
-        }
-    }
-
-    /**
-     * Returns authenticated user.
-     *
-     * @return user entity
-     * @throws AuthorizationRequiredException - if user is anonymous
-     */
-    private UserEntity getCurrentUserEntity() throws AuthorizationRequiredException {
-        return userRepository.getOne(getCurrentUserId());
     }
 }

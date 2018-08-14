@@ -12,7 +12,7 @@ import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.mapper.SingerMapper;
 import ru.reksoft.demo.repository.SingerRepository;
-import ru.reksoft.demo.service.generic.AbstractService;
+import ru.reksoft.demo.service.generic.AbstractCRUDService;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 import ru.reksoft.demo.service.generic.ResourceOptimisticLockException;
@@ -22,7 +22,7 @@ import javax.persistence.OptimisticLockException;
 import javax.validation.constraints.NotNull;
 
 @Service
-public class SingerService extends AbstractService<SingerDTO> {
+public class SingerService extends AbstractCRUDService<SingerDTO> {
 
     private MessageContainer messages;
 

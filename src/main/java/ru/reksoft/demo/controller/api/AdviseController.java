@@ -80,8 +80,14 @@ public class AdviseController {
 
     @ExceptionHandler(AuthorizationRequiredException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorDTO handleHttpMessageNotReadableException(AuthorizationRequiredException ex) {
-        return warnDTO(ex, "Unexpected Unauthorized Access Attempt.");
+    public ErrorDTO handleAuthorizationRequiredException(AuthorizationRequiredException ex) {
+        return warnDTO(ex, "Unauthorized Access Attempt.");
+    }
+
+    @ExceptionHandler(ForbiddenAccessException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorDTO handleForbiddenAccessException(ForbiddenAccessException ex) {
+        return warnDTO(ex, "Forbidden Access Attempt.");
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)

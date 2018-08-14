@@ -12,7 +12,7 @@ import ru.reksoft.demo.dto.pagination.PageDTO;
 import ru.reksoft.demo.dto.pagination.filters.StringSearcherDTO;
 import ru.reksoft.demo.mapper.LabelMapper;
 import ru.reksoft.demo.repository.LabelRepository;
-import ru.reksoft.demo.service.generic.AbstractService;
+import ru.reksoft.demo.service.generic.AbstractCRUDService;
 import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
 import ru.reksoft.demo.service.generic.ResourceNotFoundException;
 import ru.reksoft.demo.service.generic.ResourceOptimisticLockException;
@@ -22,7 +22,7 @@ import javax.persistence.OptimisticLockException;
 import javax.validation.constraints.NotNull;
 
 @Service
-public class LabelService extends AbstractService<LabelDTO> {
+public class LabelService extends AbstractCRUDService<LabelDTO> {
 
     private MessageContainer messages;
 

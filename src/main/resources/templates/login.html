@@ -17,10 +17,11 @@
                     data: {login: $('#inputLogin').val(), password: $('#inputPassword').val()},
                     dataType: 'json',
                     success: function (data, textStatus, jqXHR) {
-                        console.log(data); // todo: parse data!
+                        localStorage.setItem("accessToken", data.accessToken);
+                        localStorage.setItem("tokenType", data.tokenType);
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        console.log(errorThrown);
+                        console.log(textStatus, errorThrown);
                     }
                 })
             })

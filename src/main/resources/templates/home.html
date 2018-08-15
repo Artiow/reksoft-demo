@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Личный кабинет</title>
@@ -9,50 +10,13 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
 
-    <script>
-        const token = localStorage.getItem("token");
-        const userURI = localStorage.getItem("userURI");
-
-        if ((token === null) || (userURI === null)) {
-            window.location.replace('/login');
-        } else {
-            $.ajax({
-                type: 'GET',
-                url: userURI,
-                dataType: 'json',
-                beforeSend: function (jqXHR, settings) {
-                    jqXHR.setRequestHeader('Authorization', token);
-                },
-                success: function (data, textStatus, jqXHR) {
-                    console.log('Accepted: ', data);
-
-                    $('#login').empty()
-                        .append(data.login);
-
-                    $('#full-name').empty()
-                        .append(data.name).append(' ')
-                        .append(data.surname).append(' ')
-                        .append(data.patronymic);
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log('Unexpected error:', jqXHR.statusCode);
-                }
-            })
-        }
-
-        $(function () {
-            $('#logout').on("click", function () {
-                localStorage.removeItem('token');
-                localStorage.removeItem('userURI');
-                window.location.replace('/login');
-            });
-        });
-    </script>
+    <script src="../static/js/ajax.js" th:src="@{/js/ajax.js}"></script>
+    <script src="../static/js/home.js" th:src="@{/js/home.js}"></script>
 </head>
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-md-4" style="padding-top: 25px">
+        <div class="col-md-12" style="padding-top: 25px">
             <h1>Личный кабинет</h1>
             <p id="login" class="h3" style="display: inline"></p>
             <a id="logout" class="btn btn-danger"

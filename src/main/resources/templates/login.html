@@ -11,44 +11,8 @@
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
 
     <link rel="stylesheet" href="../static/css/login.css" th:href="@{/css/login.css}"/>
-
-    <script>
-        $(function () {
-            $('#login').on("submit", function () {
-                event.preventDefault();
-                $.ajax({
-                    type: 'GET',
-                    url: '/api/user/login',
-                    data: {login: $('#inputLogin').val(), password: $('#inputPassword').val()},
-                    dataType: 'json',
-                    success: function (data, textStatus, jqXHR) {
-                        const token = data.tokenType + ' ' + data.accessToken;
-                        const userURI = data.user.userURI;
-
-                        console.log('Accepted token:', token);
-                        localStorage.setItem('token', token);
-                        localStorage.setItem('userURI', userURI);
-                        window.location.replace('/home');
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        const element = $('#message').empty();
-                        const statusCode = jqXHR.status;
-
-                        switch (statusCode) {
-                            case 404:
-                                console.log('Error:', statusCode);
-                                element.append('Неверный логин и/или пароль!');
-                                break;
-                            default:
-                                console.log('Unexpected error:', statusCode);
-                                element.append('Неизвестная ошибка!');
-                                break;
-                        }
-                    }
-                })
-            })
-        });
-    </script>
+    <script src="../static/js/ajax.js" th:src="@{/js/ajax.js}"></script>
+    <script src="../static/js/login.js" th:src="@{/js/login.js}"></script>
 </head>
 <body id="LoginForm">
 <div class="container">

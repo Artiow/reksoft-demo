@@ -10,17 +10,17 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
 
+    <link rel="stylesheet" href="../static/css/home.css" th:href="@{/css/home.css}"/>
     <script src="../static/js/ajax.js" th:src="@{/js/ajax.js}"></script>
     <script src="../static/js/home.js" th:src="@{/js/home.js}"></script>
 </head>
-<body>
+<body style="display: none">
 <div class="container">
     <div class="row">
         <div class="col-md-12" style="padding-top: 25px">
             <h1>Личный кабинет</h1>
             <p id="login" class="h3" style="display: inline"></p>
-            <a id="logout" class="btn btn-danger"
-               style="color: white; font-weight: bold; margin-left: 10px; margin-bottom: 10px">выйти</a>
+            <a id="logout" class="btn btn-danger">выйти</a>
             <p id="full-name" style="font-size: 25px"></p>
         </div>
     </div>

@@ -27,7 +27,7 @@ function ajaxLogout() {
 function ajaxLogin(login, password, errorHandler) {
     event.preventDefault();
 
-    let redirect = localStorage.getItem("redirect");
+    let redirect = localStorage.getItem('redirect');
     if (redirect === null) {
         redirect = DEFAULT_SUCCESSFUL_REDIRECT;
     }
@@ -44,6 +44,7 @@ function ajaxLogin(login, password, errorHandler) {
             console.log('Accepted Token:', token);
             localStorage.setItem('token', token);
             localStorage.setItem('userURI', userURI);
+            localStorage.removeItem('redirect');
             window.location.replace(redirect);
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -59,9 +60,9 @@ function ajaxLogin(login, password, errorHandler) {
  * @param {function(Object)} successEvent - function that is called in case of successful verification.
  */
 function ajaxVerify(securedURL, successEvent) {
-    const token = localStorage.getItem("token");
-    if (token === null) {
-        localStorage.setItem("redirect", window.location.href);
+    const token = localStorage.getItem('token');
+    if ((token === null) || (securedURL === null)) {
+        localStorage.setItem('redirect', window.location.href);
         window.location.replace(DEFAULT_FAIL_REDIRECT);
     } else {
         $.ajax({

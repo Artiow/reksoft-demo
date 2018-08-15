@@ -7,7 +7,7 @@ import ru.reksoft.demo.repository.UserRepository;
 import ru.reksoft.demo.repository.UserRoleRepository;
 import ru.reksoft.demo.service.security.userdetails.IdentifiedUserDetails;
 
-public class AbstractSecurityService {
+public abstract class AbstractSecurityService {
 
     private MessageContainer messages;
     private UserRepository userRepository;

@@ -9,11 +9,16 @@ public class MainController {
 
     @GetMapping("/")
     public String index() {
-        return "redirect:/login";
+        return "redirect:/home";
     }
 
     @GetMapping("/login")
     public ModelAndView login() {
         return new ModelAndView("login");
+    }
+
+    @GetMapping("/home")
+    public ModelAndView home() {
+        return new ModelAndView("home");
     }
 }

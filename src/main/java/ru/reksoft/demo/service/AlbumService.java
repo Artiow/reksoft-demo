@@ -24,7 +24,7 @@ import javax.persistence.OptimisticLockException;
 import javax.validation.constraints.NotNull;
 
 @Service
-public class AlbumService extends AbstractService<AlbumDTO> {
+public class AlbumService extends AbstractCRUDService<AlbumDTO> {
 
     private MessageContainer messages;
 

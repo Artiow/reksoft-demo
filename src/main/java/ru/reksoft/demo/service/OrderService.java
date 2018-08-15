@@ -2,7 +2,6 @@ package ru.reksoft.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.reksoft.demo.config.messages.MessageContainer;
@@ -14,11 +13,8 @@ import ru.reksoft.demo.mapper.OrderMapper;
 import ru.reksoft.demo.repository.OrderRepository;
 import ru.reksoft.demo.repository.OrderStatusRepository;
 import ru.reksoft.demo.repository.UserRepository;
-import ru.reksoft.demo.service.generic.AbstractService;
-import ru.reksoft.demo.service.generic.AuthorizationRequiredException;
-import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
-import ru.reksoft.demo.service.generic.ResourceNotFoundException;
-import ru.reksoft.demo.service.security.userdetails.IdentifiedUserDetails;
+import ru.reksoft.demo.repository.UserRoleRepository;
+import ru.reksoft.demo.service.generic.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -32,11 +28,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
-public class OrderService {
+public class OrderService extends AbstractSecurityService {
 
-    private MessageContainer messages;
-
-    private UserRepository userRepository;
     private OrderRepository orderRepository;
     private OrderStatusRepository orderStatusRepository;
 
@@ -44,12 +37,17 @@ public class OrderService {
 
     @Autowired
     public void setMessages(MessageContainer messages) {
-        this.messages = messages;
+        super.setMessages(messages);
     }
 
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
+        super.setUserRepository(userRepository);
+    }
+
+    @Autowired
+    protected void setUserRoleRepository(UserRoleRepository userRoleRepository) {
+        super.setUserRoleRepository(userRoleRepository);
     }
 
     @Autowired
@@ -92,7 +90,7 @@ public class OrderService {
         try {
             return orderMapper.toDTO(orderRepository.getOne(id));
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Order.notExistById.message", id), e);
+            throw new ResourceNotFoundException(getMessages().getAndFormat("reksoft.demo.Order.notExistById.message", id), e);
         }
     }
 
@@ -110,7 +108,7 @@ public class OrderService {
         Collection<CurrentBasketEntity> basket = user.getBasket();
 
         if ((basket == null) || (basket.isEmpty())) {
-            throw new ResourceCannotCreateException(messages.get("reksoft.demo.Basket.isEmpty.message"));
+            throw new ResourceCannotCreateException(getMessages().get("reksoft.demo.Basket.isEmpty.message"));
         } else {
             OrderEntity order = new OrderEntity();
             order.setOrderedTime(Timestamp.valueOf(LocalDateTime.now()));
@@ -135,7 +133,7 @@ public class OrderService {
             Integer orderId = orderRepository.save(order).getId();
 
             user.getBasket().clear();
-            userRepository.save(user);
+            getUserRepository().save(user);
 
             return orderId;
         }
@@ -156,37 +154,12 @@ public class OrderService {
             orderEntity.setStatus(orderStatusRepository.findByCode(ORDER_SENT));
             orderRepository.save(orderEntity);
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.Order.notExistById.message", id), e);
+            throw new ResourceNotFoundException(getMessages().getAndFormat("reksoft.demo.Order.notExistById.message", id), e);
         }
     }
 
 
-    /**
-     * Returns authenticated user id.
-     *
-     * @return user id
-     * @throws AuthorizationRequiredException - if user is anonymous
-     */
-    private Integer getCurrentUserId() throws AuthorizationRequiredException {
-        try {
-            return ((IdentifiedUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-        } catch (ClassCastException e) {
-            throw new AuthorizationRequiredException(messages.get("reksoft.demo.auth.filter.credentialsNotFound.message"), e);
-        }
-    }
-
-    /**
-     * Returns authenticated user.
-     *
-     * @return user entity
-     * @throws AuthorizationRequiredException - if user is anonymous
-     */
-    private UserEntity getCurrentUserEntity() throws AuthorizationRequiredException {
-        return userRepository.getOne(getCurrentUserId());
-    }
-
-
-    public static class OrderFilter extends AbstractService.PageDivider implements Specification<OrderEntity> {
+    public static class OrderFilter extends AbstractCRUDService.PageDivider implements Specification<OrderEntity> {
 
         private Collection<String> statuses;
 

@@ -16,8 +16,7 @@ import ru.reksoft.demo.dto.shortcut.UserShortDTO;
 import ru.reksoft.demo.mapper.UserMapper;
 import ru.reksoft.demo.repository.UserRepository;
 import ru.reksoft.demo.repository.UserRoleRepository;
-import ru.reksoft.demo.service.generic.ResourceCannotCreateException;
-import ru.reksoft.demo.service.generic.ResourceNotFoundException;
+import ru.reksoft.demo.service.generic.*;
 import ru.reksoft.demo.service.security.SecurityService;
 import ru.reksoft.demo.service.security.userdetails.IdentifiedUser;
 
@@ -25,22 +24,27 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
 
 @Service
-public class UserService {
-
-    private MessageContainer messages;
+public class UserService extends AbstractSecurityService {
 
     private BCryptPasswordEncoder passwordEncoder;
 
     private SecurityService securityService;
 
-    private UserRepository userRepository;
-    private UserRoleRepository userRoleRepository;
-
     private UserMapper userMapper;
 
     @Autowired
     public void setMessages(MessageContainer messages) {
-        this.messages = messages;
+        super.setMessages(messages);
+    }
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        super.setUserRepository(userRepository);
+    }
+
+    @Autowired
+    protected void setUserRoleRepository(UserRoleRepository userRoleRepository) {
+        super.setUserRoleRepository(userRoleRepository);
     }
 
     @Autowired
@@ -51,16 +55,6 @@ public class UserService {
     @Autowired
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
-    }
-
-    @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @Autowired
-    public void setUserRoleRepository(UserRoleRepository userRoleRepository) {
-        this.userRoleRepository = userRoleRepository;
     }
 
     @Autowired
@@ -77,11 +71,15 @@ public class UserService {
      * @throws ResourceNotFoundException - if user with sent id not found
      */
     @Transactional(readOnly = true)
-    public UserShortDTO get(@NotNull Integer id) throws ResourceNotFoundException {
-        try {
-            return userMapper.toShortDTO(userRepository.getOne(id));
-        } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(messages.getAndFormat("reksoft.demo.User.notExistById.message", id), e);
+    public UserShortDTO get(@NotNull Integer id) throws ResourceNotFoundException, AuthorizationRequiredException, ForbiddenAccessException {
+        if (!id.equals(getCurrentUserId())) {
+            throw new ForbiddenAccessException(getMessages().get("reksoft.demo.User.forbiddenAccessAttempt.message"));
+        } else {
+            try {
+                return userMapper.toShortDTO(getUserRepository().getOne(id));
+            } catch (EntityNotFoundException e) {
+                throw new ResourceNotFoundException(getMessages().getAndFormat("reksoft.demo.User.notExistById.message", id), e);
+            }
         }
     }
 
@@ -99,15 +97,15 @@ public class UserService {
         UserEntity user;
 
         try {
-            user = userRepository.findByLogin(login);
+            user = getUserRepository().findByLogin(login);
             if (user == null) {
-                throw new EntityNotFoundException(messages.get("reksoft.demo.auth.service.repository.message"));
+                throw new EntityNotFoundException(getMessages().get("reksoft.demo.auth.service.repository.message"));
             } else if (!passwordEncoder.matches(password, user.getPassword())) {
-                throw new BadCredentialsException(messages.get("reksoft.demo.auth.service.encoder.message"));
+                throw new BadCredentialsException(getMessages().get("reksoft.demo.auth.service.encoder.message"));
             }
 
         } catch (EntityNotFoundException | BadCredentialsException e) {
-            throw new UsernameNotFoundException(messages.get("reksoft.demo.auth.service.loginError.message"), e);
+            throw new UsernameNotFoundException(getMessages().get("reksoft.demo.auth.service.loginError.message"), e);
         }
 
         return new TokenDTO()
@@ -140,16 +138,16 @@ public class UserService {
         Integer roleId = userDTO.getRole().getId();
         String login = userDTO.getLogin();
 
-        if (!userRoleRepository.existsById(roleId)) {
-            throw new ResourceCannotCreateException(messages.getAndFormat(
+        if (!getUserRoleRepository().existsById(roleId)) {
+            throw new ResourceCannotCreateException(getMessages().getAndFormat(
                     "reksoft.demo.UserRole.notExistById.message", roleId
             ));
-        } else if (userRepository.existsByLogin(login)) {
-            throw new ResourceCannotCreateException(messages.getAndFormat(
+        } else if (getUserRepository().existsByLogin(login)) {
+            throw new ResourceCannotCreateException(getMessages().getAndFormat(
                     "reksoft.demo.User.alreadyExistByLogin.message", login
             ));
         }
 
-        return userRepository.save(userMapper.toEntity(userDTO)).getId();
+        return getUserRepository().save(userMapper.toEntity(userDTO)).getId();
     }
 }

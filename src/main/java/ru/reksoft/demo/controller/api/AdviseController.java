@@ -4,7 +4,6 @@ import io.jsonwebtoken.JwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -26,7 +25,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestControllerAdvice
-public class AdviseController implements ErrorController {
+public class AdviseController {
 
     private static final Logger logger = LoggerFactory.getLogger(AdviseController.class);
 
@@ -81,8 +80,14 @@ public class AdviseController implements ErrorController {
 
     @ExceptionHandler(AuthorizationRequiredException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorDTO handleHttpMessageNotReadableException(AuthorizationRequiredException ex) {
-        return warnDTO(ex, "Unexpected Unauthorized Access Attempt.");
+    public ErrorDTO handleAuthorizationRequiredException(AuthorizationRequiredException ex) {
+        return warnDTO(ex, "Unauthorized Access Attempt.");
+    }
+
+    @ExceptionHandler(ForbiddenAccessException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorDTO handleForbiddenAccessException(ForbiddenAccessException ex) {
+        return warnDTO(ex, "Forbidden Access Attempt.");
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -134,16 +139,5 @@ public class AdviseController implements ErrorController {
         UUID uuid = UUID.randomUUID();
         logger.warn(logMessage + " UUID: {}", uuid);
         return uuid;
-    }
-
-
-    /**
-     * 404 handling.
-     *
-     * @return error path
-     */
-    @Override
-    public String getErrorPath() {
-        return "/error";
     }
 }

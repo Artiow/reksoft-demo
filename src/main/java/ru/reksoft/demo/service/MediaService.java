@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
-public class MediaService extends AbstractService<MediaDTO> {
+public class MediaService extends AbstractCRUDService<MediaDTO> {
 
     private MessageContainer messages;
 

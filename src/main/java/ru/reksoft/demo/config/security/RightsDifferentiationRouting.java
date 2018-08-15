@@ -4,19 +4,15 @@ import org.springframework.security.web.util.matcher.*;
 
 public interface RightsDifferentiationRouting {
 
-    RequestMatcher DEFAULT_URLS = new OrRequestMatcher(
-            new AntPathRequestMatcher("/favicon.ico"),
-            new AntPathRequestMatcher("/error"),
-            new AntPathRequestMatcher("/csrf"),
-            new AntPathRequestMatcher("/")
+    RequestMatcher UNAUTHORIZED_API_URLS = new OrRequestMatcher(
+            new AntPathRequestMatcher("/api/user/login", "GET")
     );
 
-    RequestMatcher SWAGGER_URLS = new OrRequestMatcher(
-            new AntPathRequestMatcher("/swagger-resources/**"),
-            new AntPathRequestMatcher("/configuration/**"),
-            new AntPathRequestMatcher("/webjars/**"),
-            new AntPathRequestMatcher("/swagger-ui.html"),
-            new AntPathRequestMatcher("/v2/api-docs")
+    RequestMatcher AUTHORIZED_API_URLS = new AndRequestMatcher(
+            new NegatedRequestMatcher(UNAUTHORIZED_API_URLS),
+            new OrRequestMatcher(
+                    new AntPathRequestMatcher("/api/user/*", "GET")
+            )
     );
 
     RequestMatcher USER_API_URLS = new OrRequestMatcher(
@@ -34,19 +30,9 @@ public interface RightsDifferentiationRouting {
             )
     );
 
-    RequestMatcher PUBLIC_API_URLS = new AndRequestMatcher(
-            new AntPathRequestMatcher("/api/**"),
-            new NegatedRequestMatcher(ADMIN_API_URLS),
-            new NegatedRequestMatcher(USER_API_URLS)
-    );
-
-    RequestMatcher PUBLIC_URLS = new OrRequestMatcher(
-            PUBLIC_API_URLS,
-            SWAGGER_URLS,
-            DEFAULT_URLS
-    );
-
-    RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(
-            PUBLIC_URLS
+    RequestMatcher PROTECTED_URLS = new OrRequestMatcher(
+            AUTHORIZED_API_URLS,
+            ADMIN_API_URLS,
+            USER_API_URLS
     );
 }

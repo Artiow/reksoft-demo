@@ -17,6 +17,11 @@ public class MainController {
         return new ModelAndView("login");
     }
 
+    @GetMapping("/registration")
+    public ModelAndView registration() {
+        return new ModelAndView("registration");
+    }
+
     @GetMapping("/home")
     public ModelAndView home() {
         return new ModelAndView("home");

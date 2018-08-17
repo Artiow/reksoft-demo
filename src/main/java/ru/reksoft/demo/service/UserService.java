@@ -134,20 +134,16 @@ public class UserService extends AbstractSecurityService {
      */
     @Transactional
     public Integer register(@NotNull UserDTO userDTO) throws ResourceCannotCreateException {
-        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        Integer roleId = userDTO.getRole().getId();
         String login = userDTO.getLogin();
-
-        if (!getUserRoleRepository().existsById(roleId)) {
-            throw new ResourceCannotCreateException(getMessages().getAndFormat(
-                    "reksoft.demo.UserRole.notExistById.message", roleId
-            ));
-        } else if (getUserRepository().existsByLogin(login)) {
+        if (getUserRepository().existsByLogin(login)) {
             throw new ResourceCannotCreateException(getMessages().getAndFormat(
                     "reksoft.demo.User.alreadyExistByLogin.message", login
             ));
         }
 
-        return getUserRepository().save(userMapper.toEntity(userDTO)).getId();
+        UserEntity user = userMapper.toEntity(userDTO);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(getUserRoleRepository().findByCode("user"));
+        return getUserRepository().save(user).getId();
     }
 }

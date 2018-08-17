@@ -71,8 +71,9 @@ function ajaxLogin(login, password, errorHandler) {
  *
  * @param {string} securedURL - requested secured URL
  * @param {function(object)} successEvent - function that is called in case of successful verification.
+ * @param errorHandler{function(object)} - error handler
  */
-function ajaxVerify(securedURL, successEvent) {
+function ajaxVerify(securedURL, successEvent, errorHandler) {
     const token = localStorage.getItem('token');
     if ((token === null) || (securedURL === null)) {
         localStorage.setItem('redirect', window.location.href);
@@ -91,7 +92,7 @@ function ajaxVerify(securedURL, successEvent) {
                 successEvent(data)
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                console.log('Unexpected Error:', jqXHR.statusCode);
+                errorHandler(jqXHR.responseJSON);
             }
         })
     }

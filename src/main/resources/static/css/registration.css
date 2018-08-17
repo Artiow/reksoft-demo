@@ -28,10 +28,6 @@ form .alert {
     text-align: center;
 }
 
-.row {
-    margin-top: 5%;
-}
-
 .form-row {
     margin-top: 2.5%;
     margin-bottom: 2.5%;
@@ -40,6 +36,21 @@ form .alert {
 .form-row .col-sm-3 {
     padding-right: 2.5%;
     text-align: right;
+}
+
+.row {
+    margin-top: 5%;
+}
+
+.row .btn-primary {
+    background: #f0ad4e none repeat scroll 0 0;
+    border-color: #f0ad4e;
+}
+
+.row .btn-link {
+    color: #777777;
+    font-size: 14px;
+    text-decoration: underline;
 }
 
 .login-link-box {

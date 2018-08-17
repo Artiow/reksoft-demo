@@ -21,11 +21,11 @@ function ajaxRegistration(userData, errorHandler) {
         url: '/api/user/register',
         contentType: 'application/json;charset=UTF-8',
         data: JSON.stringify(userData),
-        dataType: 'json',
         success: function (data, textStatus, jqXHR) {
-            const userURL = jqXHR.getResponseHeader("Location");
-            console.log('Accepted User URL:', userURL);
-            window.location.replace(userURL);
+            const userURI = jqXHR.getResponseHeader("Location");
+            console.log('Accepted User URI:', userURI);
+            localStorage.setItem('userURI', userURI);
+            window.location.replace(DEFAULT_FAIL_REDIRECT);
         },
         error: function (jqXHR, textStatus, errorThrown) {
             errorHandler(jqXHR.responseJSON);

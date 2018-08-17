@@ -6,4 +6,5 @@ import ru.reksoft.demo.domain.UserRoleEntity;
 
 public interface UserRoleRepository extends JpaRepository<UserRoleEntity, Integer>, JpaSpecificationExecutor<UserRoleEntity> {
 
+    UserRoleEntity findByCode(String code);
 }

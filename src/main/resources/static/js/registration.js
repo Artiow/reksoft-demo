@@ -4,11 +4,19 @@ $(function () {
     $('#registration').on("submit", function () {
         event.preventDefault();
 
-        const password = $('#password').val();
-        const confirm = $('#confirm').val();
+        $('#map').empty();
+        $('input').each(function () {
+            $(this).css("color", "green");
+        });
+
+        const messageField = $('#message').empty();
+        const passwordField = $('#password');
+        const password = passwordField.val();
+        const confirmField = $('#confirm');
+        const confirm = confirmField.val();
 
         if (password === confirm) {
-            const userData = {
+            ajaxRegistration({
                 name: $('#name').val(),
                 surname: $('#surname').val(),
                 patronymic: $('#patronymic').val(),
@@ -16,13 +24,24 @@ $(function () {
                 phone: $('#phone').val(),
                 login: $('#login').val(),
                 password: password
-            };
+            }, function (response) {
+                const errorMessage = response.message;
+                const errorMap = response.errors;
 
-            ajaxRegistration(userData, function (response) {
-                $('#message').empty().append(response.message);
+                messageField.append(errorMessage);
+                const mapField = $('#map').empty();
+                Object.keys(errorMap).forEach(function (key) {
+                    const inputField = $('#' + key);
+                    const message = errorMap[key];
+
+                    inputField.css("color", "red");
+                    mapField.append('<p>').append(inputField.attr("placeholder")).append(': ').append(message).append('</p>');
+                });
             });
         } else {
-            $('#message').empty().append(PASSWORD_DO_NOT_MATCH);
+            messageField.append(PASSWORD_DO_NOT_MATCH);
+            passwordField.css("color", "red");
+            confirmField.css("color", "red");
         }
     })
 });

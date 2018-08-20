@@ -25,31 +25,27 @@
         </div>
     </div>
 </nav>
-<div class="container">
+<div class="container showcase-container">
     <div class="row">
-        <ul class="col-sm-12">
-            <li class="card">
-                <img class="card-img-top" src="../static/img/no-image.jpg" th:src="@{/img/no-image.jpg}"
-                     alt="Обложка отсутствует!">
-                <div class="card-body">
-                    <h5 class="card-title">Заголовок</h5>
-                    <p class="card-text"><b>$</b><span>0.00</span></p>
-                    <a href="" class="btn btn-primary">В корзину</a>
-                </div>
-            </li>
-        </ul>
+        <ul id="showcase" class="card-deck"></ul>
     </div>
 </div>
 <nav>
     <ul class="pagination justify-content-center">
         <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1">Предыдущая</a>
+            <a id="prev" class="page-link" href="" tabindex="-1">Предыдущая</a>
         </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-            <a class="page-link" href="#">Следующая</a>
+        <li class="page-item"><a id="link-1" class="page-link" href="">1</a></li>
+        <li class="page-item disabled"><p class="page-link">...</p></li>
+        <li class="page-item"><a class="page-link" href="">3</a></li>
+        <li class="page-item"><a class="page-link" href="">4</a></li>
+        <li class="page-item"><a class="page-link" href=""><b>5</b></a></li>
+        <li class="page-item"><a class="page-link" href="">6</a></li>
+        <li class="page-item"><a class="page-link" href="">7</a></li>
+        <li class="page-item disabled"><p class="page-link">...</p></li>
+        <li class="page-item"><a class="page-link" href="">9</a></li>
+        <li class="page-item disabled">
+            <a id="next" class="page-link" href="" tabindex="-1">Следующая</a>
         </li>
     </ul>
 </nav>

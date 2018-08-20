@@ -253,19 +253,21 @@ public class MediaService extends AbstractCRUDService<MediaDTO> {
         public Predicate toPredicate(Root<MediaEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
             Collection<Predicate> predicates = new ArrayList<>();
             if (searchType != null) {
-                predicates.add(searchByStringPredicate(root, query, cb));
+                predicates.add(searchByStringPredicate(root, cb));
             }
             if (genreCodes != null) {
-                predicates.add(searchByGenrePredicate(root, query, cb));
+                predicates.add(searchByGenrePredicate(root, cb));
             }
             if (typeCodes != null) {
-                predicates.add(searchByTypePredicate(root, query, cb));
+                predicates.add(searchByTypePredicate(root, cb));
             }
 
-            return cb.and(predicates.toArray(new Predicate[0]));
+            return query
+                    .where(cb.and(predicates.toArray(new Predicate[0])))
+                    .distinct(true).getRestriction();
         }
 
-        private Predicate searchByStringPredicate(Root<MediaEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+        private Predicate searchByStringPredicate(Root<MediaEntity> root, CriteriaBuilder cb) {
             Join<MediaEntity, AlbumEntity> album = root.join(MediaEntity_.album);
             Expression<String> sought = null;
             switch (searchType) {
@@ -295,11 +297,11 @@ public class MediaService extends AbstractCRUDService<MediaDTO> {
             return cb.and(occurrences.toArray(new Predicate[0]));
         }
 
-        private Predicate searchByGenrePredicate(Root<MediaEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+        private Predicate searchByGenrePredicate(Root<MediaEntity> root, CriteriaBuilder cb) {
             return root.join(MediaEntity_.album).join(AlbumEntity_.genres).get(GenreEntity_.code).in(genreCodes);
         }
 
-        private Predicate searchByTypePredicate(Root<MediaEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+        private Predicate searchByTypePredicate(Root<MediaEntity> root, CriteriaBuilder cb) {
             return root.join(MediaEntity_.type).get(MediaTypeEntity_.code).in(typeCodes);
         }
     }

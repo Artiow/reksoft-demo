@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Альбомы</title>
@@ -8,12 +8,15 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="../static/css/index.css" th:href="@{/css/index.css}"/>
+    <script src="../static/js/index.js" th:src="@{/js/index.js}"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <p class="navbar-brand" style="margin: 0">МУЗЫКАЛЬНЫЕ ТОВАРЫ</p>
-        <div class="collapse navbar-collapse" id="navbar1">
+        <div>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     <a class="btn btn-outline-secondary ml-2" href="/home">Домой</a>
@@ -24,10 +27,31 @@
 </nav>
 <div class="container">
     <div class="row">
-        <div class="col-sm-12">
-
-        </div>
+        <ul class="col-sm-12">
+            <li class="card">
+                <img class="card-img-top" src="../static/img/no-image.jpg" th:src="@{/img/no-image.jpg}"
+                     alt="Обложка отсутствует!">
+                <div class="card-body">
+                    <h5 class="card-title">Заголовок</h5>
+                    <p class="card-text"><b>$</b><span>0.00</span></p>
+                    <a href="" class="btn btn-primary">В корзину</a>
+                </div>
+            </li>
+        </ul>
     </div>
 </div>
+<nav>
+    <ul class="pagination justify-content-center">
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">Предыдущая</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+            <a class="page-link" href="#">Следующая</a>
+        </li>
+    </ul>
+</nav>
 </body>
 </html>

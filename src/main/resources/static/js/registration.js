@@ -38,17 +38,14 @@ $(function () {
                     .append(errorMessage);
 
                 Object.keys(errorMap).forEach(function (key) {
-                    let errorInput;
-                    let errorField;
                     const message = errorMap[key];
-                    if (key !== 'password') {
-                        errorInput = $('#' + key).addClass("is-invalid");
-                        errorField = $('#' + key + ' + .invalid-feedback');
-                    } else {
-                        errorInput = $('#password');
-                        errorField = $('#confirm + .invalid-feedback');
+                    let errorInputId = '#' + key;
+                    let errorInput = $(errorInputId).addClass("is-invalid");
+                    if (key === 'password') {
+                        errorInputId = '#confirm';
+                        errorInput = $(errorInputId).addClass("is-invalid");
                     }
-                    errorField.empty()
+                    $(errorInputId + ' + .invalid-feedback').empty()
                         .append('Значение поля \"')
                         .append(errorInput.attr("placeholder").toLowerCase())
                         .append('\" ').append(message).append('!');

@@ -1,0 +1,12 @@
+.container {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.card {
+    width: 16rem;
+}
+
+.card .card-body b {
+    margin-right: 2px;
+}

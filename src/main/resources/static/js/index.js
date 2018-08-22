@@ -22,6 +22,16 @@ function loadPage(index, successEvent, errorHandler) {
     });
 }
 
+const PREV_BUTTON_COMPONENT =
+    "<li class=\"page-item page-item-prev\">\n" +
+    "<a id=\"link-prev\" class=\"page-link\" href=\"\">Предыдущая</a>\n" +
+    "</li>";
+
+const NEXT_BUTTON_COMPONENT =
+    "<li class=\"page-item page-item-next\">\n" +
+    "<a id=\"link-next\" class=\"page-link\" href=\"\">Следующая</a>\n" +
+    "</li>";
+
 /**
  * @param item {object}
  */
@@ -39,6 +49,18 @@ function cardComponent(item) {
         "</li>\n"
 }
 
+/**
+ * @param index {number}
+ * @param current {boolean}
+ */
+function paginationComponent(index, current) {
+    let content = index + 1;
+    if (current) {
+        content = '<b>' + content + '</b>';
+    }
+    return "<li class=\"page-item\"><a id=\"link-" + index + "\" class=\"page-link\" href=\"\">" + content + "</a></li>\n"
+}
+
 function showPage(index) {
     sessionStorage.setItem("currentPage", index);
     loadPage(index, function (response) {
@@ -54,39 +76,22 @@ function showPage(index) {
         let totalPages = response.totalPages;
         const pagination = $('#pagination').empty();
 
-        if (index > 0) {
-            pagination.append(
-                "<li class=\"page-item\">\n" +
-                "<a id=\"link-prev\" class=\"page-link\" href=\"\">Предыдущая</a>\n" +
-                "</li>"
-            );
-        } else {
-            pagination.append(
-                "<li class=\"page-item disabled\">\n" +
-                "<a id=\"link-prev\" class=\"page-link\" href=\"\" tabindex=\"-1\">Предыдущая</a>\n" +
-                "</li>"
-            );
+        pagination.append(PREV_BUTTON_COMPONENT);
+        if (index === 0) {
+            $('.page-item-prev').addClass('disabled');
+            $('#link-prev').attr('tabindex', '-1');
         }
+
         for (let i = 0; i < totalPages; i++) {
-            if (i !== index) {
-                pagination.append("<li class=\"page-item\"><a id=\"link-" + i + "\" class=\"page-link\" href=\"\">" + (i + 1) + "</a></li>\n")
-            } else {
-                pagination.append("<li class=\"page-item\"><a id=\"link-" + i + "\" class=\"page-link\" href=\"\"><b>" + (i + 1) + "</b></a></li>\n")
-            }
+            pagination.append(paginationComponent(i, (i === index)));
         }
-        if (index < (totalPages - 1)) {
-            pagination.append(
-                "<li class=\"page-item\">\n" +
-                "<a id=\"link-next\" class=\"page-link\" href=\"\">Следующая</a>\n" +
-                "</li>"
-            );
-        } else {
-            pagination.append(
-                "<li class=\"page-item disabled\">\n" +
-                "<a id=\"link-next\" class=\"page-link\" href=\"\" tabindex=\"-1\">Следующая</a>\n" +
-                "</li>"
-            );
+
+        pagination.append(NEXT_BUTTON_COMPONENT);
+        if (index === (totalPages - 1)) {
+            $('.page-item-next').addClass('disabled');
+            $('#link-next').attr('tabindex', '-1');
         }
+
     }, function (response) {
 
     });

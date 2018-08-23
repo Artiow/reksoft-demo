@@ -10,13 +10,17 @@ function loadPage(index, successEvent, errorHandler) {
         type: 'POST',
         url: '/api/media/list/byFilter',
         contentType: 'application/json;charset=UTF-8',
-        data: JSON.stringify({pageSize: DEFAULT_PAGE_SIZE, pageNum: index}),
+        data: JSON.stringify({
+            pageSize: DEFAULT_PAGE_SIZE,
+            pageNum: index
+        }),
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
             console.log('Accepted Data:', data);
             successEvent(data)
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            console.log('Accepted Error Data:', jqXHR.responseJSON);
             errorHandler(jqXHR.responseJSON);
         }
     });
@@ -54,44 +58,40 @@ function cardComponent(item) {
  * @param current {boolean}
  */
 function paginationComponent(index, current) {
-    let content = index + 1;
-    if (current) {
-        content = '<b>' + content + '</b>';
-    }
+    const content = current ? '<b>' + (index + 1) + '</b>' : (index + 1);
     return "<li class=\"page-item\"><a id=\"link-" + index + "\" class=\"page-link\" href=\"\">" + content + "</a></li>\n"
+}
+
+/**
+ * @param number {number}
+ * @param total {number}
+ */
+function showPagination(number, total) {
+    if (total > 1) {
+        const pagination = $('#pagination').empty();
+        pagination.append(PREV_BUTTON_COMPONENT);
+        for (let i = 0; i < total; i++) {
+            pagination.append(paginationComponent(i, (i === number)));
+        }
+        pagination.append(NEXT_BUTTON_COMPONENT);
+        if (number === 0) {
+            $('.page-item-prev').addClass('disabled');
+            $('#link-prev').attr('tabindex', '-1');
+        } else if (number === (total - 1)) {
+            $('.page-item-next').addClass('disabled');
+            $('#link-next').attr('tabindex', '-1');
+        }
+    }
 }
 
 function showPage(index) {
     sessionStorage.setItem("currentPage", index);
     loadPage(index, function (response) {
         const showcase = $('#showcase').empty();
-        const display = showcase.css("display");
-        showcase.css("display", "none");
         response.content.forEach(function (item, i, arr) {
             showcase.append(cardComponent(item));
         });
-        showcase.css("display", display);
-
-        let pageNumber = response.pageNumber;
-        let totalPages = response.totalPages;
-        const pagination = $('#pagination').empty();
-
-        pagination.append(PREV_BUTTON_COMPONENT);
-        if (index === 0) {
-            $('.page-item-prev').addClass('disabled');
-            $('#link-prev').attr('tabindex', '-1');
-        }
-
-        for (let i = 0; i < totalPages; i++) {
-            pagination.append(paginationComponent(i, (i === index)));
-        }
-
-        pagination.append(NEXT_BUTTON_COMPONENT);
-        if (index === (totalPages - 1)) {
-            $('.page-item-next').addClass('disabled');
-            $('#link-next').attr('tabindex', '-1');
-        }
-
+        showPagination(response.pageNumber, response.totalPages);
     }, function (response) {
 
     });
@@ -109,5 +109,5 @@ $(function () {
             let currentPage = (+sessionStorage.getItem("currentPage"));
             showPage((index === "prev") ? (currentPage - 1) : (currentPage + 1));
         }
-    })
+    });
 });

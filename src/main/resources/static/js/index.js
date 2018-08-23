@@ -26,16 +26,6 @@ function loadPage(index, successEvent, errorHandler) {
     });
 }
 
-const PREV_BUTTON_COMPONENT =
-    "<li class=\"page-item page-item-prev\">\n" +
-    "<a id=\"link-prev\" class=\"page-link\" href=\"\">Предыдущая</a>\n" +
-    "</li>";
-
-const NEXT_BUTTON_COMPONENT =
-    "<li class=\"page-item page-item-next\">\n" +
-    "<a id=\"link-next\" class=\"page-link\" href=\"\">Следующая</a>\n" +
-    "</li>";
-
 /**
  * @param item {object}
  */
@@ -52,6 +42,26 @@ function cardComponent(item) {
         "</div>\n" +
         "</li>\n"
 }
+
+/**
+ * @param content {object}
+ */
+function showCards(content) {
+    const showcase = $('#showcase').empty();
+    content.forEach(function (item, i, arr) {
+        showcase.append(cardComponent(item));
+    });
+}
+
+const PREV_BUTTON_COMPONENT =
+    "<li class=\"page-item page-item-prev\">\n" +
+    "<a id=\"link-prev\" class=\"page-link\" href=\"\">Предыдущая</a>\n" +
+    "</li>";
+
+const NEXT_BUTTON_COMPONENT =
+    "<li class=\"page-item page-item-next\">\n" +
+    "<a id=\"link-next\" class=\"page-link\" href=\"\">Следующая</a>\n" +
+    "</li>";
 
 /**
  * @param index {number}
@@ -87,10 +97,7 @@ function showPagination(number, total) {
 function showPage(index) {
     sessionStorage.setItem("currentPage", index);
     loadPage(index, function (response) {
-        const showcase = $('#showcase').empty();
-        response.content.forEach(function (item, i, arr) {
-            showcase.append(cardComponent(item));
-        });
+        showCards(response.content);
         showPagination(response.pageNumber, response.totalPages);
     }, function (response) {
 

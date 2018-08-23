@@ -32,10 +32,18 @@
     position: relative;
 }
 
+.card .card-body .card-title:last-child {
+    margin-bottom: 0;
+}
+
 .card .card-body a {
     text-decoration: none;
 }
 
-.card .card-body b {
-    margin-right: 2px;
+.card .card-footer .card-text b {
+    margin-right: 1px;
+}
+
+#pagination {
+    min-height: 38px;
 }

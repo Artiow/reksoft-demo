@@ -1,19 +1,16 @@
 const DEFAULT_PAGE_SIZE = 4;
 
 /**
- * @param index {number}
+ * @param filter {object}
  * @param successEvent {function(object)}
  * @param errorHandler {function(object)}
  */
-function loadPage(index, successEvent, errorHandler) {
+function loadPage(filter, successEvent, errorHandler) {
     $.ajax({
         type: 'POST',
         url: '/api/media/list/byFilter',
         contentType: 'application/json;charset=UTF-8',
-        data: JSON.stringify({
-            pageSize: DEFAULT_PAGE_SIZE,
-            pageNum: index
-        }),
+        data: JSON.stringify(filter),
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
             console.log('Accepted Data:', data);
@@ -26,6 +23,13 @@ function loadPage(index, successEvent, errorHandler) {
     });
 }
 
+const NOT_FOUND_COMPONENT =
+    "<div class=\"col-md-12 text-center mt-md-5 mt-sm-0\">\n" +
+    "<span class=\"display-4 d-block\">Ничего не найдено</span>\n" +
+    "</div>\n";
+
+const SHOWCASE_COMPONENT = "<ul id=\"showcase\" class=\"card-deck\"></ul>\n";
+
 /**
  * @param item {object}
  */
@@ -33,11 +37,12 @@ function cardComponent(item) {
     return "<li class=\"card\">\n" +
         "<img class=\"card-img-top\" src=\"" + item.pictureURI + "\" alt=\"" + item.album + "\">\n" +
         "<div class=\"card-body\">\n" +
-        "<h5 class=\"card-title\"><a href=\"\">" + item.album + "</a></h5>\n" +
-        "<h6 class=\"card-title\"><a href=\"\">" + item.singer + "</a></h6>" +
+        "<h5 class=\"card-title\"><a href=\"#\">" + item.album + "</a></h5>\n" +
+        "<h6 class=\"card-title\"><a href=\"#\">" + item.singer + "</a></h6>\n" +
+        "<h6 class=\"card-title\"><a href=\"#\"><small>" + item.label + "</small></a></h6>\n" +
         "</div>\n" +
         "<div class=\"card-footer\">\n" +
-        "<p class=\"card-text\"><b>$</b><span>" + (item.price / 100) + " (" + item.type + ")" + "</span></p>\n" +
+        "<p class=\"card-text\"><b>$</b><span>" + (item.price / 100) + " <small>(" + item.type + ")</small>" + "</span></p>\n" +
         "<a href=\"\" class=\"btn btn-primary\">В корзину</a>\n" +
         "</div>\n" +
         "</li>\n"
@@ -47,10 +52,16 @@ function cardComponent(item) {
  * @param content {object}
  */
 function showCards(content) {
-    const showcase = $('#showcase').empty();
-    content.forEach(function (item, i, arr) {
-        showcase.append(cardComponent(item));
-    });
+    const container = $('#showcase-container').empty();
+    if (content.length > 0) {
+        container.append(SHOWCASE_COMPONENT);
+        const showcase = $('#showcase').empty();
+        content.forEach(function (item, i, arr) {
+            showcase.append(cardComponent(item));
+        });
+    } else {
+        container.append(NOT_FOUND_COMPONENT);
+    }
 }
 
 const PREV_BUTTON_COMPONENT =
@@ -77,8 +88,8 @@ function paginationComponent(index, current) {
  * @param total {number}
  */
 function showPagination(number, total) {
+    const pagination = $('#pagination').empty();
     if (total > 1) {
-        const pagination = $('#pagination').empty();
         pagination.append(PREV_BUTTON_COMPONENT);
         for (let i = 0; i < total; i++) {
             pagination.append(paginationComponent(i, (i === number)));
@@ -94,9 +105,24 @@ function showPagination(number, total) {
     }
 }
 
+/**
+ * @param index {number}
+ */
 function showPage(index) {
     sessionStorage.setItem("currentPage", index);
-    loadPage(index, function (response) {
+    const queryJson = {
+        pageSize: DEFAULT_PAGE_SIZE,
+        pageNum: index
+    };
+
+    const searchType = sessionStorage.getItem("searchType");
+    const searchString = sessionStorage.getItem("searchString");
+    if ((searchType !== null) && (searchString !== null)) {
+        queryJson.searchType = searchType;
+        queryJson.searchString = searchString;
+    }
+
+    loadPage(queryJson, function (response) {
         showCards(response.content);
         showPagination(response.pageNumber, response.totalPages);
     }, function (response) {
@@ -106,6 +132,7 @@ function showPage(index) {
 
 $(function () {
     showPage(0);
+    sessionStorage.setItem('searchType', 'byAlbum');
     $(document).on('click', '.page-link', function () {
         event.preventDefault();
         const tmpArr = $(this).attr('id').split('-');
@@ -116,5 +143,15 @@ $(function () {
             let currentPage = (+sessionStorage.getItem("currentPage"));
             showPage((index === "prev") ? (currentPage - 1) : (currentPage + 1));
         }
+    });
+    $(document).on('click', '.dropdown-item', function () {
+        event.preventDefault();
+        sessionStorage.setItem('searchType', $(this).attr('id'));
+        $('.dropdown button').text($(this).text());
+    });
+    $(document).on('submit', '#search', function () {
+        event.preventDefault();
+        sessionStorage.setItem('searchString', $('#query').val());
+        showPage(0);
     });
 });

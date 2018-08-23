@@ -25,8 +25,27 @@
         </div>
     </div>
 </nav>
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #41474c">
+    <div class="container">
+        <form id="search" class="form-inline">
+            <input id="query" class="form-control mr-sm-2" type="search"/>
+            <button class="btn btn-outline-success mr-sm-2" type="submit">Поиск</button>
+            <div class="dropdown">
+                <button class="btn btn-outline-success dropdown-toggle my-2 my-sm-0" type="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    по альбомам
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#" id="byAlbum">по альбомам</a>
+                    <a class="dropdown-item" href="#" id="bySinger">по исполнителям</a>
+                    <a class="dropdown-item" href="#" id="byLabel">по лейблам</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</nav>
 <div class="container showcase-container">
-    <div class="row">
+    <div id="showcase-container" class="row">
         <ul id="showcase" class="card-deck"></ul>
     </div>
 </div>

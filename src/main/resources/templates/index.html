@@ -28,11 +28,10 @@
 <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #41474c">
     <div class="container">
         <form id="search" class="form-inline">
-            <input id="query" class="form-control mr-sm-2" type="search"/>
-            <button class="btn btn-outline-success mr-sm-2" type="submit">Поиск</button>
-            <div class="dropdown">
-                <button class="btn btn-outline-success dropdown-toggle my-2 my-sm-0" type="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <input id="query" class="form-control mr-2" type="search"/>
+            <button class="btn btn-outline-success mr-2" type="submit">Поиск</button>
+            <div id="dropdown-search-type" class="dropdown">
+                <button class="btn btn-outline-success dropdown-toggle mr-2" data-toggle="dropdown">
                     по альбомам
                 </button>
                 <div class="dropdown-menu">
@@ -40,6 +39,16 @@
                     <a class="dropdown-item" href="#" id="bySinger">по исполнителям</a>
                     <a class="dropdown-item" href="#" id="byLabel">по лейблам</a>
                 </div>
+            </div>
+            <div id="dropdown-media-type" class="dropdown checkbox-dropdown">
+                <button class="btn btn-outline-warning dropdown-toggle my-2 my-sm-0" data-toggle="dropdown">
+                    тип
+                </button>
+                <ul class="dropdown-menu">
+                    <li><label id="cd"><input type="checkbox">CD</label></li>
+                    <li><label id="vinyl"><input type="checkbox">Винил</label></li>
+                    <li><label id="cassette"><input type="checkbox">Кассета</label></li>
+                </ul>
             </div>
         </form>
     </div>

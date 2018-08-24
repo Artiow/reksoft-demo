@@ -144,10 +144,17 @@ $(function () {
             showPage((index === "prev") ? (currentPage - 1) : (currentPage + 1));
         }
     });
-    $(document).on('click', '.dropdown-item', function () {
+    $(document).on('click', '#dropdown-search-type .dropdown-item', function () {
         event.preventDefault();
         sessionStorage.setItem('searchType', $(this).attr('id'));
-        $('.dropdown button').text($(this).text());
+        $('#dropdown-search-type .dropdown-toggle').text($(this).text());
+    });
+    $(document).on('click', '#dropdown-media-type .dropdown-menu', function (e) {
+        e.stopPropagation();
+    });
+    $(document).on('click', '#dropdown-media-type .dropdown-item', function () {
+        event.preventDefault();
+        // todo: event here
     });
     $(document).on('submit', '#search', function () {
         event.preventDefault();

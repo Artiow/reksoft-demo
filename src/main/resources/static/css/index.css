@@ -1,7 +1,7 @@
 .showcase-container {
     padding-top: 15px;
     padding-bottom: 15px;
-    min-height: 520px;
+    min-height: 538px;
 }
 
 #showcase {
@@ -42,6 +42,20 @@
 
 .card .card-footer .card-text b {
     margin-right: 1px;
+}
+
+.dropdown.checkbox-dropdown ul label {
+    padding: 4px 24px 4px 24px;
+    justify-content: left;
+}
+
+.dropdown.checkbox-dropdown ul label:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+
+.dropdown.checkbox-dropdown ul label input {
+    margin-right: 4px;
 }
 
 #pagination {

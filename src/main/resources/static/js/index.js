@@ -125,6 +125,11 @@ function showPage(index) {
         queryJson.typeCodes = mediaTypes;
     }
 
+    if (genres.length > 0) {
+        // todo: uncomment!
+        // queryJson.genreCodes = genres;
+    }
+
     loadPage(queryJson, function (response) {
         showCards(response.content);
         showPagination(response.pageNumber, response.totalPages);
@@ -136,7 +141,8 @@ function showPage(index) {
 let currentPage = null,
     searchType = "byAlbum",
     searchString = null,
-    mediaTypes = [];
+    mediaTypes = [],
+    genres = [];
 
 $(function () {
     showPage(0);
@@ -161,9 +167,6 @@ $(function () {
         searchString = ($('#query').val());
         showPage(0);
     });
-    $(document).on('click', '#dropdown-media-type .dropdown-menu', function (e) {
-        e.stopPropagation();
-    });
     $(document).on('change', '#dropdown-media-type .dropdown-menu input[type=checkbox]', function () {
         let val = ($(this).attr('value'));
         let idx = mediaTypes.indexOf(val);
@@ -172,5 +175,17 @@ $(function () {
         } else {
             mediaTypes.splice(idx, 1);
         }
+    });
+    $(document).on('change', '#dropdown-genre .dropdown-menu input[type=checkbox]', function () {
+        let val = ($(this).attr('value'));
+        let idx = genres.indexOf(val);
+        if ((this.checked) && (idx < 0)) {
+            genres.push(val);
+        } else {
+            genres.splice(idx, 1);
+        }
+    });
+    $(document).on('click', '.checkbox-dropdown .dropdown-menu', function (e) {
+        e.stopPropagation();
     });
 });

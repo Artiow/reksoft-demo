@@ -29,9 +29,9 @@
     <div class="container">
         <form id="search" class="form-inline">
             <input id="query" class="form-control mr-2" type="search"/>
-            <button class="btn btn-outline-success mr-2" type="submit">Поиск</button>
+            <button class="btn btn-success mr-2" type="submit">Поиск</button>
             <div id="dropdown-search-type" class="dropdown">
-                <button class="btn btn-outline-success dropdown-toggle mr-2" data-toggle="dropdown">
+                <button class="btn btn-outline-warning dropdown-toggle mr-2" data-toggle="dropdown">
                     по альбомам
                 </button>
                 <div class="dropdown-menu">
@@ -45,9 +45,9 @@
                     тип
                 </button>
                 <ul class="dropdown-menu">
-                    <li><label id="cd"><input type="checkbox">CD</label></li>
-                    <li><label id="vinyl"><input type="checkbox">Винил</label></li>
-                    <li><label id="cassette"><input type="checkbox">Кассета</label></li>
+                    <li><label><input value="cd" type="checkbox">CD</label></li>
+                    <li><label><input value="vinyl" type="checkbox">Винил</label></li>
+                    <li><label><input value="cassette" type="checkbox">Кассета</label></li>
                 </ul>
             </div>
         </form>

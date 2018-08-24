@@ -227,9 +227,12 @@ public class MediaService extends AbstractCRUDService<MediaDTO> {
             MediaSearchType searchType = dto.getSearchType();
             if (searchType != null) {
                 String searchString = dto.getSearchString();
-                if ((searchString != null) && (!searchString.equals(""))) {
-                    this.searchWords = searchString.trim().toLowerCase().split(" ");
-                    this.searchType = searchType;
+                if (searchString != null) {
+                    searchString = searchString.trim();
+                    if (!searchString.equals("")) {
+                        this.searchWords = searchString.trim().toLowerCase().split(" ");
+                        this.searchType = searchType;
+                    }
                 }
             }
         }

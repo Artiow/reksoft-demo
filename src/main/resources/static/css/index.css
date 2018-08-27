@@ -1,0 +1,63 @@
+.showcase-container {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    min-height: 538px;
+}
+
+#showcase {
+    text-align: justify;
+    margin: 0;
+    padding: 0;
+}
+
+#showcase:before {
+    display: block;
+    width: 100%;
+    height: 0;
+    content: '';
+}
+
+#showcase:after {
+    display: inline-block;
+    width: 100%;
+    height: 0;
+    visibility: hidden;
+    overflow: hidden;
+    content: '';
+}
+
+.card {
+    width: 16rem;
+    display: inline-block;
+    position: relative;
+}
+
+.card .card-body .card-title:last-child {
+    margin-bottom: 0;
+}
+
+.card .card-body a {
+    text-decoration: none;
+}
+
+.card .card-footer .card-text b {
+    margin-right: 1px;
+}
+
+.dropdown.checkbox-dropdown ul label {
+    padding: 4px 24px 4px 24px;
+    justify-content: left;
+}
+
+.dropdown.checkbox-dropdown ul label:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+
+.dropdown.checkbox-dropdown ul label input {
+    margin-right: 4px;
+}
+
+#pagination {
+    min-height: 38px;
+}

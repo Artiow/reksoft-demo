@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ALBUM_NAME</title>
+
+    <!-- LIBRARIES -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+
+    <link rel="stylesheet" href="../static/css/album.css" th:href="@{/css/album.css}"/>
+    <script src="../static/js/album.js" th:src="@{/js/album.js}"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <p class="navbar-brand" style="margin: 0">МУЗЫКАЛЬНЫЕ ТОВАРЫ</p>
+        <div>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="btn btn-outline-secondary" href="/home">Домой</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="card">
+        <div class="container">
+            <div class="wrapper row">
+                <div class="col-sm-6">
+                    <img src="../static/img/no-image.jpg">
+                </div>
+                <div class="col-sm-6">
+                    <h3 class="product-title">ALBUM_NAME</h3>
+                    <h4>SINGER_NAME</h4>
+                    <h5>LABEL_NAME</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

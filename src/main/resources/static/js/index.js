@@ -126,8 +126,7 @@ function showPage(index) {
     }
 
     if (genres.length > 0) {
-        // todo: uncomment!
-        // queryJson.genreCodes = genres;
+        queryJson.genreCodes = genres;
     }
 
     loadPage(queryJson, function (response) {
@@ -138,6 +137,51 @@ function showPage(index) {
     });
 }
 
+/**
+ * @param dictionaryName {string}
+ * @param successEvent {function(object)}
+ * @param errorHandler {function(object)}
+ */
+function loadDictionary(dictionaryName, successEvent, errorHandler) {
+    $.ajax({
+        type: 'POST',
+        url: '/api/' + dictionaryName + '/list',
+        contentType: 'application/json;charset=UTF-8',
+        data: JSON.stringify({pageNum: 0, pageSize: 0}),
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+            console.log('Accepted Data:', data);
+            successEvent(data)
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log('Accepted Error Data:', jqXHR.responseJSON);
+            errorHandler(jqXHR.responseJSON);
+        }
+    });
+}
+
+function liCheckboxComponent(value, text) {
+    return "<li><label><input value=\"" + value + "\" type=\"checkbox\">" + text + "</label></li>";
+}
+
+function showFilter(container, content) {
+    container.empty();
+    content.forEach(function (item, i, arr) {
+        container.append(liCheckboxComponent(item.code, item.name));
+    });
+}
+
+function initFilter() {
+    loadDictionary('mediatype', function (response) {
+        showFilter($('#dropdown-media-type .dropdown-menu'), response.content)
+    }, function () {
+    });
+    loadDictionary('genre', function (response) {
+        showFilter($('#dropdown-genre .dropdown-menu'), response.content)
+    }, function () {
+    });
+}
+
 let currentPage = null,
     searchType = "byAlbum",
     searchString = null,
@@ -145,6 +189,7 @@ let currentPage = null,
     genres = [];
 
 $(function () {
+    initFilter();
     showPage(0);
     $(document).on('click', '.page-link', function () {
         event.preventDefault();

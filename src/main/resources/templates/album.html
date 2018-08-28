@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ALBUM_NAME</title>
+    <title></title>
 
     <!-- LIBRARIES -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.0.4/popper.js"></script>
@@ -32,36 +32,22 @@
         <div class="container">
             <div class="wrapper row">
                 <div class="col-sm-6">
-                    <img src="../static/img/no-image.jpg">
+                    <img id="album-img" src="../static/img/no-image.jpg">
                 </div>
                 <div class="col-sm-6 product-container">
-                    <h3 class="product-title">ALBUM_NAME</h3>
-                    <h5><a class="product-title-link">SINGER_NAME</a></h5>
-                    <h6><a class="product-title-link">LABEL_NAME</a></h6>
-                    <div class="genre-container">
-                        <a href="#" class="badge badge-dark">genre1</a>
-                        <a href="#" class="badge badge-dark">genre2</a>
-                        <a href="#" class="badge badge-dark">genre3</a>
-                    </div>
+                    <h3 class="product-title" id="title-album"></h3>
+                    <h5><a class="product-title-link" id="title-singer"></a></h5>
+                    <h6><a class="product-title-link" id="title-label"></a></h6>
+                    <div class="genre-container" id="genre-box"></div>
                     <div class="btn-container btn-group">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown">
-                                type1
-                            </button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">type1
-                                    <small class="badge badge-dark"><b>$</b>00.00</small>
-                                </a>
-                                <a class="dropdown-item" href="#">type3
-                                    <small class="badge badge-dark"><b>$</b>00.00</small>
-                                </a>
-                                <a class="dropdown-item" href="#">type2
-                                    <small class="badge badge-dark"><b>$</b>00.00</small>
-                                </a>
+                            <button type="button" class="btn btn-outline-dark dropdown-toggle"
+                                    data-toggle="dropdown" id="type-dropdown"></button>
+                            <div class="dropdown-menu" id="type-box">
                             </div>
                         </div>
                         <button type="button" class="btn btn-outline-dark">
-                            В корзину <span class="badge badge-dark"><b>$</b> 00.00</span>
+                            в корзину <span class="badge badge-dark"><b>$</b> <span id="price">00.00</span></span>
                         </button>
                     </div>
                     <div class="composition-container">
@@ -73,22 +59,7 @@
                                 <th scope="col">Длительность</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>track1</td>
-                                <td>00:00</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>track2</td>
-                                <td>00:00</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>track3</td>
-                                <td>00:00</td>
-                            </tr>
+                            <tbody id="composition-box">
                             </tbody>
                         </table>
                     </div>

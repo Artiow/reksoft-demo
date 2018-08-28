@@ -10,8 +10,11 @@ public class MediaShortDTO extends AbstractIdentifiedDTO {
     private Integer price;
     private String type;
     private String album;
+    private Integer albumId;
     private String label;
+    private Integer labelId;
     private String singer;
+    private Integer singerId;
     private URI pictureURI;
 
 
@@ -50,20 +53,49 @@ public class MediaShortDTO extends AbstractIdentifiedDTO {
         this.album = album;
     }
 
+    public Integer getAlbumId() {
+        return albumId;
+    }
+
+    public MediaShortDTO setAlbumId(Integer albumId) {
+        this.albumId = albumId;
+        return this;
+    }
+
     public String getLabel() {
         return label;
     }
 
-    public void setLabel(String label) {
+    public MediaShortDTO setLabel(String label) {
         this.label = label;
+        return this;
+    }
+
+    public Integer getLabelId() {
+        return labelId;
+    }
+
+    public MediaShortDTO setLabelId(Integer labelId) {
+        this.labelId = labelId;
+        return this;
     }
 
     public String getSinger() {
         return singer;
     }
 
-    public void setSinger(String singer) {
+    public MediaShortDTO setSinger(String singer) {
         this.singer = singer;
+        return this;
+    }
+
+    public Integer getSingerId() {
+        return singerId;
+    }
+
+    public MediaShortDTO setSingerId(Integer singerId) {
+        this.singerId = singerId;
+        return this;
     }
 
     public URI getPictureURI() {

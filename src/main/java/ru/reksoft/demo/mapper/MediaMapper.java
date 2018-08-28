@@ -20,8 +20,11 @@ public interface MediaMapper extends AbstractVersionedMapper<MediaEntity, MediaD
     @Mappings({
             @Mapping(target = "type", source = "type.name"),
             @Mapping(target = "album", source = "album.name"),
+            @Mapping(target = "albumId", source = "album.id"),
             @Mapping(target = "label", source = "album.label.name"),
+            @Mapping(target = "labelId", source = "album.label.id"),
             @Mapping(target = "singer", source = "album.singer.name"),
+            @Mapping(target = "singerId", source = "album.singer.id"),
             @Mapping(target = "pictureURI", source = "album.picture.id"),
     })
     MediaShortDTO toShortDTO(MediaEntity entity);

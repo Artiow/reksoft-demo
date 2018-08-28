@@ -22,3 +22,13 @@ body {
 h3.product-title {
     font-weight: bold;
 }
+
+.genre-container, .composition-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.composition-container {
+    height: 245px;
+    overflow-y: auto;
+}

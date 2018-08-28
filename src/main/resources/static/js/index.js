@@ -37,9 +37,9 @@ function cardComponent(item) {
     return "<li class=\"card\">\n" +
         "<img class=\"card-img-top\" src=\"" + item.pictureURI + "\" alt=\"" + item.album + "\">\n" +
         "<div class=\"card-body\">\n" +
-        "<h5 class=\"card-title\"><a href=\"#\">" + item.album + "</a></h5>\n" +
-        "<h6 class=\"card-title\"><a href=\"#\">" + item.singer + "</a></h6>\n" +
-        "<h6 class=\"card-title\"><a href=\"#\"><small>" + item.label + "</small></a></h6>\n" +
+        "<h5 class=\"card-title\"><a href=\"/album/" + item.albumId + "\">" + item.album + "</a></h5>\n" +
+        "<h6 class=\"card-title\"><a href=\"/singer/" + item.singerId + "\">" + item.singer + "</a></h6>\n" +
+        "<h6 class=\"card-title\"><a href=\"/label/" + item.labelId + "\"><small>" + item.label + "</small></a></h6>\n" +
         "</div>\n" +
         "<div class=\"card-footer\">\n" +
         "<p class=\"card-text\"><b>$</b><span>" + (item.price / 100) + " <small>(" + item.type + ")</small>" + "</span></p>\n" +

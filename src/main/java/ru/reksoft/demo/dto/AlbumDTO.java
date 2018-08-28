@@ -5,10 +5,7 @@ import ru.reksoft.demo.dto.validation.annotations.PositionSequence;
 import ru.reksoft.demo.dto.validation.annotations.ReleaseYear;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.List;
 
 public class AlbumDTO extends AbstractVersionedDTO {
@@ -53,6 +50,9 @@ public class AlbumDTO extends AbstractVersionedDTO {
     @NotEmpty(groups = FieldCheck.class)
     @PositionSequence(groups = FieldCheck.class)
     private List<CompositionDTO> compositions;
+
+    @Null(groups = FieldCheck.class)
+    private List<PriceDTO> priceList;
 
 
     @Override
@@ -149,6 +149,15 @@ public class AlbumDTO extends AbstractVersionedDTO {
         return this;
     }
 
+    public List<PriceDTO> getPriceList() {
+        return priceList;
+    }
+
+    public AlbumDTO setPriceList(List<PriceDTO> priceList) {
+        this.priceList = priceList;
+        return this;
+    }
+
 
     public interface IdCheck extends VersionCheck {
 
@@ -162,7 +171,6 @@ public class AlbumDTO extends AbstractVersionedDTO {
 
     }
 
-
     private interface VersionCheck {
 
     }
@@ -170,5 +178,41 @@ public class AlbumDTO extends AbstractVersionedDTO {
     private interface FieldCheck extends
             LabelDTO.IdCheck, SingerDTO.IdCheck, PictureDTO.IdCheck, GenreDTO.IdCheck, CompositionDTO.FieldCheck {
 
+    }
+
+
+    public static class PriceDTO {
+
+        private Integer mediaId;
+        private Integer mediaPrice;
+        private String type;
+
+
+        public Integer getMediaId() {
+            return mediaId;
+        }
+
+        public PriceDTO setMediaId(Integer mediaId) {
+            this.mediaId = mediaId;
+            return this;
+        }
+
+        public Integer getMediaPrice() {
+            return mediaPrice;
+        }
+
+        public PriceDTO setMediaPrice(Integer mediaPrice) {
+            this.mediaPrice = mediaPrice;
+            return this;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public PriceDTO setType(String type) {
+            this.type = type;
+            return this;
+        }
     }
 }

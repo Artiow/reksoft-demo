@@ -23,7 +23,17 @@ public interface AlbumMapper extends AbstractVersionedMapper<AlbumEntity, AlbumD
     })
     AlbumShortDTO toShortDTO(AlbumEntity entity);
 
-    @Mapping(target = "picture.uri", source = "picture.id")
+    @Mappings({
+            @Mapping(target = "mediaId", source = "id"),
+            @Mapping(target = "mediaPrice", source = "price"),
+            @Mapping(target = "type", source = "type.name")
+    })
+    AlbumDTO.PriceDTO toPriceDTO(MediaEntity entity);
+
+    @Mappings({
+            @Mapping(target = "picture.uri", source = "picture.id"),
+            @Mapping(target = "priceList", source = "media")
+    })
     AlbumDTO toDTO(AlbumEntity entity);
 
     @Mapping(target = "id", ignore = true)
@@ -46,6 +56,7 @@ public interface AlbumMapper extends AbstractVersionedMapper<AlbumEntity, AlbumD
             @Mapping(target = "name", ignore = true)
     })
     GenreEntity toEntity(GenreDTO dto);
+
 
     default AlbumEntity merge(AlbumEntity acceptor, AlbumEntity donor) throws OptimisticLockException {
         AbstractVersionedMapper.super.merge(acceptor, donor);

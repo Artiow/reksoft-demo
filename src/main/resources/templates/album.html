@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <!-- LIBRARIES -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.0.4/popper.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+
+    <link rel="stylesheet" href="../static/css/album.css" th:href="@{/css/album.css}"/>
+    <script src="../static/js/ajax.js" th:src="@{/js/ajax.js}"></script>
+    <script src="../static/js/auth.js" th:src="@{/js/auth.js}"></script>
+    <script src="../static/js/album.js" th:src="@{/js/album.js}"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a href="/" class="navbar-brand" style="margin: 0">МУЗЫКАЛЬНЫЕ ТОВАРЫ</a>
+        <div>
+            <ul class="navbar-nav ml-auto" id="nav-auth-container"></ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="card">
+        <div class="container">
+            <div class="wrapper row">
+                <div class="col-sm-6">
+                    <img id="album-img" src="../static/img/no-image.jpg">
+                </div>
+                <div class="col-sm-6 product-container">
+                    <h3 class="product-title" id="title-album"></h3>
+                    <h5><a class="product-title-link" id="title-singer"></a></h5>
+                    <h6><a class="product-title-link" id="title-label"></a></h6>
+                    <div class="genre-container" id="genre-box"></div>
+                    <div class="btn-container btn-group">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-outline-dark dropdown-toggle"
+                                    data-toggle="dropdown" id="type-dropdown"></button>
+                            <div class="dropdown-menu" id="type-box">
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline-dark">
+                            в корзину <span class="badge badge-dark"><b>$</b> <span id="price">00.00</span></span>
+                        </button>
+                    </div>
+                    <div class="composition-container">
+                        <table class="table">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Трек</th>
+                                <th scope="col">Длительность</th>
+                            </tr>
+                            </thead>
+                            <tbody id="composition-box">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

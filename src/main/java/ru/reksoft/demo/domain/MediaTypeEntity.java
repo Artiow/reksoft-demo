@@ -2,7 +2,9 @@ package ru.reksoft.demo.domain;
 
 import ru.reksoft.demo.domain.generic.AbstractDescriptiveDictionaryEntity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.Collection;
 
 @Entity

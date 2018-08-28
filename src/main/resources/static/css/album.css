@@ -15,12 +15,17 @@ body {
     width: 100%;
 }
 
-.product-title {
+.product-container .product-title {
     margin-top: 0;
 }
 
-h3.product-title {
+.product-container h3.product-title {
     font-weight: bold;
+}
+
+.product-container .product-title-link {
+    color: inherit;
+    text-decoration: none;
 }
 
 .genre-container, .composition-container {

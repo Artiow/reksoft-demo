@@ -189,6 +189,8 @@ let currentPage = null,
     genres = [];
 
 $(function () {
+    setAuth();
+
     initFilter();
     showPage(0);
     $(document).on('click', '.page-link', function () {

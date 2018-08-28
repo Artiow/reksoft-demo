@@ -3,10 +3,11 @@ $(function () {
 });
 
 const userURI = localStorage.getItem('userURI');
+const userID = localStorage.getItem('userID');
 
 ajaxVerify(userURI, function (data) {
     $('#login').empty()
-        .append(data.login);
+        .append(userID);
     $('#full-name').empty()
         .append(data.name).append(' ')
         .append(data.surname).append(' ')

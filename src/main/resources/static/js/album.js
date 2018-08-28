@@ -84,6 +84,8 @@ function loadAlbum(id) {
 }
 
 $(function () {
+    setAuth();
+
     const container = $('.product-container').hide();
     const arr = $(location).attr('pathname').split('/');
     loadAlbum(arr[arr.length - 1]);

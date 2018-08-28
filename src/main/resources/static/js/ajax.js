@@ -53,10 +53,12 @@ function ajaxLogin(login, password, errorHandler) {
         success: function (data, textStatus, jqXHR) {
             const token = data.tokenType + ' ' + data.accessToken;
             const userURI = data.user.userURI;
+            const userID = data.user.login;
 
             console.log('Accepted Token:', token);
             localStorage.setItem('token', token);
             localStorage.setItem('userURI', userURI);
+            localStorage.setItem('userID', userID);
             localStorage.removeItem('redirect');
             window.location.replace(redirect);
         },

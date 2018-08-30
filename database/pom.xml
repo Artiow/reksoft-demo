@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ru.reksoft</groupId>
+    <artifactId>database</artifactId>
+    <version>0.1</version>
+
+    <properties>
+        <org.postgresql.version>42.2.2</org.postgresql.version>
+        <org.flywaydb.version>5.1.1</org.flywaydb.version>
+    </properties>
+
+    <dependencies>
+        <!-- POSTGRESQL -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${org.postgresql.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- FLYWAY MAVEN PLUGIN -->
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>${org.flywaydb.version}</version>
+                <configuration>
+                    <url>jdbc:postgresql://appdb:5432/reksoft</url>
+                    <user>postgres</user>
+                    <password>postgres</password>
+                    <locations>filesystem:migration</locations>
+                    <schemas>
+                        <schema>demo</schema>
+                    </schemas>
+                </configuration>
+            </plugin>
+
+            <!-- SQL MAVEN PLUGIN -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.5</version>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>${org.postgresql.version}</version>
+                    </dependency>
+                </dependencies>
+
+                <configuration>
+                    <driver>org.postgresql.Driver</driver>
+                    <url>jdbc:postgresql://appdb:5432/reksoft</url>
+                    <username>postgres</username>
+                    <password>postgres</password>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>init</id>
+                        <configuration>
+                            <autocommit>true</autocommit>
+                            <sqlCommand>create schema if not exists demo</sqlCommand>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>demo</id>
+                        <configuration>
+                            <autocommit>true</autocommit>
+                            <srcFiles>
+                                <srcFile>demo.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

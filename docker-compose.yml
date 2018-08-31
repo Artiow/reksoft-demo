@@ -1,0 +1,29 @@
+version: '3.4'
+
+networks:
+  app-net:
+    driver: bridge
+
+services:
+  database:
+    build:
+      context: .
+      dockerfile: ./database/dockerfile
+    image: database
+    container_name: database
+    networks:
+      - app-net
+
+  application:
+    build:
+      context: .
+      dockerfile: dockerfile
+      network: app-net
+    image: application
+    container_name: application
+    ports:
+      - 80:8080
+    networks:
+      - app-net
+    depends_on:
+      - database

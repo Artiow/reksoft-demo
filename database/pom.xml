@@ -29,7 +29,7 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>${org.flywaydb.version}</version>
                 <configuration>
-                    <url>jdbc:postgresql://appdb:5432/reksoft</url>
+                    <url>jdbc:postgresql://database:5432/reksoft</url>
                     <user>postgres</user>
                     <password>postgres</password>
                     <locations>filesystem:migration</locations>
@@ -55,7 +55,7 @@
 
                 <configuration>
                     <driver>org.postgresql.Driver</driver>
-                    <url>jdbc:postgresql://appdb:5432/reksoft</url>
+                    <url>jdbc:postgresql://database:5432/reksoft</url>
                     <username>postgres</username>
                     <password>postgres</password>
                 </configuration>

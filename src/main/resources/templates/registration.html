@@ -6,12 +6,13 @@
     <title>Регистрация</title>
 
     <!-- LIBRARIES -->
-    <!-- todo: download libraries! -->
-    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" rel="stylesheet">
+    <script src="../static/libs/jquery-3.3.1.min.js" th:src="@{/libs/jquery-3.3.1.min.js}"></script>
+    <script src="../static/libs/bootstrap.min.js" th:src="@{/libs/bootstrap.min.js}"></script>
+    <link href="../static/libs/bootstrap.min.css" th:href="@{/libs/bootstrap.min.css}" rel="stylesheet">
+
+    <script src="../static/libs/jquery.maskedinput.min.js" th:src="@{/libs/jquery.maskedinput.min.js}"></script>
+    <link href="../static/libs/fonts/font-awesome.min.css" th:href="@{/libs/fonts/font-awesome.min.css}"
+          rel="stylesheet">
 
     <script src="../static/js/ajax.js" th:src="@{/js/ajax.js}"></script>
     <script src="../static/js/registration.js" th:src="@{/js/registration.js}"></script>

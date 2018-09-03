@@ -1,0 +1,6 @@
+FROM maven:3-jdk-8
+ADD ./migration /database/migration
+ADD ./demo.sql /database
+ADD ./pom.xml /database
+WORKDIR /database
+ENTRYPOINT ["mvn", "sql:execute@init", "flyway:clean", "flyway:migrate", "sql:execute@demo"]

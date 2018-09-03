@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.reksoft.demo.boot.ReksoftDemoApplication;
 
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -24,8 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ReksoftDemoApplication.class)
 @TestPropertySource("classpath:application-test.properties")
-@Sql(scripts = "file:database/testing/init_basket.sql", executionPhase = BEFORE_TEST_METHOD)
-@Sql(scripts = "file:database/testing/clear.sql", executionPhase = AFTER_TEST_METHOD)
+@Sql(scripts = {"file:database/testing/clear.sql", "file:database/testing/init_order.sql"}, executionPhase = BEFORE_TEST_METHOD)
 @AutoConfigureMockMvc
 public class BasketControllerTests extends AbstractSecuredControllerTests {
 

@@ -1,10 +1,3 @@
-FROM maven:3-jdk-8
-ADD ./database/migration /database/migration
-ADD ./database/demo.sql /database
-ADD ./database/pom.xml /database
-WORKDIR /database
-RUN mvn sql:execute@init flyway:clean flyway:migrate sql:execute@demo
-
 FROM tomcat:9.0-jre8
 EXPOSE 8080
 RUN rm -rf /usr/local/tomcat/webapps/ROOT

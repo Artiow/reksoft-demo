@@ -1,29 +1,30 @@
 version: '3.4'
 
-networks:
-  app-net:
-    driver: bridge
-
 services:
   database:
-    build:
-      context: .
-      dockerfile: ./database/dockerfile
-    image: database
+    image: postgres:10.5
     container_name: database
-    networks:
-      - app-net
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=reksoft
+
+  builder:
+    build:
+      context: ./database
+      dockerfile: dockerfile
+    image: builder
+    container_name: builder
+    depends_on:
+      - database
 
   application:
     build:
       context: .
       dockerfile: dockerfile
-      network: app-net
     image: application
     container_name: application
     ports:
       - 80:8080
-    networks:
-      - app-net
     depends_on:
-      - database
+      - builder
